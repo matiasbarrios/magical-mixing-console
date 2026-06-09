@@ -1,0 +1,19 @@
+{
+  "name": "@magical-mixing/mixers",
+  "version": "1.0.0",
+  "description": "A way of handling digital mixers with nodejs.",
+  "type": "module",
+  "main": "./index.js",
+  "scripts": {
+    "connectivity-test": "node ./examples/manual-connect-test-cli.js"
+  },
+  "keywords": [
+    "digital",
+    "mixer"
+  ],
+  "author": {
+    "name": "Matías Barrios",
+    "email": "matias@magicalmixingconsole.com"
+  },
+  "license": "Apache-2.0"
+}

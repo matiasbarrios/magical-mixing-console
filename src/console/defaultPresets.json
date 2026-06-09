@@ -1,0 +1,188 @@
+{
+    "compressor": {
+        "Kick": {
+            "mode": "Compressor",
+            "ratio": "4.0",
+            "knee": 2,
+            "threshold": -30,
+            "gain": 6,
+            "determination": "RMS",
+            "mix": 100,
+            "automatic": false,
+            "envelope": "Logarithmic",
+            "attack": 16,
+            "hold": 32,
+            "release": 116,
+            "sidechainOn": false,
+            "sidechainType": "High cut 12",
+            "sidechainFrequency": 176,
+            "sidechainSource": "Self"
+        },
+        "Snare": {
+            "mode": "Compressor",
+            "ratio": "3.0",
+            "knee": 1,
+            "threshold": -26,
+            "gain": 0,
+            "determination": "Peak",
+            "mix": 100,
+            "automatic": false,
+            "envelope": "Logarithmic",
+            "attack": 18,
+            "hold": 399,
+            "release": 77,
+            "sidechainOn": true,
+            "sidechainType": "Bell Q3",
+            "sidechainFrequency": 611,
+            "sidechainSource": "Self"
+        },
+        "Bass": {
+            "mode": "Compressor",
+            "ratio": "3.0",
+            "knee": 2,
+            "threshold": -31,
+            "gain": 6,
+            "determination": "Peak",
+            "mix": 100,
+            "automatic": false,
+            "envelope": "Logarithmic",
+            "attack": 24,
+            "hold": 63,
+            "release": 18,
+            "sidechainOn": true,
+            "sidechainType": "Bell Q2",
+            "sidechainFrequency": 532,
+            "sidechainSource": "Self"
+        },
+        "Vocal": {
+            "mode": "Compressor",
+            "ratio": "3.0",
+            "knee": 2,
+            "threshold": -25.5,
+            "gain": 6,
+            "determination": "Peak",
+            "mix": 100,
+            "automatic": false,
+            "envelope": "Logarithmic",
+            "attack": 10,
+            "hold": 10,
+            "release": 151,
+            "sidechainOn": true,
+            "sidechainType": "Bell Q3",
+            "sidechainFrequency": 611,
+            "sidechainSource": "Self"
+        }
+    },
+    "gate": {
+        "Kick": {
+            "mode": "Gate",
+            "range": 60,
+            "threshold": -32.5,
+            "attack": 8,
+            "hold": 12.6,
+            "release": 116,
+            "sidechainOn": true,
+            "sidechainType": "High cut 12",
+            "sidechainFrequency": 101,
+            "sidechainSource": "Self"
+        },
+        "Snare": {
+            "mode": "Exp 4:1",
+            "range": 60,
+            "threshold": -56,
+            "attack": 5,
+            "hold": 31.7,
+            "release": 101,
+            "sidechainOn": true,
+            "sidechainType": "Bell Q3",
+            "sidechainFrequency": 480,
+            "sidechainSource": "Self"
+        },
+        "Acoustic guitar": {
+            "mode": "Exp 2:1",
+            "range": 60,
+            "threshold": -41,
+            "attack": 12,
+            "hold": 126,
+            "release": 752,
+            "sidechainOn": false,
+            "sidechainType": "Bell Q3",
+            "sidechainFrequency": 991,
+            "sidechainSource": "Self"
+        },
+        "Vocal": {
+            "mode": "Exp 2:1",
+            "range": 60,
+            "threshold": -44.0,
+            "attack": 16,
+            "hold": 126,
+            "release": 983,
+            "sidechainOn": true,
+            "sidechainType": "Bell Q3",
+            "sidechainFrequency": 611,
+            "sidechainSource": "Self"
+        }
+    },
+    "equalizer": {
+        "Low cut 110": {
+            "on": true,
+            "bands": [
+                {
+                    "parameterId": 0,
+                    "on": true,
+                    "type": "Low cut",
+                    "frequency": 110
+                }
+            ]
+        },
+        "Low & high cut": {
+            "on": true,
+            "bands": [
+                {
+                    "parameterId": 0,
+                    "on": true,
+                    "type": "Low cut",
+                    "frequency": 110
+                },
+                {
+                    "parameterId": 4,
+                    "on": true,
+                    "type": "High cut",
+                    "frequency": 10000,
+                    "q": 2,
+                    "gain": 0
+                }
+            ]
+        },
+        "Kick": {
+            "on": true,
+            "bands": [
+                {
+                    "parameterId": 0,
+                    "on": true,
+                    "type": "Low cut",
+                    "frequency": 40
+                },
+                {
+                    "parameterId": 4,
+                    "on": true,
+                    "type": "High cut",
+                    "frequency": 10000,
+                    "q": 2,
+                    "gain": 0
+                }
+            ]
+        },
+        "Bass": {
+            "on": true,
+            "bands": [
+                {
+                    "parameterId": 0,
+                    "on": true,
+                    "type": "Low cut",
+                    "frequency": 50
+                }
+            ]
+        }
+    }
+}

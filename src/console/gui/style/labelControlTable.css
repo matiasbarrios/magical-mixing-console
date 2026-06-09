@@ -1,0 +1,66 @@
+table.label-control-table {
+    width: 100%;
+    max-width: 100dvw;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: left;
+    vertical-align: top;
+    box-sizing: border-box;
+    height: 0;
+}
+
+
+table.label-control-table td {
+    box-sizing: border-box;
+    vertical-align: inherit;
+    padding: 4px;
+    height: 36px;
+}
+
+
+table.label-control-table tr:first-child td {
+    padding-top: 0;
+}
+
+
+table.label-control-table tr:last-child td {
+    padding-bottom: 0;
+}
+
+
+table.label-control-table tr td:first-child {
+    padding-left: 0;
+}
+
+
+table.label-control-table tr td:last-child {
+    padding-right: 0;
+}
+
+
+table.label-control-table.label-control-table--label-control tr td:first-child,
+table.label-control-table.label-control-table--label-control tr td:first-child .rt-Text {
+    white-space: nowrap;
+}
+
+
+table.label-control-table.label-control-table--label-control tr td:first-child {
+    vertical-align: middle;
+}
+
+
+@media (max-width: 767px) {
+    table.label-control-table.label-control-table--label-control {
+        table-layout: fixed;
+    }
+
+    table.label-control-table.label-control-table--label-control td {
+        height: auto;
+        min-height: 36px;
+    }
+
+    table.label-control-table.label-control-table--label-control tr td:first-child,
+    table.label-control-table.label-control-table--label-control tr td:first-child .rt-Text {
+        white-space: normal;
+    }
+}

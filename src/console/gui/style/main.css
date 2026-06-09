@@ -1,0 +1,26 @@
+@import "./reset.css";
+@import "@radix-ui/themes/styles.css";
+@import "./labelControlTable.css";
+@import "./controls.css";
+@import "./scroll.css";
+@import "./help.css";
+
+:root {
+    --mmc-safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+    --mmc-safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+    --mmc-safe-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+    --mmc-safe-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+    --mmc-viewport-height: calc(100dvh - var(--mmc-safe-top) - var(--mmc-safe-bottom));
+    --mmc-icon-size: 14px;
+    --mmc-quick-button-font-size: 12px;
+    --mmc-chart-font-size: 10px;
+    --mmc-chart-threshold-line-height: 12;
+    --mmc-knob-size: 22px;
+    --mmc-meter-slider-size: 20px;
+    --mmc-meter-slider-track-size: 22px;
+    --mmc-footer-height: 36px;
+}
+
+.mmc-assignment-names > * + *::before {
+    content: ', ';
+}

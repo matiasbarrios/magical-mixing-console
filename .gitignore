@@ -1,0 +1,11 @@
+node_modules
+out
+settings.json
+vaults
+.webpack
+plugins
+.DS_Store
+test-results/
+playwright-report/
+blob-report/
+tests/e2e/electron/.e2e-state.json

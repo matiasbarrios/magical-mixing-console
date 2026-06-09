@@ -1,0 +1,25 @@
+{
+  "name": "@magical-mixing/console",
+  "version": "1.0.0",
+  "description": "Desktop and mobile app for controlling X Air and M Air digital mixers.",
+  "keywords": [
+    "digital",
+    "mixer",
+    "mixing",
+    "console",
+    "xair",
+    "electron",
+    "react",
+    "capacitor"
+  ],
+  "author": {
+    "name": "Matías Barrios",
+    "email": "matias@magicalmixingconsole.com"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@magical-mixing/mixers": "^1.0.0",
+    "@magical-mixing/mixers-react": "^1.0.0",
+    "@magical-mixing/virtual-devices": "^1.0.0"
+  }
+}

@@ -1,0 +1,75 @@
+// Requirements
+import { useCallback, useMemo, useState } from 'react';
+import { Dialog, Flex, Text } from '@radix-ui/themes';
+import { scaleLog } from 'd3';
+import { useBusGateRelease, useDevice } from '@magical-mixing/mixers-react';
+import { useLanguage } from '../../../../../components/language';
+import { Knob } from '../../../../../components/base/knob';
+import DecimalInput from '../../../../../components/base/decimalInput';
+import DialogHeader from '../../../../../components/base/dialogHeader';
+import { ONE } from '../../../../../helpers/values';
+import { fromValueToK } from '../../../../../helpers/format';
+
+
+// Exported
+export default ({ busId }) => {
+    const { t } = useLanguage();
+    const { disabled } = useDevice();
+
+    const {
+        has, value, set, minimum, maximum,
+    } = useBusGateRelease(busId);
+
+    const [opened, setOpened] = useState(false);
+    const doOpen = useCallback(() => setOpened(true), [setOpened]);
+
+    const valueToDecimal = useMemo(() => scaleLog()
+        .domain([minimum, maximum])
+        .range([0, ONE]), [minimum, maximum]);
+    const decimalToValue = useMemo(() => valueToDecimal.invert, [valueToDecimal]);
+
+    const isValidValue = useMemo(() => !Number.isNaN(value)
+        && value !== undefined && value !== null, [value]);
+
+    if (!has || value === undefined) return null;
+
+    return (
+        <Flex direction="column" align="center" gapY="1">
+            <Text size="1" color="gray" align="center">
+                { t('Release', undefined, true) }
+            </Text>
+            {isValidValue && (
+                <Flex direction="column" align="center" justify="center" gapY="1">
+                    <Knob
+                        value={value}
+                        set={set}
+                        valueToDecimal={valueToDecimal}
+                        decimalToValue={decimalToValue}
+                        minimum={minimum}
+                        maximum={maximum}
+                        onRightClick={doOpen}
+                        ariaLabel={t('Release', undefined, true)}
+                        disabled={disabled}
+                        decimalsToShow={0}
+                        asButton
+                        resetValue={minimum}
+                        onFocusScale={1.5}
+                        formatValue={fromValueToK}
+                    />
+                </Flex>
+            )}
+            <Dialog.Root open={opened} onOpenChange={setOpened}>
+                <Dialog.Content aria-describedby={undefined}>
+                    <DialogHeader>
+                        { t('Release', undefined, true) }
+                    </DialogHeader>
+                    <DecimalInput
+                        value={value}
+                        set={set}
+                        onEnter={() => setOpened(false)}
+                    />
+                </Dialog.Content>
+            </Dialog.Root>
+        </Flex>
+    );
+};

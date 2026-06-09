@@ -1,0 +1,20 @@
+{
+  "appId": "com.opensource.magicalmixing.console",
+  "appName": "Open-Sourced Magical Mixing Console",
+  "webDir": "./out/capacitor",
+  "loggingBehavior": "none",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "Keyboard": {
+      "resizeOnFullScreen": false
+    },
+    "SystemBars": {
+      "insetsHandling": "css"
+    }
+  },
+  "ios": {
+    "inputAccessoryView": false
+  }
+}

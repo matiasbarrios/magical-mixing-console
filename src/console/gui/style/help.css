@@ -1,0 +1,121 @@
+.mmc-help-dialog {
+    display: flex;
+    flex-direction: column;
+    max-height: 85dvh;
+    overflow: hidden;
+}
+
+.mmc-help-body {
+    display: flex;
+    flex-grow: 1;
+    min-height: 0;
+    gap: var(--space-4);
+}
+
+.mmc-help-toc {
+    flex-shrink: 0;
+    width: 148px;
+    padding-top: var(--space-1);
+    border-right: 1px solid var(--gray-a4);
+}
+
+.mmc-help-toc-link {
+    display: block;
+    width: 100%;
+    padding: var(--space-1) var(--space-2);
+    margin-bottom: var(--space-1);
+    border: none;
+    border-left: 2px solid transparent;
+    border-radius: 0 var(--radius-2) var(--radius-2) 0;
+    background: transparent;
+    color: var(--gray-11);
+    font: inherit;
+    font-size: var(--font-size-1);
+    line-height: var(--line-height-1);
+    text-align: left;
+    cursor: pointer;
+}
+
+.mmc-help-toc-link:hover {
+    background: var(--gray-a3);
+    color: var(--gray-12);
+}
+
+.mmc-help-toc-link[data-active="true"] {
+    border-left-color: var(--accent-9);
+    background: var(--accent-a3);
+    color: var(--accent-11);
+    font-weight: var(--font-weight-medium);
+}
+
+.mmc-help-content {
+    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+    padding-right: var(--space-1);
+}
+
+.mmc-help-section + .mmc-help-section {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--gray-a4);
+}
+
+.mmc-help-section:first-child {
+    padding-top: var(--space-1);
+}
+
+.mmc-help-callout {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    border-left: 3px solid var(--blue-9);
+    border-radius: var(--radius-2);
+    background: var(--blue-a2);
+}
+
+.mmc-help-flow {
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius-2);
+    background: var(--gray-a2);
+    font-family: var(--code-font-family, ui-monospace, monospace);
+    font-size: var(--font-size-1);
+    line-height: var(--line-height-3);
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+.mmc-help-list {
+    margin: var(--space-2) 0 0;
+    padding-left: var(--space-4);
+}
+
+.mmc-help-list li + li {
+    margin-top: var(--space-1);
+}
+
+@media (max-width: 560px) {
+    .mmc-help-body {
+        flex-direction: column;
+    }
+
+    .mmc-help-toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-1);
+        width: 100%;
+        padding-bottom: var(--space-2);
+        border-right: none;
+        border-bottom: 1px solid var(--gray-a4);
+    }
+
+    .mmc-help-toc-link {
+        width: auto;
+        border-left: none;
+        border-radius: var(--radius-2);
+    }
+
+    .mmc-help-toc-link[data-active="true"] {
+        border-left: none;
+    }
+}

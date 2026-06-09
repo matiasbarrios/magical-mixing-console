@@ -1,0 +1,23 @@
+html,
+body {
+    overscroll-behavior: none;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #f8f9fb 0%, #ffffff 100%);
+    overflow: hidden;
+    user-select: none;
+}
+
+
+body.dark {
+    background: linear-gradient(135deg, #0a0f1a 0%, #1a1f2b 100%);
+}
+
+
+#root {
+    box-sizing: border-box;
+    padding-left: var(--mmc-safe-left);
+    padding-right: var(--mmc-safe-right);
+}

@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Dev",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "electron-dev",
+            ],
+        },
+        {
+            "name": "Virtual X18",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/src/virtual-devices",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "x18",
+            ],
+        },
+        {
+            "name": "Virtual XR12",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/src/virtual-devices",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "xr12",
+            ],
+        },
+    ]
+}

@@ -1,0 +1,126 @@
+/* Offline device: soft control labels inherit the button disabled color (--gray-a8)
+   instead of overriding it with Text color="gray" (--gray-11). */
+:where(.rt-Button, .rt-IconButton)[data-disabled="true"] :where(.rt-Text) {
+    color: inherit;
+}
+
+:where(.rt-Button, .rt-IconButton)[data-disabled="true"] :where([data-accent-color]) {
+    --accent-a11: var(--gray-a8);
+    --accent-12: var(--gray-a8);
+    opacity: 1;
+}
+
+/* Keyboard focus rings — keyboard tab only, not pointer drag/click */
+
+:root {
+    --mmc-focus-visible-shadow:
+        0 0 0 1px var(--black-a3),
+        0 0 0 1px var(--gray-a2),
+        0 0 0 2px var(--gray-a8),
+        0 1px 2px var(--gray-a4),
+        0 1px 3px -0.5px var(--gray-a3);
+
+    --mmc-thumb-shadow:
+        0 0 0 1px var(--black-a3),
+        0 0 0 1px var(--gray-a2),
+        0 0 0 1px var(--accent-a2),
+        0 1px 2px var(--gray-a4),
+        0 1px 3px -0.5px var(--gray-a3);
+}
+
+.mmc-knob:focus {
+    outline: none;
+}
+
+.mmc-knob:focus-visible,
+.mmc-knob[data-keyboard-focus] {
+    outline: none;
+    box-shadow: var(--mmc-focus-visible-shadow);
+    border-radius: 9999px;
+    position: relative;
+    z-index: 1;
+}
+
+.mmc-meter-slider__thumb {
+    box-shadow: var(--mmc-thumb-shadow);
+}
+
+.mmc-meter-slider__thumb:focus {
+    outline: none;
+}
+
+.mmc-meter-slider__thumb:focus-visible,
+.mmc-meter-slider__thumb[data-keyboard-focus] {
+    outline: none;
+    box-shadow: var(--mmc-focus-visible-shadow);
+    position: relative;
+    z-index: 1;
+}
+
+@media (forced-colors: active) {
+    .mmc-knob:focus-visible,
+    .mmc-knob[data-keyboard-focus],
+    .mmc-meter-slider__thumb:focus-visible,
+    .mmc-meter-slider__thumb[data-keyboard-focus] {
+        outline: 2px solid CanvasText;
+        outline-offset: 2px;
+    }
+}
+
+/* Dense rows: ghost/soft buttons keep their label on one line. */
+.mmc-btn-nowrap {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* flex-shrink on Button / IconButton / Text — Radix layout props only work on Flex/Box/Grid. */
+.mmc-shrink-0 {
+    flex-shrink: 0;
+}
+
+/* Appearance text size "normal": compact controls (size 1) render at size 2. Menu content stays size 2 via component API. */
+.mmc-ui-text-size-2 :where(.rt-Text.rt-r-size-1, .rt-Button.rt-r-size-1, .rt-IconButton.rt-r-size-1) {
+    font-size: var(--font-size-2);
+    line-height: var(--line-height-2);
+    letter-spacing: var(--letter-spacing-2);
+}
+
+.mmc-ui-text-size-2 .rt-BaseButton:where(.rt-r-size-1) {
+    --base-button-classic-active-padding-top: 2px;
+    --base-button-height: var(--space-6);
+    border-radius: max(var(--radius-2), var(--radius-full));
+}
+
+.mmc-ui-text-size-2 .rt-Button:where(.rt-r-size-1):where(:not(.rt-variant-ghost)) {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+}
+
+.mmc-ui-text-size-2 .rt-Button:where(.rt-r-size-1):where(.rt-variant-ghost) {
+    --button-ghost-padding-x: var(--space-2);
+    --button-ghost-padding-y: var(--space-2);
+}
+
+/* Touch: cards in scrollable lists flash accent/focus on tap; keep scroll from feeling "clicky". */
+@media (pointer: coarse) {
+    .rt-Card {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .rt-Card:focus {
+        outline: none;
+    }
+
+    .rt-Card:focus-visible {
+        outline: none;
+    }
+
+    .rt-Card:focus-visible::before,
+    .rt-Card:active::before {
+        background-image: none !important;
+    }
+
+    .rt-Card:active::after {
+        transition: none !important;
+    }
+}

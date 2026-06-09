@@ -1,0 +1,28 @@
+{
+  "name": "@magical-mixing/virtual-devices",
+  "version": "1.0.0",
+  "description": "Virtual digital mixers.",
+  "type": "module",
+  "main": "./index.js",
+  "scripts": {
+    "x18-capture": "node ./x18/capture/index.js 192.168.1.21 10024",
+    "x18": "npx nodemon ./x18/run/native.js",
+    "xr12": "npx nodemon ./xr12/run/native.js"
+  },
+  "keywords": [
+    "virtual",
+    "digital",
+    "mixer",
+    "console",
+    "behringer",
+    "x18"
+  ],
+  "author": {
+    "name": "Matías Barrios",
+    "email": "matias@magicalmixingconsole.com"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@magical-mixing/mixers": "^1.0.0"
+  }
+}

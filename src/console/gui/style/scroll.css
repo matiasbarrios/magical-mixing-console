@@ -1,0 +1,92 @@
+/* Native scrollbars styled like Radix Themes ScrollArea (Chrome / Electron). */
+
+/* No rubber-band / pull-to-refresh chaining on mobile WebViews when at scroll edges. */
+.mmc-scroll-y,
+.mmc-scroll-x,
+.rt-ScrollAreaViewport {
+    overscroll-behavior: none;
+}
+
+.mmc-scroll-y {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding-left: var(--space-1);
+    padding-right: var(--space-1);
+
+    --mmc-scrollbar-size: var(--space-1);
+    --mmc-scrollbar-radius: max(var(--radius-1), var(--radius-full));
+    --mmc-scrollbar-track-margin: var(--space-1);
+}
+
+.mmc-scroll-y::-webkit-scrollbar {
+    width: var(--mmc-scrollbar-size);
+}
+
+.mmc-scroll-y::-webkit-scrollbar-track {
+    background-color: var(--gray-a3);
+    border-radius: var(--mmc-scrollbar-radius);
+    margin: var(--mmc-scrollbar-track-margin) 0;
+}
+
+.mmc-scroll-y::-webkit-scrollbar-thumb {
+    background-color: var(--gray-a8);
+    border-radius: var(--mmc-scrollbar-radius);
+    transition: background-color 100ms;
+}
+
+.mmc-scroll-y::-webkit-scrollbar-thumb:hover {
+    background-color: var(--gray-a9);
+}
+
+.mmc-scroll-y::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+.mmc-scroll-y.mmc-scroll-y-always {
+    overflow-y: scroll;
+}
+
+.mmc-scroll-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    scrollbar-gutter: stable;
+    padding-top: var(--space-1);
+    padding-bottom: var(--space-1);
+
+    --mmc-scrollbar-size: var(--space-1);
+    --mmc-scrollbar-radius: max(var(--radius-1), var(--radius-full));
+    --mmc-scrollbar-track-margin: var(--space-1);
+}
+
+.mmc-scroll-x-fill {
+    position: absolute;
+    inset: 0;
+}
+
+.mmc-scroll-x::-webkit-scrollbar {
+    height: var(--mmc-scrollbar-size);
+}
+
+.mmc-scroll-x::-webkit-scrollbar-track {
+    background-color: var(--gray-a3);
+    border-radius: var(--mmc-scrollbar-radius);
+    margin: 0 var(--mmc-scrollbar-track-margin);
+}
+
+.mmc-scroll-x::-webkit-scrollbar-thumb {
+    background-color: var(--gray-a8);
+    border-radius: var(--mmc-scrollbar-radius);
+    transition: background-color 100ms;
+}
+
+.mmc-scroll-x::-webkit-scrollbar-thumb:hover {
+    background-color: var(--gray-a9);
+}
+
+.mmc-scroll-x::-webkit-scrollbar-corner {
+    background: transparent;
+}
