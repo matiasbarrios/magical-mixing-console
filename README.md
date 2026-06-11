@@ -1,5 +1,5 @@
-<div align="right">
-  <img src="https://magicalmixingconsole.com/icon.png" width="64" alt="Magical Mixing Console icon">
+<div align="center">
+  <img src="https://magicalmixingconsole.com/icon.png" width="128" alt="Magical Mixing Console icon">
 </div>
 
 # Magical Mixing Console
