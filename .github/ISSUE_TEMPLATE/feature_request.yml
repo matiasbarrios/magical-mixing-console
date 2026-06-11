@@ -1,0 +1,62 @@
+name: Feature request
+description: A scoped improvement or new capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Early ideas and “support mixer X” proposals work better in [Ideas Discussions](https://github.com/matiasbarrios/magical-mixing-console/discussions/categories/ideas) first.
+
+        Open an issue when the scope is clear enough to implement or track.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What pain point does this solve for developers or users?
+      placeholder: "When developing a new driver, it's hard to ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should change? API shape, UI, driver, protocol?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Primary layer
+      options:
+        - mixers / drivers (OSC, new desk family)
+        - mixers-react (hooks)
+        - GUI
+        - Electron
+        - Capacitor / mobile
+        - virtual-devices
+        - Docs / tooling
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope notes
+      options:
+        - label: This may require changes in `src/mixers/drivers/`
+        - label: This affects OSC/UDP protocol handling
+        - label: This needs UI work in `src/console/gui/`
+        - label: I am willing to open a PR for this
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you thought about
+    validations:
+      required: false

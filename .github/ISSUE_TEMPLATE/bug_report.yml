@@ -1,0 +1,100 @@
+name: Bug report
+description: Something broken in the app, drivers, or build
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Questions and setup help belong in [Q&A Discussions](https://github.com/matiasbarrios/magical-mixing-console/discussions/categories/q-a), not here.
+
+        Include steps to reproduce and the platform you tested on.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Electron (desktop)
+        - Capacitor (Android)
+        - Capacitor (iOS)
+        - mixers library only (no UI)
+        - virtual-devices
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: App version from package.json, or git commit SHA
+      placeholder: "2.1.0 or abc1234"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mixer
+    attributes:
+      label: Mixer (if applicable)
+      options:
+        - Not applicable / build-only
+        - Virtual X18
+        - X18 / XR18 / MR18 (or v2)
+        - XR16 (or v2)
+        - XR12 / MR12 (or v2)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps from a clean start, if possible
+      placeholder: |
+        1. npm run electron-dev
+        2. Connect to virtual X18 at ...
+        3. Open bus 3 compressor
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Console output, Electron devtools, Wireshark notes, or screenshots
+      render: shell
+    validations:
+      required: false
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Suspected layer (optional)
+      options:
+        - Unknown
+        - GUI (`src/console/gui`)
+        - mixers-react
+        - mixers / drivers
+        - Electron platform
+        - Capacitor platform
+        - virtual-devices
+        - Build / webpack
+    validations:
+      required: false

@@ -1,6 +1,10 @@
+<div align="right">
+  <img src="https://magicalmixingconsole.com/icon.png" width="64" alt="Magical Mixing Console icon">
+</div>
+
 # Magical Mixing Console
 
-Desktop and mobile app for controlling **Behringer X Air** and **M Air** digital mixers.
+Open-source mixer control for **Behringer X Air** and **M Air** digital mixers — React UI, Electron/Capacitor, OSC/UDP.
 
 If looking for a Node.js library for communicating with X Air devices only, check out [magical-mixers](https://github.com/matiasbarrios/magical-mixers).
 
@@ -91,6 +95,12 @@ Full index: **[docs/README.md](docs/README.md)**
 | [docs/gui/GUI.md](docs/gui/GUI.md) | GUI conventions |
 | [docs/gui/LIST_PATTERN.md](docs/gui/LIST_PATTERN.md) | List UI patterns |
 | [docs/TESTING.md](docs/TESTING.md) | Automated tests |
+
+## Contributing
+
+Questions and architecture help → [Discussions](https://github.com/matiasbarrios/magical-mixing-console/discussions). Bugs and scoped work → [Issues](https://github.com/matiasbarrios/magical-mixing-console/issues/new/choose).
+
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for setup, layer guide, tests, and PR notes.
 
 ## License
 
