@@ -2,11 +2,12 @@
 import { useCallback, useState } from 'react';
 import { Flex, IconButton } from '@radix-ui/themes';
 import { useBusGateOn, useBusGateReset, useDevice } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../../components/base/resetIcon';
 import { useLanguage } from '../../../../components/language';
 import { useUiSize } from '../../../../components/theme';
 import { ActiveToggleButton } from '../../../../components/base/activeToggleButton';
-import { PresetContext, PresetSave, PresetsMenu } from './presets';
+import { PresetProvider, PresetSave, PresetsMenu } from './presets';
 
 
 // Internal
@@ -33,6 +34,7 @@ const Reset = ({ busId }) => {
             onClick={reset}
             disabled={disabled}
             aria-label={t('Reset')}
+            {...focusRoamAttrs(RESET_ROAM_ID)}
         >
             <ResetIcon />
         </IconButton>
@@ -48,13 +50,13 @@ export default ({ busId }) => {
     }, []);
 
     return (
-        <PresetContext>
+        <PresetProvider>
             <Flex align="start" gapX="2" gapY="2" wrap="wrap" width="100%">
                 <On busId={busId} />
                 <PresetsMenu busId={busId} doPresetSaveOpen={doPresetSaveOpen} />
                 <Reset busId={busId} />
             </Flex>
             <PresetSave busId={busId} open={presetSaveOpen} onOpenChange={setPresetSaveOpen} />
-        </PresetContext>
+        </PresetProvider>
     );
 };

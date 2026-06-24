@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { MagicWandIcon } from '@radix-ui/react-icons';
 import { useDevice } from '@magical-mixing/mixers-react';
 import { HeaderIconButton } from '../../components/layout/header/iconButton';
+import { useTheme } from '../../components/theme';
 import { ICON_STYLE } from '../../helpers/values';
 import { noPointerDown } from '../../helpers/behaviour';
 import { useSetupWizard } from './context';
@@ -11,6 +12,7 @@ import { useSetupWizard } from './context';
 // Exported
 export default () => {
     const { isOnline, isHalted, disabled } = useDevice();
+    const { headerWizardWandShown } = useTheme();
     const { wizardOpen, openWizard, closeWizard } = useSetupWizard();
 
     const toggleOpen = useCallback(() => {
@@ -18,7 +20,7 @@ export default () => {
         else openWizard();
     }, [wizardOpen, closeWizard, openWizard]);
 
-    if (!isOnline || isHalted) return null;
+    if (!isOnline || isHalted || !headerWizardWandShown) return null;
 
     return (
         <HeaderIconButton

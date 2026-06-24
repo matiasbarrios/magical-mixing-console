@@ -1,12 +1,12 @@
 // Requirements
 import { useContext } from 'react';
 import { useHasGetSet } from '../../helpers/hasGetSet';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useAutomixOn = (automixId) => {
-    const { features: { automix: { on } } } = useContext(DeviceContextRoot);
+    const { features: { automix: { on } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, automixId);
 

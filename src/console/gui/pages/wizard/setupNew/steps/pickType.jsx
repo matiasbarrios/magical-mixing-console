@@ -47,7 +47,7 @@ const TypeOption = ({ type, selected, onSelect }) => {
     return (
         <Button
             size={textSize}
-            variant="soft"
+            variant="ghost"
             color={color}
             onClick={onClick}
             style={{

@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { hasCall, hasGetOnlyOnce } from '../../helpers/feature';
 import { useChanges, defaultOption } from '../../helpers/changes';
 
@@ -71,7 +71,7 @@ export const inputsAssignmentsReset = (changeSchedule, bus, output) => {
 
 
 export const useInputBusAssignmentsReset = (inputId) => {
-    const { features: { bus } } = useContext(DeviceContextRoot);
+    const { features: { bus } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -85,7 +85,7 @@ export const useInputBusAssignmentsReset = (inputId) => {
 
 
 export const useInputAssignmentsResetAll = () => {
-    const { features: { bus, output } } = useContext(DeviceContextRoot);
+    const { features: { bus, output } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {
@@ -99,7 +99,7 @@ export const useInputAssignmentsResetAll = () => {
 
 
 export const useInputResetAll = () => {
-    const { features: { bus, input, output } } = useContext(DeviceContextRoot);
+    const { features: { bus, input, output } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

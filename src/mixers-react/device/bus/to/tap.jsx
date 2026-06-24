@@ -1,13 +1,13 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '../..';
+import { DeviceContext } from '../..';
 import { useOptions } from '../../../helpers/options';
 import { useHasGetSet } from '../../../helpers/hasGetSet';
 
 
 // Exported
 export const useBusToTap = (busIdFrom, busIdTo) => {
-    const { features: { bus: { to: { tap } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { to: { tap } } } } = useContext(DeviceContext);
 
     const ids = useMemo(() => [busIdFrom, busIdTo], [busIdFrom, busIdTo]);
     const [has, value, set] = useHasGetSet(tap, ids);

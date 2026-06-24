@@ -7,7 +7,7 @@ import { LetterIconButton } from '../../../components/base/letterIconButton';
 
 // Exported
 export default ({
-    busId, dense = false, stopPropagation = false,
+    busId, dense = false, stopPropagation = false, focusRoam = 'solo',
 }) => {
     const { t } = useLanguage();
     const { disabled } = useDevice();
@@ -32,6 +32,7 @@ export default ({
             aria-pressed={value}
             dense={dense}
             stopPropagation={stopPropagation}
+            focusRoam={focusRoam}
         />
     );
 };

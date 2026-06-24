@@ -53,6 +53,7 @@ const Pan = ({ busIdFrom, busIdTo, readOnly }) => {
                 orientation="horizontal"
                 disabled={disabled}
                 readOnly={readOnly}
+                focusRoam="pan"
             />
             {!readOnly && (
                 <Dialog.Root open={opened} onOpenChange={setOpened}>

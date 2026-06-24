@@ -109,6 +109,7 @@ export const Knob = ({
     formatValue,
     ariaLabel,
     orientation = 'vertical',
+    focusRoam,
 }) => {
     const { knobSizePx } = useUiSize();
     const size = knobSizePx;
@@ -483,6 +484,7 @@ export const Knob = ({
             className="mmc-knob"
             {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
             {...(keyboardFocus && isInteractive ? { 'data-keyboard-focus': '' } : {})}
+            {...(focusRoam ? { 'data-focus-roam': focusRoam } : {})}
             style={containerStyleFinal}
             data-accent-color={color}
             {...interactionProps}

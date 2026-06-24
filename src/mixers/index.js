@@ -1,7 +1,7 @@
 // Requirements
 import { lanSetProvider } from './helpers/lan.js';
 import { fromBuffer, toBuffer } from './helpers/osc.js';
-import { udpOSCSetProvider } from './controllers/udpOSC/index.js';
+import { udpOSCSetProvider, udpOSCSetCacheConfig } from './controllers/udpOSC/index.js';
 
 
 // Exported
@@ -14,15 +14,27 @@ export const oscToBuffer = toBuffer;
 export { searchNew } from './devices/search.js';
 
 
-export const mixersInitialize = (platform) => {
+export const mixersInitialize = ({
+    getLANBroadcastAddress,
+    getLocalAddressForIP,
+    udpSocketOpen,
+    udpSocketClose,
+    udpMessageSend,
+    onUDPMessageReceived,
+    cacheMaxEntries,
+}) => {
+
     lanSetProvider({
-        getLANBroadcastAddress: platform.getLANBroadcastAddress,
-        getLocalAddressForIP: platform.getLocalAddressForIP,
+        getLANBroadcastAddress,
+        getLocalAddressForIP,
     });
     udpOSCSetProvider({
-        udpSocketOpen: platform.udpSocketOpen,
-        udpSocketClose: platform.udpSocketClose,
-        udpMessageSend: platform.udpMessageSend,
-        onUDPMessageReceived: platform.onUDPMessageReceived,
+        udpSocketOpen,
+        udpSocketClose,
+        udpMessageSend,
+        onUDPMessageReceived,
     });
+    if (cacheMaxEntries != null) {
+        udpOSCSetCacheConfig({ maxEntries: cacheMaxEntries });
+    }
 };

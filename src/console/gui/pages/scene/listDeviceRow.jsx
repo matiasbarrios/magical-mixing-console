@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import {
     Button, Flex, IconButton,
 } from '@radix-ui/themes';
-import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
 import {
     useDevice, useSceneActive, useSceneErase, useSceneLoad, useSceneSave,
 } from '@magical-mixing/mixers-react';
@@ -11,10 +11,10 @@ import { Alert } from '../../components/base/alert';
 import { useLanguage } from '../../components/language';
 import { useUiSize } from '../../components/theme';
 import { ICON_STYLE } from '../../helpers/values';
+import { useActiveDeviceScene } from '../../components/activeScene';
 import ViewScene from './view/openScene';
 import LoadDialog from './loadDialog';
 import SaveDeviceDialog from './saveDeviceDialog';
-import Edit from './view/edit';
 import { useSceneFinalName } from './view/name';
 
 
@@ -28,24 +28,25 @@ export default ({ sceneId }) => {
     const { erase } = useSceneErase(sceneId);
     const { load } = useSceneLoad(sceneId);
     const { save } = useSceneSave(sceneId);
+    const { setLoadedScene } = useActiveDeviceScene();
 
     const occupied = useMemo(() => (activeHas && activeValue)
         || !activeHas, [activeHas, activeValue]);
 
     const doLoad = useCallback(() => {
         load();
-    }, [load]);
+        setLoadedScene(sceneId);
+    }, [load, setLoadedScene, sceneId]);
 
     const doSave = useCallback((sceneName) => {
         save(sceneName);
-    }, [save]);
+        setLoadedScene(sceneId);
+    }, [save, setLoadedScene, sceneId]);
 
     const [loadOpened, setLoadOpened] = useState(false);
     const [saveOpened, setSaveOpened] = useState(false);
-    const [editOpened, setEditOpened] = useState(false);
     const loadShow = useCallback(() => setLoadOpened(true), []);
     const saveShow = useCallback(() => setSaveOpened(true), []);
-    const editShow = useCallback(() => setEditOpened(true), []);
 
     const stopRowOpen = useCallback((e) => {
         e.stopPropagation();
@@ -92,19 +93,6 @@ export default ({ sceneId }) => {
                         { t('Save') }
                     </Button>
                     {occupied && (
-                        <IconButton
-                            size={textSize}
-                            variant="soft"
-                            radius="full"
-                            color="gray"
-                            disabled={disabled}
-                            onClick={editShow}
-                            aria-label={t('Rename')}
-                        >
-                            <Pencil1Icon style={ICON_STYLE} />
-                        </IconButton>
-                    )}
-                    {occupied && (
                         <Alert onAccept={erase} title={`${t('Erase')} ${name}`} accept={t('Erase')}>
                             {doOpen => (
                                 <IconButton
@@ -137,13 +125,6 @@ export default ({ sceneId }) => {
                     onOpenChange={setSaveOpened}
                     defaultName={name}
                     onAccept={doSave}
-                />
-            )}
-            {editOpened && (
-                <Edit
-                    sceneId={sceneId}
-                    open={editOpened}
-                    onOpenChange={setEditOpened}
                 />
             )}
         </>

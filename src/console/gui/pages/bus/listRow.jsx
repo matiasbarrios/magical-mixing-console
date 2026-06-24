@@ -3,12 +3,13 @@ import { useCallback, useMemo } from 'react';
 import { Flex, IconButton, Text } from '@radix-ui/themes';
 import { DragHandleDots2Icon, Pencil1Icon } from '@radix-ui/react-icons';
 import { useDevice } from '@magical-mixing/mixers-react';
+import { EDIT_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import { useLanguage } from '../../components/language';
 import { ICON_STYLE } from '../../helpers/values';
 import { useUiSize } from '../../components/theme';
 import {
     SourceIcon, SourceMute, SourceSolo, SourceViewBus,
-} from './view/fromTo/openFrom';
+} from './view/fromTo/from/openFrom';
 import Level from './view/level';
 
 
@@ -20,7 +21,7 @@ const dragButtonStyle = {
 
 const LevelTrackStart = ({ busId, label }) => (
     <Flex align="center" gapX="1" wrap="nowrap">
-        <SourceIcon busIdFrom={busId} hideIdentifier size="1" />
+        <SourceIcon busIdFrom={busId} hideIdentifier singular size="1" />
         <Text size="1" color="gray" wrap="nowrap">
             { label }
         </Text>
@@ -43,6 +44,7 @@ const QuickActions = ({
             disabled={disabled}
             onClick={onEdit}
             aria-label={editLabel}
+            {...focusRoamAttrs(EDIT_ROAM_ID)}
         >
             <Pencil1Icon style={ICON_STYLE} />
         </IconButton>
@@ -115,7 +117,7 @@ export default ({
                     onPointerDown={stopRowOpen}
                     onClick={stopRowOpen}
                 >
-                    <SourceViewBus busIdFrom={busId} />
+                    <SourceViewBus busIdFrom={busId} singular />
                 </Flex>
                 <Flex
                     flexGrow="1"

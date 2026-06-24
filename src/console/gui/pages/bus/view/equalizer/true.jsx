@@ -9,6 +9,7 @@ import {
 } from '@magical-mixing/mixers-react';
 import { scaleLinear } from 'd3';
 import DecimalInput from '../../../../components/base/decimalInput';
+import ConditionalScrollX from '../../../../components/base/conditionalScrollX';
 import DialogHeader from '../../../../components/base/dialogHeader';
 import { useLanguage } from '../../../../components/language';
 import { Meter, MeterSlider } from '../../../../components/base/meterSlider';
@@ -147,11 +148,11 @@ const True = ({ busId, graph }) => {
 const TrueOptions = ({ busId, height }) => {
     const { options } = useBusEqualizerTrueOptions(busId);
     return (
-        <div className="mmc-scroll-x mmc-scroll-x-fill">
+        <ConditionalScrollX>
             <Flex gapX="1" height={height} px="1" pb="2" width="max-content" align="stretch">
                 {options.map(o => <True key={o.id} busId={busId} graph={o} />)}
             </Flex>
-        </div>
+        </ConditionalScrollX>
     );
 };
 

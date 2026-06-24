@@ -8,17 +8,19 @@ import { DotsVerticalIcon, LinkBreak2Icon } from '@radix-ui/react-icons';
 import { useDevice } from '@magical-mixing/mixers-react';
 import Avatar from '../../../devices/avatar';
 import { useLanguage } from '../../../language';
+import { useTheme } from '../../../theme';
 import { useDevices } from '../../../devices/context';
 import { noPointerDown } from '../../../../helpers/behaviour';
 import { ICON_STYLE } from '../../../../helpers/values';
 import { HeaderIconButton } from '../iconButton';
 import Buses from './buses';
+import Wizard from './wizard';
 import Other from './other';
 import Groups from './groups';
-import Footer from './footer';
 import App from './app';
 import Help from './help';
 import Reset from './reset';
+import Scenes from './scenes';
 import { DropdownMenuContent, DropdownMenuSubContent } from './../../../base/dropdownMenuContent';
 
 
@@ -47,6 +49,7 @@ export default () => {
         devices, focused, focus, deviceRemove,
     } = useDevices();
     const { model, name, disabled } = useDevice();
+    const { headerWizardWandShown } = useTheme();
     const { t } = useLanguage();
 
     const focusedUnselect = useCallback(() => {
@@ -107,16 +110,17 @@ export default () => {
                         ))}
                     </DropdownMenuSubContent>
                 </DropdownMenu.Sub>
+                {!headerWizardWandShown && <Wizard />}
                 <DropdownMenu.Separator />
                 <Buses />
                 <DropdownMenu.Separator />
-                <Groups />
-                <DropdownMenu.Separator />
                 <Other />
                 <DropdownMenu.Separator />
-                <Footer />
-                <App />
+                <Groups />
                 <DropdownMenu.Separator />
+                <Scenes />
+                <DropdownMenu.Separator />
+                <App />
                 <Help />
             </DropdownMenuContent>
         </DropdownMenu.Root>

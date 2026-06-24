@@ -1,12 +1,12 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
 import { useBusMuteSetMany, useMgMute } from '@magical-mixing/mixers-react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Internal
 const useFallbackMute = (mgId) => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
 
     const busesIds = useMemo(() => {
         const r = [];
@@ -52,7 +52,7 @@ const DeviceMute = ({ mgId, children }) => {
 
 // Exported
 export const FallbackMgMute = ({ mgId, children }) => {
-    const { mgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions } = useContext(FallbackContext);
     if (!mgOptions.find(o => o.id === mgId)) return <DeviceMute mgId={mgId}>{children}</DeviceMute>;
     return <FallbackMute mgId={mgId}>{children}</FallbackMute>;
 };

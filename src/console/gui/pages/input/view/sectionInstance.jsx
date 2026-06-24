@@ -7,6 +7,7 @@ import { useLanguage } from '../../../components/language';
 import { ucFirst } from '../../../helpers/format';
 import SectionInstanceDropdown from '../../../components/layout/headerTrail/instance/dropdown';
 import { DropdownMenuSubContent } from '../../../components/base/dropdownMenuContent';
+import { useUiSize } from '../../../components/theme';
 import { useInputNameTranslated } from './name';
 
 
@@ -51,6 +52,7 @@ const InputsPerType = ({ type, inputId, onSelect }) => {
 export default ({ inputId, color = 'gray' }) => {
     const { t } = useLanguage();
     const navigate = useNavigate();
+    const { textSize } = useUiSize();
     const { options, types } = useInputOptions();
     const { name } = useInputNameTranslated(inputId);
 
@@ -60,7 +62,7 @@ export default ({ inputId, color = 'gray' }) => {
     const onSelect = useCallback(id => () => navigate(`/input/${id}`), [navigate]);
     const goToList = useCallback(() => navigate('/input/list'), [navigate]);
 
-    const label = <Text size="2" color={color}>{ name }</Text>;
+    const label = <Text size={textSize} color={color}>{ name }</Text>;
 
     return (
         <SectionInstanceDropdown color={color} label={label} hasMenu>

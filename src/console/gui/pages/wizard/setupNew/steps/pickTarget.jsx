@@ -33,7 +33,7 @@ const BusOption = ({ bus, selected, onSelect }) => {
     return (
         <Button
             size={textSize}
-            variant="soft"
+            variant="outline"
             color={selected ? 'blue' : 'gray'}
             onClick={onClick}
             style={{ width: '100%' }}

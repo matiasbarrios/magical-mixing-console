@@ -28,7 +28,7 @@ Parameter/settings rows (`LabelControlTable.Row` for a single control): bus inpu
 
 ### Control surface (`/automix/list`)
 
-Not a filterable entity list. Uses the same list **shell** as route-level pages (`ListPageShell`, `ListFooter`) but replaces `ListFilterBar` with a centered **group strip** (`strip.jsx`: On/Lock per automix group). Rows (`busRow.jsx` in `buses.jsx` / `ListStack`) are a bus × group assignment matrix with optional weight sliders — not navigation list rows.
+Not a filterable entity list. Uses the same list **shell** as route-level pages (`ListPageShell`). A **group strip** (`strip.jsx`: On/Lock per automix group) shares the top row with global Reset in `ListFilterActions`. Rows (`busRow.jsx` in `buses.jsx` / `ListStack`) are a bus × group assignment matrix with optional weight sliders — not navigation list rows.
 
 ---
 
@@ -59,30 +59,20 @@ Also used: `ICON_SIZE`, `QUICK_BUTTON_STYLE` for action buttons (S/M letters sam
 1. **No `Card`** wrapping the list or rows.
 2. **Separation:** gap only (`ListStack`). No `Separator` between rows.
 3. **All entity lists** use `ListStack` — single column, flex stack.
-4. **No card wrapper** around list content. `ListFilterBar` is OK for filter row only (see `components/layout/list/filterBar.jsx`). Footer actions use `ListFooter` (see `components/layout/list/footer.jsx`).
+4. **No card wrapper** around list content. `ListFilterBar` is OK for filter row only (see `components/layout/list/filterBar.jsx`).
 
 ### Header (when filter exists)
 
 ```
-[ TextFieldErasable filter — flexGrow ]  [ bulk ops on filtered ]
+[ TextFieldErasable filter — flexGrow ]  [ bulk ops ] [ Reset ] [ Add ]
 ```
 
-- Bulk ops (e.g. Apply to filtered, Edit filtered) stay **top-right**, same row as filter.
+- Bulk ops (e.g. Apply to filtered, Edit filtered) and global Reset/Add stay **top-right**, same row as filter (`ListFilterActions` → `actionGroup.jsx`).
 - Filter uses `TextFieldErasable`, `debounceTime={250}`.
-
-### Footer (when Reset / Add apply)
-
-Use shared `ListFooter` with `reset` and/or `add` slots:
-
-```
-                                    [ Reset ] [ Add ]
-```
-
-- Always `justify="end"` (handled by `ListFooter`).
-- Order: **Reset left of Add**.
+- Order in the action group: bulk ops first, then **Reset left of Add** when both exist.
 - Reset: `IconButton size="1" variant="soft" color="gray" radius="full"` + `ResetIcon`, wrapped in `Alert` when destructive.
 - Add: same button style + `PlusIcon`, or `DropdownMenuTrigger` + menu of items to add (from/to pattern).
-- Reset menu with sub-options (bus list): footer dropdown, same icon style.
+- Reset menu with sub-options (bus list): dropdown in the filter bar, same icon style.
 
 ### Row anatomy (strip)
 
@@ -102,7 +92,7 @@ Use shared `ListFooter` with `reset` and/or `add` slots:
 ### Embedded assignment lists
 
 - Show **only assigned / in-mix** rows (Evaluator pattern, like from/to).
-- Footer with Reset + Add (dropdown of items not yet assigned).
+- Footer with Reset + Add (dropdown of items not yet assigned) at the bottom of the scroll area.
 
 ### Drag and drop
 
@@ -150,11 +140,11 @@ Use shared `ListFooter` with `reset` and/or `add` slots:
 ## File map
 
 ```
-components/layout/list/   filterBar.jsx, footer.jsx, filterEmpty.jsx, stack.jsx, shell.jsx
+components/layout/list/   filterBar.jsx, filterEmpty.jsx, stack.jsx, shell.jsx
 pages/bus/list.jsx         listRow.jsx
 pages/bus/view/fromTo/     from.jsx, fromRow.jsx, to.jsx, toRow.jsx
 pages/input/               list.jsx, listRow.jsx, view/openInput.jsx, view/buses.jsx, busRow.jsx, view/outputs.jsx, outputRow.jsx
-pages/output/              list.jsx, listRow.jsx, view/index.jsx, view/tabs.jsx, view/strip.jsx, view/general.jsx, view/openOutput.jsx
+pages/output/              list.jsx, listRow.jsx, view/index.jsx, view/tabs.jsx, view/generalTop.jsx, view/generalRight.jsx, view/general.jsx, view/openOutput.jsx
 pages/fx/                  list.jsx, listRow.jsx, view/openFx.jsx
 pages/dca/                 list.jsx, listRow.jsx, view/openDca.jsx, view/buses.jsx, busRow.jsx
 pages/mg/                  list.jsx, listRow.jsx, view/openMg.jsx, view/buses.jsx, busRow.jsx

@@ -6,7 +6,8 @@ import {
     Button, Dialog, Flex, IconButton, Text,
 } from '@radix-ui/themes';
 import { PlusIcon } from '@radix-ui/react-icons';
-import { SceneAppContext, useDevice, useSceneApp } from '@magical-mixing/mixers-react';
+import { SceneAppProvider, useDevice, useSceneApp } from '@magical-mixing/mixers-react';
+import { ADD_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import { ICON_STYLE } from '../../helpers/values';
 import ListStack from '../../components/layout/list/stack';
 import { useLanguage } from '../../components/language';
@@ -16,12 +17,11 @@ import { useListHeaderTrail } from '../../components/layout/headerTrail/hooks/us
 import TextFieldErasable from '../../components/base/textFieldErasable';
 import { ListFilterBar, ListFilterTitle, ListFilterActions } from '../../components/layout/list/filterBar';
 import ListFilterEmpty from '../../components/layout/list/filterEmpty';
-import ListFooter from '../../components/layout/list/footer';
 import { useVault } from '../../components/vault';
 import DialogHeader from '../../components/base/dialogHeader';
 import {
-    ApplyProgressDialog, formatProgressEta, useGlobalError, useProgressEta,
-} from '../../components/global/callout';
+    ApplyProgressDialog, formatProgressEta, useProgressEta,
+} from '../../components/base/applyProgressDialog';
 import {
     Label, LabelControlTable, LABEL_CONTROL_CLASS, LABEL_WIDTH,
 } from '../../components/base/labelControlTable';
@@ -129,26 +129,23 @@ const SceneSave = ({ open, onOpenChange }) => {
 };
 
 
-const ListFooterActions = ({ onAdd, disabled }) => {
+const ListToolbarActions = ({ onAdd, disabled }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
 
     return (
-        <ListFooter
-            add={(
-                <IconButton
-                    variant="soft"
-                    color="gray"
-                    size={textSize}
-                    radius="full"
-                    onClick={onAdd}
-                    disabled={disabled}
-                    aria-label={t('Save as new')}
-                >
-                    <PlusIcon style={ICON_STYLE} />
-                </IconButton>
-            )}
-        />
+        <IconButton
+            variant="soft"
+            color="gray"
+            size={textSize}
+            radius="full"
+            onClick={onAdd}
+            disabled={disabled}
+            aria-label={t('Save as new')}
+            {...focusRoamAttrs(ADD_ROAM_ID)}
+        >
+            <PlusIcon style={ICON_STYLE} />
+        </IconButton>
     );
 };
 
@@ -156,10 +153,11 @@ const ListFooterActions = ({ onAdd, disabled }) => {
 const List = () => {
     const { disabled } = useDevice();
     const { t } = useLanguage();
+    const { textSize } = useUiSize();
     const {
         vaults, vaultErase, vaultLoad, vaultReplace,
     } = useVault('scene');
-    const { globalErrorEdit } = useGlobalError();
+    const [loadError, setLoadError] = useState(null);
     const { capture, load, running } = useSceneApp();
 
     const [filterBy, setFilterBy] = useState('');
@@ -182,21 +180,22 @@ const List = () => {
 
     const [loading, setLoading] = useState(false);
     const doSceneLoad = useCallback(vaultId => async () => {
+        setLoadError(null);
         setLoading(true);
         try {
             const v = await vaultLoad(vaultId);
             if (!v || typeof v !== 'object') {
-                globalErrorEdit(t('Could not read this scene. The file may be damaged. Save over it to replace it.'));
+                setLoadError(t('Could not read this scene. The file may be damaged. Save over it to replace it.'));
                 setLoading(false);
                 return;
             }
             load(v, () => { setLoading(false); });
         } catch (error) {
             console.error('Scene load failed', error);
-            globalErrorEdit(t('Could not load this scene.'));
+            setLoadError(t('Could not load this scene.'));
             setLoading(false);
         }
-    }, [vaultLoad, load, globalErrorEdit, t]);
+    }, [vaultLoad, load, t]);
 
     const doSceneSaveOver = useCallback(vaultId => async () => {
         capture(async (values) => {
@@ -218,8 +217,15 @@ const List = () => {
                             width="100%"
                         />
                     </ListFilterTitle>
-                    <ListFilterActions />
+                    <ListFilterActions>
+                        <ListToolbarActions onAdd={doSceneSaveOpen} disabled={disabled || running} />
+                    </ListFilterActions>
                 </ListFilterBar>
+                {!!loadError && (
+                    <Text size={textSize} color="red" mb="3">
+                        { loadError }
+                    </Text>
+                )}
                 <ListStack>
                     {filtered.map(v => (
                         <ListAppRow
@@ -235,7 +241,6 @@ const List = () => {
                     ))}
                     <ListFilterEmpty show={!!filterBy.trim() && filtered.length === 0} />
                 </ListStack>
-                <ListFooterActions onAdd={doSceneSaveOpen} disabled={disabled || running} />
             </ListPageShell>
             <SceneSave open={sceneSaveOpen} onOpenChange={setSceneSaveOpen} />
             <CaptureDialog />
@@ -254,7 +259,7 @@ const List = () => {
 
 // Exported
 export default () => (
-    <SceneAppContext>
+    <SceneAppProvider>
         <List />
-    </SceneAppContext>
+    </SceneAppProvider>
 );

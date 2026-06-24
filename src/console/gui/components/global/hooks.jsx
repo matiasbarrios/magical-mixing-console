@@ -3,13 +3,11 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { isMobile, platformGet } from '../../platform';
 import { useTheme } from '../theme';
-import { useGlobalError } from './callout';
 
 
 // Exported
 export default ({ children }) => {
     const { themeCurrent } = useTheme();
-    const { globalErrorEdit } = useGlobalError();
     const navigate = useNavigate();
 
     // Colors settings
@@ -39,15 +37,6 @@ export default ({ children }) => {
             applyColorsToBar();
         }
     }, [themeCurrent]);
-
-    // UDP errors as global ones
-    useEffect(() => {
-        const unlistenUdpError = platformGet().onUDPError(globalErrorEdit);
-        return () => {
-            if (!unlistenUdpError) return;
-            unlistenUdpError();
-        };
-    }, [globalErrorEdit]);
 
     // Back button on desktop
     useEffect(() => {

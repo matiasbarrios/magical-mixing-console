@@ -4,7 +4,7 @@ import { Usb } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useDevice } from '@magical-mixing/mixers-react';
 import { useUiSize } from '../../theme';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 import Accordion from '../../icons/accordion';
 import AcousticGuitar from '../../icons/acousticGuitar';
 import AcousticBass from '../../icons/acousticBass';
@@ -148,7 +148,7 @@ export { iconOptions };
 
 
 export const useFallbackIcons = (type) => {
-    const { icons, setIcons } = useContext(FallbackContextRoot);
+    const { icons, setIcons } = useContext(FallbackContext);
 
     const iconGet = useCallback(id => icons[`${type}-${id}`], [icons, type]);
 

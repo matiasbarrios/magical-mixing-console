@@ -47,7 +47,6 @@ export default ({ busId, color = 'gray' }) => {
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
             <DropdownMenuTrigger
                 square
-                size="2"
                 variant="ghost"
                 color={color}
                 onClick={toggleOpened}

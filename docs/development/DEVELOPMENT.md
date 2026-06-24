@@ -7,6 +7,8 @@ Guide to clone the repo, install dependencies, and run the app on each platform.
 ## Requirements
 
 - **Node.js 24**
+- **git**
+- **npm** (bundled with Node)
 
 Additional tools depending on what you build:
 
@@ -91,6 +93,8 @@ Before building for mobile:
 
 ## Code layers
 
+Do not import GUI from `mixers`. Summary:
+
 | Layer | Path |
 |-------|------|
 | UI | `src/console/gui/` |
@@ -112,7 +116,13 @@ The root declares `"workspaces": ["src/*"]`:
 | `src/console/` | `@magical-mixing/console` | App (GUI + electron/capacitor) |
 | `src/virtual-devices/` | `@magical-mixing/virtual-devices` | Simulated X18 for dev |
 
-Note that `node_modules/@magical-mixing/mixers` is the monorepo copy of the public repo [magical-mixers](https://github.com/matiasbarrios/magical-mixers).
+After `npm install`, `node_modules/@magical-mixing/mixers` is a **symlink** to `src/mixers`. Edits under `src/mixers/` are picked up immediately without `npm update`.
+
+The app imports `@magical-mixing/mixers` / `mixers-react` in code; do not import `src/mixers/...` paths directly.
+
+The version in `src/mixers/package.json` is the **npm package** version, separate from the app version in the root `package.json`.
+
+The public library repo is [magical-mixers](https://github.com/matiasbarrios/magical-mixers). It uses a different layout and git history from this monorepo; changes here are not published there automatically.
 
 ---
 
@@ -125,6 +135,12 @@ brew install cocoapods
 ```
 
 Then, after `npm run cap-dev` or `cap-make`, open Xcode with `npm run cap-ios`.
+
+If Archive → App Store upload fails oddly, try removing Homebrew's `rsync` (it can shadow Xcode's):
+
+```bash
+brew uninstall rsync
+```
 
 ---
 
@@ -149,6 +165,8 @@ Wireshark filters for lab and X Air traffic: [DEBUGGING_NETWORK.md](./DEBUGGING_
 | Doc | Content |
 |-----|---------|
 | [DEBUGGING_NETWORK.md](./DEBUGGING_NETWORK.md) | Wireshark |
+| [HOTKEYS.md](./HOTKEYS.md) | Configurable keyboard shortcuts |
 | [GUI.md](../gui/GUI.md) | UI conventions |
+| [LAYOUT.md](../gui/LAYOUT.md) | Page shells, header trail, entity view layout |
 | [LIST_PATTERN.md](../gui/LIST_PATTERN.md) | List patterns |
 | [TESTING.md](../TESTING.md) | Test layout and scripts |

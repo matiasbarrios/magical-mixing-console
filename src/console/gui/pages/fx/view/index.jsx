@@ -2,11 +2,10 @@
 import {
     useMemo,
 } from 'react';
-import { useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 import { useFxOptions } from '@magical-mixing/mixers-react';
 import { useEntityHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
 import EntityViewShell from '../../../components/layout/entity/shell';
-import EntityNotFound from '../../../components/base/entityNotFound';
 import FxTabs from './tabs';
 
 
@@ -54,7 +53,7 @@ export default () => {
     const { get } = useFxOptions();
     const fx = useMemo(() => get(fxId), [get, fxId]);
 
-    if (!fx) return <EntityNotFound listTo="/fx/list" />;
+    if (!fx) return <Navigate to="/fx/list" replace />;
 
     return <Fx fx={fx} />;
 };

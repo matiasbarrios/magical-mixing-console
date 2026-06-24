@@ -47,7 +47,7 @@ const BusMenuItem = ({ busId }) => {
 
     return (
         <DropdownMenu.Item onSelect={navigateTo} disabled={disabled}>
-            <BusIconNameLabeled busId={busId} />
+            <BusIconNameLabeled busId={busId} size="2" />
         </DropdownMenu.Item>
     );
 };

@@ -111,7 +111,7 @@ const SecondaryTap = ({ busId }) => {
         <LabelControlTable.Row>
             <LabelControlTable.Cell width={LABEL_WIDTH}>
                 <Label>
-                    { t('Secondary buses tap to monitor') }
+                    { t('Aux buses tap to monitor') }
                 </Label>
             </LabelControlTable.Cell>
             <LabelControlTable.Cell>

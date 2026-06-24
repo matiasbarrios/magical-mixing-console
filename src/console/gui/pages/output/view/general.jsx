@@ -1,6 +1,7 @@
 // Requirements
 import { Flex, IconButton } from '@radix-ui/themes';
 import { useDevice, useOutputReset } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../components/base/resetIcon';
 import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
@@ -70,6 +71,7 @@ const ResetOutput = ({ outputId }) => {
                     onClick={doOpen}
                     disabled={disabled}
                     aria-label={t('Reset')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
                 >
                     <ResetIcon />
                 </IconButton>

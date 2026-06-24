@@ -5,6 +5,7 @@ import { useLanguage } from '../../components/language';
 import ViewInput from './view/openInput';
 import Gain from './view/gain';
 import Phantom from './view/phantom';
+import AssignedBuses from './listAssignedBuses';
 
 
 // Internal
@@ -16,7 +17,7 @@ const GainTrackStart = ({ label }) => (
 
 
 // Exported
-export default ({ inputId }) => {
+export default ({ inputId, inlineBuses = false }) => {
     const { t } = useLanguage();
 
     const stopRowOpen = useCallback((e) => {
@@ -27,7 +28,18 @@ export default ({ inputId }) => {
         <GainTrackStart label={t('Gain')} />
     ), [t]);
 
-    return (
+    const assignedBuses = (
+        <Flex
+            flexShrink="0"
+            minWidth={inlineBuses ? '0' : undefined}
+            onPointerDown={stopRowOpen}
+            onClick={stopRowOpen}
+        >
+            <AssignedBuses inputId={inputId} />
+        </Flex>
+    );
+
+    const mainRow = (
         <Flex
             align="center"
             gapX="1"
@@ -57,6 +69,29 @@ export default ({ inputId }) => {
                 onClick={stopRowOpen}
             >
                 <Phantom inputId={inputId} />
+            </Flex>
+            {inlineBuses && assignedBuses}
+        </Flex>
+    );
+
+    if (inlineBuses) {
+        return (
+            <Flex width="100%" minWidth="0">
+                { mainRow }
+            </Flex>
+        );
+    }
+
+    return (
+        <Flex
+            direction="column"
+            gapY="1"
+            width="100%"
+            minWidth="0"
+        >
+            { mainRow }
+            <Flex align="center" justify="end" gapX="1" wrap="wrap" minWidth="0" pl="2">
+                { assignedBuses }
             </Flex>
         </Flex>
     );

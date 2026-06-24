@@ -1,6 +1,6 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 import { useHas } from '../../helpers/has';
@@ -8,7 +8,7 @@ import { useHas } from '../../helpers/has';
 
 // Exported
 export const useBusFx = (busId) => {
-    const { features: { bus: { fx } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { fx } } } = useContext(DeviceContext);
 
     const has = useHas(fx, busId);
 
@@ -17,7 +17,7 @@ export const useBusFx = (busId) => {
 
 
 export const useBusFxId = (busId) => {
-    const { features: { bus: { fx: { id } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { fx: { id } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(id, busId);
 
@@ -30,7 +30,7 @@ export const useBusFxId = (busId) => {
 
 
 export const useBusFxOn = (busId) => {
-    const { features: { bus: { fx: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { fx: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -41,7 +41,7 @@ export const useBusFxOn = (busId) => {
 
 
 export const useBusFxGain = (busId) => {
-    const { features: { bus: { fx: { gain } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { fx: { gain } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(gain, busId);
 

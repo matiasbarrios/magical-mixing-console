@@ -4,7 +4,7 @@ import {
     useBusLevelSetIncrementMany, useDcaLevel, useDcaLevelPost, useDcaLevelPre,
     useDcaLevelResetAll,
 } from '@magical-mixing/mixers-react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Constants
@@ -15,7 +15,7 @@ const DB_MAXIMUM = 10;
 
 // Internal
 const useFallbackLevel = (dcaId) => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
 
     const busesIds = useMemo(() => {
         const r = [];
@@ -84,7 +84,7 @@ const DeviceLevelPost = ({ dcaId, children }) => {
 
 // Exported
 export const useFallbackDcaLevels = () => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
     const { resetAll: dcaLevelResetAll } = useDcaLevelResetAll();
 
     const levelsReset = useCallback(async () => {
@@ -98,7 +98,7 @@ export const useFallbackDcaLevels = () => {
 
 
 export const FallbackDcaLevel = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions
         .find(o => o.id === dcaId)) return <DeviceLevel dcaId={dcaId}>{children}</DeviceLevel>;
     return <FallbackLevel dcaId={dcaId}>{children}</FallbackLevel>;
@@ -106,7 +106,7 @@ export const FallbackDcaLevel = ({ dcaId, children }) => {
 
 
 export const FallbackDcaLevelPre = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceLevelPre dcaId={dcaId}>{children}</DeviceLevelPre>;
     }
@@ -115,7 +115,7 @@ export const FallbackDcaLevelPre = ({ dcaId, children }) => {
 
 
 export const FallbackDcaMeterLevelPreHas = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceLevelPre dcaId={dcaId}>{children}</DeviceLevelPre>;
     }
@@ -124,7 +124,7 @@ export const FallbackDcaMeterLevelPreHas = ({ dcaId, children }) => {
 
 
 export const FallbackDcaLevelPost = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceLevelPost dcaId={dcaId}>{children}</DeviceLevelPost>;
     }
@@ -133,7 +133,7 @@ export const FallbackDcaLevelPost = ({ dcaId, children }) => {
 
 
 export const FallbackDcaMeterLevelPostHas = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceLevelPost dcaId={dcaId}>{children}</DeviceLevelPost>;
     }

@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHas } from '../../helpers/has';
 import { useHasGet } from '../../helpers/hasGet';
 import { useHasGetSet } from '../../helpers/hasGetSet';
@@ -10,7 +10,7 @@ import { useChanges, defaultOption } from '../../helpers/changes';
 
 // Exported
 export const useBusGate = (busId) => {
-    const { features: { bus: { gate } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { gate } } } = useContext(DeviceContext);
 
     const has = useHas(gate, busId);
 
@@ -19,7 +19,7 @@ export const useBusGate = (busId) => {
 
 
 export const useBusGateOn = (busId) => {
-    const { features: { bus: { gate: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { gate: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -30,7 +30,7 @@ export const useBusGateOn = (busId) => {
 
 
 export const useBusGateMode = (busId) => {
-    const { features: { bus: { gate: { mode } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { gate: { mode } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(mode, busId);
 
@@ -47,7 +47,7 @@ export const useBusGateMode = (busId) => {
 export const useBusGateThreshold = (busId) => {
     const {
         features: { bus: { gate: { threshold } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(threshold, busId);
 
@@ -61,7 +61,7 @@ export const useBusGateThreshold = (busId) => {
 
 
 export const useBusGateRange = (busId) => {
-    const { features: { bus: { gate: { range } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { gate: { range } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(range, busId);
 
@@ -77,7 +77,7 @@ export const useBusGateRange = (busId) => {
 export const useBusGateAttack = (busId) => {
     const {
         features: { bus: { gate: { attack } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(attack, busId);
 
@@ -93,7 +93,7 @@ export const useBusGateAttack = (busId) => {
 export const useBusGateHold = (busId) => {
     const {
         features: { bus: { gate: { hold } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(hold, busId);
 
@@ -109,7 +109,7 @@ export const useBusGateHold = (busId) => {
 export const useBusGateRelease = (busId) => {
     const {
         features: { bus: { gate: { release } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(release, busId);
 
@@ -123,7 +123,7 @@ export const useBusGateRelease = (busId) => {
 
 
 export const useBusGateSidechain = (busId) => {
-    const { features: { bus: { gate: { sidechain } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { gate: { sidechain } } } } = useContext(DeviceContext);
 
     const has = useHas(sidechain, busId);
 
@@ -134,7 +134,7 @@ export const useBusGateSidechain = (busId) => {
 export const useBusGateSidechainOn = (busId) => {
     const {
         features: { bus: { gate: { sidechain: { on } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -147,7 +147,7 @@ export const useBusGateSidechainOn = (busId) => {
 export const useBusGateSidechainSource = (busId) => {
     const {
         features: { bus: { gate: { sidechain: { source } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(source, busId);
 
@@ -164,7 +164,7 @@ export const useBusGateSidechainSource = (busId) => {
 export const useBusGateSidechainType = (busId) => {
     const {
         features: { bus: { gate: { sidechain: { type } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(type, busId);
 
@@ -181,7 +181,7 @@ export const useBusGateSidechainType = (busId) => {
 export const useBusGateSidechainFrequency = (busId) => {
     const {
         features: { bus: { gate: { sidechain: { frequency } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(frequency, busId);
 
@@ -197,7 +197,7 @@ export const useBusGateSidechainFrequency = (busId) => {
 export const useBusGateGainReduction = (busId) => {
     const {
         features: { bus: { gate: { gainReduction } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(gainReduction, busId);
 
@@ -208,7 +208,7 @@ export const useBusGateGainReduction = (busId) => {
 export const useBusGateKey = (busId) => {
     const {
         features: { bus: { gate: { key } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(key, busId);
 
@@ -231,7 +231,7 @@ export const busGateReset = (changeSchedule, gate, busId) => {
 
 
 export const useBusGateReset = (busId) => {
-    const { features: { bus: { gate } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { gate } } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {

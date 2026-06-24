@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Constants
@@ -65,7 +65,7 @@ export { colorOptions };
 
 
 export const useFallbackColors = (type) => {
-    const { colors, setColors } = useContext(FallbackContextRoot);
+    const { colors, setColors } = useContext(FallbackContext);
 
     const colorGet = useCallback(id => colors[id], [colors]);
 

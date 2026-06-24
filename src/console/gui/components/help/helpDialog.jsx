@@ -7,6 +7,7 @@ import {
 } from '@radix-ui/themes';
 import { useLanguage } from '../language';
 import { useUiSize } from '../theme';
+import ConditionalScrollY from '../base/conditionalScrollY';
 import DialogHeader from '../base/dialogHeader';
 
 
@@ -283,19 +284,18 @@ export default ({ open, onOpenChange }) => {
                     <Box className="mmc-help-toc" aria-label={t('Contents')}>
                         { toc }
                     </Box>
-                    <Flex
+                    <ConditionalScrollY
                         ref={scrollRef}
-                        direction="column"
-                        flexGrow="1"
-                        minHeight="0"
-                        className="mmc-help-content mmc-scroll-y"
+                        className="mmc-help-content"
+                        gapY="0"
+                        pb="0"
                     >
                         <HelpContent
                             t={t}
                             textSize={textSize}
                             setSectionRef={setSectionRef}
                         />
-                    </Flex>
+                    </ConditionalScrollY>
                 </Flex>
             </Dialog.Content>
         </Dialog.Root>

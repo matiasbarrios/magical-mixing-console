@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useHas } from '../../helpers/has';
 import { useOptions } from '../../helpers/options';
@@ -8,7 +8,7 @@ import { useOptions } from '../../helpers/options';
 
 // Exported
 export const useBusMonitor = (busId) => {
-    const { features: { bus: { monitor } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor } } } = useContext(DeviceContext);
 
     const has = useHas(monitor, busId);
 
@@ -17,7 +17,7 @@ export const useBusMonitor = (busId) => {
 
 
 export const useBusMonitorMono = (busId) => {
-    const { features: { bus: { monitor: { mono } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor: { mono } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(mono, busId);
 
@@ -30,7 +30,7 @@ export const useBusMonitorMono = (busId) => {
 export const useBusMonitorChannelLineEffectTap = (busId) => {
     const {
         features: { bus: { monitor: { channelLineEffectTap } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(channelLineEffectTap, busId);
 
@@ -48,7 +48,7 @@ export const useBusMonitorChannelLineEffectTap = (busId) => {
 export const useBusMonitorSecondaryTap = (busId) => {
     const {
         features: { bus: { monitor: { secondaryTap } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(secondaryTap, busId);
 
@@ -64,7 +64,7 @@ export const useBusMonitorSecondaryTap = (busId) => {
 
 
 export const useBusMonitorSource = (busId) => {
-    const { features: { bus: { monitor: { source } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor: { source } } } } = useContext(DeviceContext);
 
     const has = useHas(source, busId);
 
@@ -73,7 +73,7 @@ export const useBusMonitorSource = (busId) => {
 
 
 export const useBusMonitorSourceId = (busId) => {
-    const { features: { bus: { monitor: { source: { id } } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor: { source: { id } } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(id, busId);
 
@@ -88,7 +88,7 @@ export const useBusMonitorSourceId = (busId) => {
 
 
 export const useBusMonitorSourceTrim = (busId) => {
-    const { features: { bus: { monitor: { source: { trim } } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor: { source: { trim } } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(trim, busId);
 
@@ -102,7 +102,7 @@ export const useBusMonitorSourceTrim = (busId) => {
 
 
 export const useBusMonitorDim = (busId) => {
-    const { features: { bus: { monitor: { dim } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor: { dim } } } } = useContext(DeviceContext);
 
     const has = useHas(dim, busId);
 
@@ -111,7 +111,7 @@ export const useBusMonitorDim = (busId) => {
 
 
 export const useBusMonitorDimOn = (busId) => {
-    const { features: { bus: { monitor: { dim: { on } } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { monitor: { dim: { on } } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -124,7 +124,7 @@ export const useBusMonitorDimOn = (busId) => {
 export const useBusMonitorDimAttenuation = (busId) => {
     const {
         features: { bus: { monitor: { dim: { attenuation } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(attenuation, busId);
 
@@ -140,7 +140,7 @@ export const useBusMonitorDimAttenuation = (busId) => {
 export const useBusMonitorDimAtPreLevel = (busId) => {
     const {
         features: { bus: { monitor: { dim: { atPreLevel } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(atPreLevel, busId);
 

@@ -1,7 +1,7 @@
 {
   "name": "magical-mixing-console",
   "productName": "Magical Mixing Console",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "An app for controlling X Air and M Air digital mixers, with the hope of supporting other mixers in the future.",
   "main": ".webpack/main",
   "workspaces": [
@@ -77,7 +77,6 @@
     "globals": "^17.5.0",
     "happy-dom": "^20.10.1",
     "html-webpack-plugin": "^5.6.0",
-    "javascript-obfuscator": "^5.4.3",
     "node-loader": "^2.0.0",
     "postcss": "^8.4.33",
     "postcss-advanced-variables": "^5.0.0",
@@ -91,8 +90,7 @@
     "webpack": "^5.90.1",
     "webpack-bundle-analyzer": "^5.3.0",
     "webpack-cli": "^7.0.3",
-    "webpack-dev-server": "^5.2.1",
-    "webpack-obfuscator": "^3.5.1"
+    "webpack-dev-server": "^5.2.1"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.4",

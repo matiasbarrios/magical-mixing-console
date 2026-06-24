@@ -1,11 +1,11 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useBusFromOptions = (busId) => {
-    const { features: { bus } } = useContext(DeviceContextRoot);
+    const { features: { bus } } = useContext(DeviceContext);
 
     const options = useMemo(() => {
         const res = bus.options

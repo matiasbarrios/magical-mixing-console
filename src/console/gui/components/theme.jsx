@@ -29,10 +29,13 @@ const useSystemTheme = () => {
 
 
 // Exported
-export const ThemeContext = ({ children }) => {
+export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useSettings('theme', 'dark', true);
     const [textSize, setTextSize] = useSettings('text-size', '1');
     const [receptionShortcuts, setReceptionShortcuts] = useSettings('bus-reception-shortcuts', true);
+    const [entityViewLayout, setEntityViewLayout] = useSettings('entity-view-layout', 'vertical');
+    const [headerWizardWandShown, setHeaderWizardWandShown] = useSettings('header-wizard-wand-shown', true);
+    const [headerNavigation, setHeaderNavigation] = useSettings('header-navigation', false);
     const systemTheme = useSystemTheme();
 
     const themeCurrent = useMemo(() => {
@@ -48,7 +51,15 @@ export const ThemeContext = ({ children }) => {
         setTextSize,
         receptionShortcuts,
         setReceptionShortcuts,
-    }), [theme, themeCurrent, setTheme, textSize, setTextSize, receptionShortcuts, setReceptionShortcuts]);
+        entityViewLayout,
+        setEntityViewLayout,
+        headerWizardWandShown,
+        setHeaderWizardWandShown,
+        headerNavigation,
+        setHeaderNavigation,
+    }), [theme, themeCurrent, setTheme, textSize, setTextSize, receptionShortcuts, setReceptionShortcuts,
+        entityViewLayout, setEntityViewLayout, headerWizardWandShown, setHeaderWizardWandShown,
+        headerNavigation, setHeaderNavigation]);
 
     useEffect(() => {
         document.body.classList.toggle('dark', themeCurrent === 'dark');
@@ -81,6 +92,7 @@ export const ThemeContext = ({ children }) => {
         <Context.Provider value={state}>
             <Theme
                 appearance={themeCurrent}
+                accentColor="blue"
                 hasBackground={false}
                 className={`mmc-ui-text-size-${textSize}`}
             >
@@ -95,6 +107,9 @@ export const useTheme = () => {
     const {
         theme, setTheme, themeCurrent, textSize, setTextSize,
         receptionShortcuts, setReceptionShortcuts,
+        entityViewLayout, setEntityViewLayout,
+        headerWizardWandShown, setHeaderWizardWandShown,
+        headerNavigation, setHeaderNavigation,
     } = useContext(Context);
 
     return {
@@ -105,7 +120,25 @@ export const useTheme = () => {
         setTextSize,
         receptionShortcuts,
         setReceptionShortcuts,
+        entityViewLayout,
+        setEntityViewLayout,
+        headerWizardWandShown,
+        setHeaderWizardWandShown,
+        headerNavigation,
+        setHeaderNavigation,
     };
+};
+
+
+export const useEntityViewLayout = () => {
+    const { entityViewLayout, setEntityViewLayout } = useTheme();
+
+    return useMemo(() => ({
+        entityViewLayout,
+        setEntityViewLayout,
+        isVertical: entityViewLayout === 'vertical',
+        isHorizontal: entityViewLayout === 'horizontal',
+    }), [entityViewLayout, setEntityViewLayout]);
 };
 
 
@@ -120,6 +153,7 @@ export const useUiSize = () => {
         return {
             textSize,
             setTextSize,
+            subTextFontSize: small ? 'var(--mmc-chart-font-size)' : 'var(--font-size-1)',
             iconSize: iconSizePx,
             iconSpacer: { width: `${iconSizePx}px`, height: `${iconSizePx}px` },
             menuContentSize: '2',

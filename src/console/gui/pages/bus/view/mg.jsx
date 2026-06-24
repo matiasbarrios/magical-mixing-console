@@ -5,11 +5,11 @@ import {
     DropdownMenu, Flex, IconButton,
 } from '@radix-ui/themes';
 import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
+import { ADD_ROAM_ID, REMOVE_ROAM_ID, focusRoamAttrs } from '../../../helpers/hotkeys/focusRoam';
 import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
 import { FallbackBusMgOn, useFallbackBusMg, useFallbackMgOptions } from '../../../components/fallback';
 import { ICON_STYLE } from '../../../helpers/values';
-import ListStack from '../../../components/layout/list/stack';
 import { DropdownMenuTrigger } from '../../../components/base/dropdownMenuTrigger';
 import { MgFinalName } from '../../mg/view/name';
 import ViewMg from '../../mg/view/openMg';
@@ -42,7 +42,12 @@ const AddMgs = ({ busId }) => {
 
     return (
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
-            <DropdownMenuTrigger variant="soft" color="gray" onClick={toggleOpened}>
+            <DropdownMenuTrigger
+                variant="soft"
+                color="gray"
+                onClick={toggleOpened}
+                {...focusRoamAttrs(ADD_ROAM_ID)}
+            >
                 <PlusIcon style={ICON_STYLE} />
             </DropdownMenuTrigger>
             <DropdownMenuContent size="2">
@@ -70,6 +75,7 @@ const UnassignMg = ({ set }) => {
             onClick={() => set(false)}
             disabled={disabled}
             aria-label={t('Unassign mute group')}
+            {...focusRoamAttrs(REMOVE_ROAM_ID)}
         >
             <MinusIcon style={ICON_STYLE} />
         </IconButton>
@@ -118,9 +124,7 @@ const MgTab = ({ busId }) => {
 
     return (
         <Flex direction="column" gapY="3" width="100%">
-            <ListStack>
-                {options.map(o => <Evaluate key={o.id} mgId={o.id} busId={busId} />)}
-            </ListStack>
+            {options.map(o => <Evaluate key={o.id} mgId={o.id} busId={busId} />)}
             <Flex align="center" justify="end" gap="1">
                 <AddMgs busId={busId} />
             </Flex>

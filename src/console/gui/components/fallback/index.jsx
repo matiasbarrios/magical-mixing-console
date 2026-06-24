@@ -1,5 +1,5 @@
 // Requirements
-import { FallbackContext } from './context';
+import { FallbackProvider } from './context';
 import { useFallbackBusColors, useFallbackBusColor } from './bus/color';
 import {
     useFallbackBusDca, FallbackBusDcaOn, FallbackBusDcaUnassignAllOf,
@@ -11,9 +11,9 @@ import {
     useFallbackBusMgUnassignAllOfAll,
 } from './bus/mg';
 import { useFallbackBusesSorted } from './bus/sort';
-import { useFallbackDcaColors, FallbackDcaColor } from './dca/color';
+import { useFallbackDcaColors, useFallbackDcaColor, FallbackDcaColor } from './dca/color';
 import { useFallbackDcaHas } from './dca/has';
-import { FallbackDcaIconUse, FallbackDcaIcon } from './dca/icon';
+import { FallbackDcaIconUse, FallbackDcaIcon, useFallbackDcaIcon } from './dca/icon';
 import {
     FallbackDcaLevel, FallbackDcaLevelPre, FallbackDcaMeterLevelPreHas, useFallbackDcaLevels,
 } from './dca/level';
@@ -22,7 +22,7 @@ import { useFallbackDcaNames, FallbackDcaName } from './dca/name';
 import { useFallbackDcaOptions } from './dca/options';
 import { FallbackDcaSolo } from './dca/solo';
 import { useFallbackMgHas } from './mg/has';
-import { FallbackMgIconUse, FallbackMgIcon } from './mg/icon';
+import { FallbackMgIconUse, FallbackMgIcon, useFallbackMgIcon } from './mg/icon';
 import { useFallbackMgNames, FallbackMgName } from './mg/name';
 import { useFallbackMgOptions } from './mg/options';
 import { FallbackMgMute } from './mg/mute';
@@ -31,7 +31,7 @@ import { FallbackIcon, Icon } from './shared/icon';
 
 // Exported
 export {
-    FallbackContext,
+    FallbackProvider,
     useFallbackBusColors,
     useFallbackBusColor,
     useFallbackBusDca,
@@ -45,11 +45,13 @@ export {
     FallbackBusMgUnassignAllOf,
     useFallbackBusesSorted,
     useFallbackDcaColors,
+    useFallbackDcaColor,
     FallbackDcaColor,
     useFallbackDcaHas,
     useFallbackBusDcaUnassignAllOfAll,
     FallbackDcaIconUse,
     FallbackDcaIcon,
+    useFallbackDcaIcon,
     useFallbackDcaLevels,
     FallbackDcaLevel,
     FallbackDcaLevelPre,
@@ -65,6 +67,7 @@ export {
     useFallbackBusMgUnassignAllOfAll,
     FallbackMgIconUse,
     FallbackMgIcon,
+    useFallbackMgIcon,
     useFallbackMgNames,
     FallbackMgName,
     useFallbackMgOptions,

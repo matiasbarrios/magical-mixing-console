@@ -1,12 +1,12 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
 import { useMgOptions } from '@magical-mixing/mixers-react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Exported
 export const useFallbackMgOptions = () => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
     const { options: deviceOptions } = useMgOptions();
 
     const options = useMemo(() => [...deviceOptions.map(o => ({

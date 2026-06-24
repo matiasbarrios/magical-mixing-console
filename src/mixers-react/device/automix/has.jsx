@@ -1,12 +1,12 @@
 // Requirements
 import { useContext } from 'react';
 import { useHas } from '../../helpers/has';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useAutomixHas = () => {
-    const { features: { automix } } = useContext(DeviceContextRoot);
+    const { features: { automix } } = useContext(DeviceContext);
 
     const has = useHas(automix);
 

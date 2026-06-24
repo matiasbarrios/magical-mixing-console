@@ -9,7 +9,7 @@ export default ({ children }) => {
     if (!Children.toArray(children).length) return null;
 
     return (
-        <Flex align="center" gapX="4" justify="end" flexShrink="0">
+        <Flex align="center" gapX="2" justify="end" flexShrink="0">
             {children}
         </Flex>
     );

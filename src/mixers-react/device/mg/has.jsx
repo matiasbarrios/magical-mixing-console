@@ -1,12 +1,12 @@
 // Requirements
 import { useContext } from 'react';
 import { useHas } from '../../helpers/has';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useMgHas = () => {
-    const { features: { mg } } = useContext(DeviceContextRoot);
+    const { features: { mg } } = useContext(DeviceContext);
 
     const has = useHas(mg);
 

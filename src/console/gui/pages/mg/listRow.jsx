@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { Flex, IconButton } from '@radix-ui/themes';
 import { Pencil1Icon } from '@radix-ui/react-icons';
 import { useDevice } from '@magical-mixing/mixers-react';
+import { EDIT_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import { useLanguage } from '../../components/language';
 import { ICON_STYLE } from '../../helpers/values';
 import { useUiSize } from '../../components/theme';
@@ -53,6 +54,7 @@ export default ({ mgId, onEdit }) => {
                     disabled={disabled}
                     onClick={edit}
                     aria-label={t('Edit')}
+                    {...focusRoamAttrs(EDIT_ROAM_ID)}
                 >
                     <Pencil1Icon style={ICON_STYLE} />
                 </IconButton>

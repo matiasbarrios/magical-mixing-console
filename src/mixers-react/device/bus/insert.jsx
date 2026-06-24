@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 import { useHas } from '../../helpers/has';
@@ -8,7 +8,7 @@ import { useHas } from '../../helpers/has';
 
 // Exported
 export const useBusInsert = (busId) => {
-    const { features: { bus: { insert } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { insert } } } = useContext(DeviceContext);
 
     const has = useHas(insert, busId);
 
@@ -17,7 +17,7 @@ export const useBusInsert = (busId) => {
 
 
 export const useBusInsertOn = (busId) => {
-    const { features: { bus: { insert: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { insert: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -28,7 +28,7 @@ export const useBusInsertOn = (busId) => {
 
 
 export const useBusInsertFx = (busId) => {
-    const { features: { bus: { insert: { fx } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { insert: { fx } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(fx, busId);
 

@@ -77,7 +77,7 @@ const outputGainGet = (inputGain, parameters) => {
 };
 
 
-const getPoints = (chart, parameters) => {
+const getResultPoints = (chart, parameters) => {
     const { xScale, width } = chart;
     const points = [];
     for (let i = 0; i < DISCRETE_POINTS; i += 1) {
@@ -89,13 +89,15 @@ const getPoints = (chart, parameters) => {
 };
 
 
-// Exported
+export { getResultPoints };
+
+
 export const createResult = (chart, parameters) => {
     const {
         resultContainer, xScale, yScaleLeft,
     } = chart;
 
-    const points = getPoints(chart, parameters);
+    const points = getResultPoints(chart, parameters);
 
     // Build the function for creating the line
     chart.resultLine = line()
@@ -119,7 +121,7 @@ export const createResult = (chart, parameters) => {
 export const updateResult = (chart, parameters) => {
     const { resultContainer, resultLine } = chart;
 
-    const points = getPoints(chart, parameters);
+    const points = getResultPoints(chart, parameters);
 
     // Creating the line
     resultContainer.selectAll('#compLineResult')

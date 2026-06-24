@@ -1,64 +1,22 @@
 // Requirements
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
-import { Flex, Text } from '@radix-ui/themes';
+import ConditionalScrollY from '../../components/base/conditionalScrollY';
+import { LabelControlTable, LABEL_CONTROL_CLASS } from '../../components/base/labelControlTable';
 import { useLanguage } from '../../components/language';
-import { EntityTabsShell, TabPanelScrollable, useEntityTabs } from '../../components/layout/entity/tabs';
+import { EntityTabsShell, useEntityTabs } from '../../components/layout/entity/tabs';
+import HeaderTabBar from '../../components/layout/entity/headerTabBar';
 import EntityViewShell from '../../components/layout/entity/shell';
 import { useEntityHeaderTrail } from '../../components/layout/headerTrail/hooks/useHeaderTrail';
+import { useHeaderTrailCenter } from '../../components/layout/headerTrail/hooks/useHeaderTrailCenter';
 import { useVault } from '../../components/vault';
-import {
-    Label, LabelControlTable, LABEL_CONTROL_CLASS, LABEL_WIDTH,
-} from '../../components/base/labelControlTable';
-import { fromCamelCaseToUCFirst } from '../../helpers/format';
+import Values from './view/values';
 
 
 // Internal
 const useParsedParams = () => {
     const { vaultId } = useParams();
     return { vaultId };
-};
-
-
-const ValueRow = ({ label, value }) => {
-    const { t } = useLanguage();
-
-    const displayValue = useMemo(() => {
-        if (typeof value === 'boolean') return value ? t('Yes') : t('No');
-        return value;
-    }, [value, t]);
-
-    return (
-        <LabelControlTable.Row>
-            <LabelControlTable.Cell width={LABEL_WIDTH}>
-                <Label>
-                    { label }
-                </Label>
-            </LabelControlTable.Cell>
-            <LabelControlTable.Cell>
-                <Flex align="center" justify="end" width="100%" minWidth="0">
-                    <Text size="1" color="gray" wrap="nowrap">{ displayValue }</Text>
-                </Flex>
-            </LabelControlTable.Cell>
-        </LabelControlTable.Row>
-    );
-};
-
-
-const Content = ({ content }) => {
-    const keys = useMemo(() => Object.keys(content), [content]);
-
-    return (
-        <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
-            {keys.map(key => (
-                <ValueRow
-                    key={key}
-                    label={fromCamelCaseToUCFirst(key)}
-                    value={content[key]}
-                />
-            ))}
-        </LabelControlTable.List>
-    );
 };
 
 
@@ -75,6 +33,20 @@ const Vault = ({ vault }) => {
         settingsKey: 'vault-view-tab',
         defaultTab: 'values',
     });
+
+    const headerTabPicker = useMemo(() => (
+        tabs.length > 0
+            ? (
+                <HeaderTabBar
+                    tabs={tabs}
+                    active={tabActive}
+                    onChange={onTabChange}
+                />
+            )
+            : null
+    ), [tabs, tabActive, onTabChange]);
+
+    useHeaderTrailCenter(headerTabPicker);
 
     const [vaultContent, setVaultContent] = useState(null);
 
@@ -113,11 +85,17 @@ const Vault = ({ vault }) => {
                 tabs={tabs}
                 tabActive={tabActive}
                 onTabChange={onTabChange}
+                tabPanelMt="3"
+                hideTabBar
             >
                 {tabActive === 'values' && (
-                    <TabPanelScrollable>
-                        {!!vaultContent && <Content content={vaultContent} />}
-                    </TabPanelScrollable>
+                    <ConditionalScrollY>
+                        {!!vaultContent && (
+                            <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
+                                <Values content={vaultContent} />
+                            </LabelControlTable.List>
+                        )}
+                    </ConditionalScrollY>
                 )}
             </EntityTabsShell>
         </EntityViewShell>

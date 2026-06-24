@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Button, Flex } from '@radix-ui/themes';
 import { useMemo } from 'react';
 import { useUiSize } from '../../theme';
-import { FooterContext, useFooter } from './context';
+import { FooterProvider, useFooter } from './context';
 import Mg from './mg';
 import Solo from './solo';
 
@@ -35,7 +35,7 @@ export const useFooterHeight = () => {
     return useMemo(() => `${footerHeightPx}px`, [footerHeightPx]);
 };
 
-export { FooterContext, useFooter };
+export { FooterProvider, useFooter };
 
 
 export const Footer = () => {

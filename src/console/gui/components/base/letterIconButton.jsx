@@ -57,6 +57,7 @@ export const LetterIconButton = ({
     'aria-pressed': ariaPressed,
     dense = false,
     stopPropagation = false,
+    focusRoam,
     textSize: textSizeProp,
     textStyle,
     style: styleProp,
@@ -88,6 +89,7 @@ export const LetterIconButton = ({
             onClick={handleClick}
             aria-label={ariaLabel}
             aria-pressed={ariaPressed}
+            {...(focusRoam ? { 'data-focus-roam': focusRoam } : {})}
             style={styleProp || undefined}
             {...rest}
         >

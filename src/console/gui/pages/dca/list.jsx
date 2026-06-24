@@ -5,6 +5,7 @@ import {
 import { IconButton } from '@radix-ui/themes';
 import { useDevice } from '@magical-mixing/mixers-react';
 import { PlusIcon } from '@radix-ui/react-icons';
+import { ADD_ROAM_ID, RESET_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../components/base/resetIcon';
 import { ICON_STYLE } from '../../helpers/values';
 import ListStack from '../../components/layout/list/stack';
@@ -22,14 +23,13 @@ import { ListFilterBar, ListFilterTitle, ListFilterActions } from '../../compone
 import { ListFilterScope, useListFilterVisibility } from '../../components/layout/list/filterEmpty';
 import TextFieldErasable from '../../components/base/textFieldErasable';
 import { Alert } from '../../components/base/alert';
-import ListFooter from '../../components/layout/list/footer';
 import Add from './view/add';
 import Edit from './view/edit';
 import ListRow from './listRow';
 
 
 // Internal
-const ListFooterActions = ({ onAdd }) => {
+const ToolbarReset = () => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
     const { disabled } = useDevice();
@@ -49,38 +49,44 @@ const ListFooterActions = ({ onAdd }) => {
     }, [colorsReset, iconsReset, namesReset, levelsReset, unassignAllBusesOfAll]);
 
     return (
-        <ListFooter
-            reset={(
-                <Alert onAccept={resetAll} accept={t('Clear all DCAs')}>
-                    {doOpen => (
-                        <IconButton
-                            variant="soft"
-                            color="gray"
-                            size={textSize}
-                            radius="full"
-                            onClick={doOpen}
-                            disabled={disabled}
-                            aria-label={t('Clear all DCAs')}
-                        >
-                            <ResetIcon />
-                        </IconButton>
-                    )}
-                </Alert>
-            )}
-            add={(
+        <Alert onAccept={resetAll} accept={t('Clear all DCAs')}>
+            {doOpen => (
                 <IconButton
                     variant="soft"
                     color="gray"
                     size={textSize}
                     radius="full"
-                    onClick={onAdd}
+                    onClick={doOpen}
                     disabled={disabled}
-                    aria-label={t('Add')}
+                    aria-label={t('Clear all DCAs')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
                 >
-                    <PlusIcon style={ICON_STYLE} />
+                    <ResetIcon />
                 </IconButton>
             )}
-        />
+        </Alert>
+    );
+};
+
+
+const ToolbarAdd = ({ onAdd }) => {
+    const { t } = useLanguage();
+    const { textSize } = useUiSize();
+    const { disabled } = useDevice();
+
+    return (
+        <IconButton
+            variant="soft"
+            color="gray"
+            size={textSize}
+            radius="full"
+            onClick={onAdd}
+            disabled={disabled}
+            aria-label={t('Add')}
+            {...focusRoamAttrs(ADD_ROAM_ID)}
+        >
+            <PlusIcon style={ICON_STYLE} />
+        </IconButton>
     );
 };
 
@@ -166,10 +172,12 @@ export default () => {
                             width="100%"
                         />
                     </ListFilterTitle>
-                    <ListFilterActions />
+                    <ListFilterActions>
+                        <ToolbarReset />
+                        <ToolbarAdd onAdd={addOpen} />
+                    </ListFilterActions>
                 </ListFilterBar>
                 <List filterBy={filterBy} onEdit={onEdit} />
-                <ListFooterActions onAdd={addOpen} />
             </ListPageShell>
         </>
     );

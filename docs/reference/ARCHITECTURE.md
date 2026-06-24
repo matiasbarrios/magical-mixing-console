@@ -96,9 +96,9 @@ flowchart TB
 **What it is:** Thin React binding over the mixers feature API.
 
 **Owns:**
-- `DeviceContext` — connected device and its `features` tree
+- `DeviceProvider` — connected device and its `features` tree
 - Hooks per parameter (`useBusLevel`, `useInputGain`, …) — subscribe/get/set through driver API
-- `ChangesContext` — batching/applying multiple parameter writes
+- `ChangesProvider` — batching/applying multiple parameter writes
 - `useSearch` — device discovery hook
 - Scene-app capture logic exposed to UI
 
@@ -156,7 +156,7 @@ See also: `.cursor/rules/console-gui.mdc`.
 - LAN broadcast address discovery
 - Persistent settings load/save
 - Vault file storage
-- OS integration: language, haptics, status bar, navigation bar
+- OS integration: updates, language, haptics, status bar, navigation bar
 - Virtual device run/stop (delegates to `virtual-devices`)
 
 **Does not own:**
@@ -166,6 +166,7 @@ See also: `.cursor/rules/console-gui.mdc`.
 **Typical changes:**
 - Desktop vs mobile behavioral difference for I/O or storage
 - Capacitor/Electron permission or lifecycle issue
+- Auto-update, notarization-related **wiring** ([RELEASE.md](../release/RELEASE.md), [MACOS_SIGNING.md](../release/MACOS_SIGNING.md))
 
 **Selection:** `gui/platform/index.js` loads `window.electron` or dynamically imports `capacitor/`.
 
@@ -245,7 +246,7 @@ Bus **send matrix** drivers live under `bus/to/` (`on.js`, `level.js`, `tap.js`,
 | Settings or vault not persisting | `console/electron` or `console/capacitor` helpers |
 | Dev without hardware | `virtual-devices` |
 | Device not found on network | `mixers/devices/search.js`, driver search |
-| Build / packaging | root `package.json`, `forge.config.js`, `webpack/` |
+| Build / release / store packaging | root `package.json`, `webpack/`, [RELEASE.md](../release/RELEASE.md) |
 
 ---
 
@@ -265,7 +266,7 @@ Skip layers that don't apply (e.g. no GUI yet for a headless experiment).
 
 ## Publishing
 
-`@magical-mixing/mixers` lives in `src/mixers/` and is linked via npm workspaces (see [DEVELOPMENT.md](../development/DEVELOPMENT.md#npm-workspaces)). Keep its public API stable; app-specific behavior belongs in `console`.
+`@magical-mixing/mixers` lives in `src/mixers/` and is linked via npm workspaces (see [DEVELOPMENT.md](../development/DEVELOPMENT.md#paquetes-npm-workspaces)). It can be published to npm independently ([RELEASE.md](../release/RELEASE.md) §7). Keep its public API stable; app-specific behavior belongs in `console`.
 
 ---
 
@@ -273,10 +274,13 @@ Skip layers that don't apply (e.g. no GUI yet for a headless experiment).
 
 | Doc | Purpose |
 |-----|---------|
-| [CONCEPTS.md](./CONCEPTS.md) | Domain model for navigation |
+| [CONCEPTS.md](./CONCEPTS.md) | Domain model for navigation & product |
 | [CONNECTIVITY.md](./CONNECTIVITY.md) | Device search/connect actors, socket ownership, flows |
 | [README.md](../README.md) | Doc index |
 | [DEVELOPMENT.md](../development/DEVELOPMENT.md) | Dev setup, plugins, npm scripts |
+| [RELEASE.md](../release/RELEASE.md) | Release manual (todas las plataformas) |
+| [MACOS_SIGNING.md](../release/MACOS_SIGNING.md) | macOS Electron signing & notarization |
+| [ASSETS.md](../release/ASSETS.md) | Icons & splash assets |
 | [DEBUGGING_NETWORK.md](../development/DEBUGGING_NETWORK.md) | Wireshark / UDP debugging |
 | [GUI.md](../gui/GUI.md) | GUI conventions |
 | `.cursor/rules/console-gui.mdc` | Scoped rules for GUI-only work |

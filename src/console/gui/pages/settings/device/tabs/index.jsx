@@ -2,9 +2,10 @@
 import { useMemo } from 'react';
 import { useConfigurationOptions } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../../components/language';
-import {
-    EntityTabsShell, TabPanelScrollable, useEntityTabs,
-} from '../../../../components/layout/entity/tabs';
+import ConditionalScrollY from '../../../../components/base/conditionalScrollY';
+import { EntityTabsShell, useEntityTabs } from '../../../../components/layout/entity/tabs';
+import HeaderTabBar from '../../../../components/layout/entity/headerTabBar';
+import { useHeaderTrailCenter } from '../../../../components/layout/headerTrail/hooks/useHeaderTrailCenter';
 import CategoryOptions from '../options';
 
 
@@ -29,6 +30,20 @@ export default () => {
         defaultTab,
     });
 
+    const headerTabPicker = useMemo(() => (
+        tabs.length > 0
+            ? (
+                <HeaderTabBar
+                    tabs={tabs}
+                    active={tabActive}
+                    onChange={onTabChange}
+                />
+            )
+            : null
+    ), [tabs, tabActive, onTabChange]);
+
+    useHeaderTrailCenter(headerTabPicker);
+
     if (!defaultTab) return null;
 
     return (
@@ -36,12 +51,14 @@ export default () => {
             tabs={tabs}
             tabActive={tabActive}
             onTabChange={onTabChange}
+            tabPanelMt="3"
+            hideTabBar
         >
             {visibleCategories.map(category => (
                 tabActive === category.id && (
-                    <TabPanelScrollable key={category.id}>
+                    <ConditionalScrollY key={category.id}>
                         <CategoryOptions categoryId={category.id} />
-                    </TabPanelScrollable>
+                    </ConditionalScrollY>
                 )
             ))}
         </EntityTabsShell>

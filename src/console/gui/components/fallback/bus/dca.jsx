@@ -4,12 +4,12 @@ import {
     useBusDcaUnassignAllOfAll, useBusMute, useDcaHas,
 } from '@magical-mixing/mixers-react';
 import { useCallback, useContext, useMemo } from 'react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Internal
 const useFallbackDcaOn = (busId, dcaId) => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
 
     const value = useMemo(() => {
         const dca = dcaOptions.find(o => o.id === dcaId);
@@ -40,7 +40,7 @@ const useFallbackDcaOn = (busId, dcaId) => {
 
 
 const useFallbackDcaUnassignAllOf = (dcaId) => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
 
     const unassignAllOf = useCallback(() => {
         const r = dcaOptions.find(o => o.id === dcaId);
@@ -98,7 +98,7 @@ export const useFallbackBusDca = (busId) => {
 
 
 export const useFallbackBusDcaUnassignAllOfAll = () => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
 
     const { unassignAll: unassignAllDevice } = useBusDcaUnassignAllOfAll();
 
@@ -115,7 +115,7 @@ export const useFallbackBusDcaUnassignAllOfAll = () => {
 
 
 export const FallbackBusDcaOn = ({ busId, dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceBusDcaOn busId={busId} dcaId={dcaId}>{children}</DeviceBusDcaOn>;
     }
@@ -124,7 +124,7 @@ export const FallbackBusDcaOn = ({ busId, dcaId, children }) => {
 
 
 export const FallbackBusDcaUnassignAllOf = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceBusDcaUnassignAllOf dcaId={dcaId}>{children}</DeviceBusDcaUnassignAllOf>;
     }

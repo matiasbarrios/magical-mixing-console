@@ -8,10 +8,10 @@ const Context = createContext({});
 
 
 // Exported
-export const FallbackContextRoot = Context;
+export const FallbackContext = Context;
 
 
-export const FallbackContext = ({ children }) => {
+export const FallbackProvider = ({ children }) => {
     const emptyArray = useMemo(() => [], []);
     const emptyObject = useMemo(() => ({}), []);
 

@@ -9,10 +9,11 @@ import { ChevronLeftIcon, ChevronRightIcon, DividerVerticalIcon } from '@radix-u
 import { useDevice } from '@magical-mixing/mixers-react';
 import { useNavigate } from 'react-router';
 import { ICON_STYLE } from '../../../helpers/values';
+import { useTheme, useUiSize } from '../../theme';
 import Link from '../../base/link';
 import { HeaderIconButton } from '../header/iconButton';
 import InstancePicker, { hasHeaderTrailInstancePicker } from './instance/picker';
-import { HeaderTrailContextState } from './context';
+import { HeaderTrailContext } from './context';
 
 
 // Constants
@@ -31,8 +32,21 @@ const instanceStyle = {
 };
 
 
+const headerCenterStyle = {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: 'min(calc(100dvw - 260px), 720px)',
+    maxWidth: 'min(calc(100dvw - 260px), 720px)',
+    minWidth: 0,
+    overflow: 'hidden',
+    pointerEvents: 'auto',
+};
+
+
 const InstanceArea = () => {
-    const { headerTrail } = useContext(HeaderTrailContextState);
+    const { textSize } = useUiSize();
+    const { headerTrail } = useContext(HeaderTrailContext);
 
     if (!headerTrail?.instance) return null;
 
@@ -51,7 +65,7 @@ const InstanceArea = () => {
         <>
             {!!headerTrail.entity && <DividerVerticalIcon color="gray" style={ICON_STYLE} />}
             <Flex align="center" style={instanceStyle}>
-                <Text size="2" color={headerTrail.instance.color || 'gray'} mx="2">
+                <Text size={textSize} color={headerTrail.instance.color || 'gray'} mx="2">
                     {headerTrail.instance.name}
                 </Text>
             </Flex>
@@ -62,13 +76,14 @@ const InstanceArea = () => {
 
 // Exported
 export const useHeaderTrail = () => {
-    const { headerTrail, setHeaderTrail } = useContext(HeaderTrailContextState);
+    const { headerTrail, setHeaderTrail } = useContext(HeaderTrailContext);
     return { headerTrail, setHeaderTrail };
 };
 
 
 export const HeaderTrail = () => {
     const { disabled } = useDevice();
+    const { textSize } = useUiSize();
     const { headerTrail } = useHeaderTrail();
 
     if (disabled) return null;
@@ -77,12 +92,12 @@ export const HeaderTrail = () => {
     return (
         <Flex align="center" style={headerTrailStyle}>
             {headerTrail.entity?.link && (
-                <Link to={headerTrail.entity.link} variant="ghost" color="gray">
+                <Link to={headerTrail.entity.link} variant="ghost" color="gray" size={textSize}>
                     {headerTrail.entity.name}
                 </Link>
             )}
             {headerTrail.entity && !headerTrail.entity.link && (
-                <Text size="2" color="gray" mx="2">{headerTrail.entity.name}</Text>
+                <Text size={textSize} color="gray" mx="2">{headerTrail.entity.name}</Text>
             )}
             <InstanceArea />
         </Flex>
@@ -101,8 +116,24 @@ export const HeaderTrailActions = () => {
 };
 
 
+export const HeaderTrailCenter = () => {
+    const { disabled } = useDevice();
+    const { headerTrail } = useHeaderTrail();
+
+    if (disabled) return null;
+    if (!headerTrail?.center) return null;
+
+    return (
+        <Flex align="center" justify="center" style={headerCenterStyle}>
+            { headerTrail.center }
+        </Flex>
+    );
+};
+
+
 export const HeaderTrailNavigation = () => {
     const { disabled } = useDevice();
+    const { headerNavigation } = useTheme();
     const { headerTrail } = useHeaderTrail();
     const navigate = useNavigate();
 
@@ -115,6 +146,7 @@ export const HeaderTrailNavigation = () => {
     }, [headerTrail, navigate]);
 
     if (disabled) return null;
+    if (!headerNavigation) return null;
     if (!headerTrail?.previous && !headerTrail?.next) return null;
 
     return (

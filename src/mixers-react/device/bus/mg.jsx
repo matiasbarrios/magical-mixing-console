@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useHas } from '../../helpers/has';
 import { useSetManyIf } from '../../helpers/setManyIf';
@@ -10,7 +10,7 @@ import { useChanges } from '../../helpers/changes';
 
 // Exported
 export const useBusMg = (busId) => {
-    const { features: { bus: { mg } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { mg } } } = useContext(DeviceContext);
 
     const has = useHas(mg, busId);
 
@@ -19,7 +19,7 @@ export const useBusMg = (busId) => {
 
 
 export const useBusMgOn = (busId, mgId) => {
-    const { features: { bus: { mg: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { mg: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, [busId, mgId]);
 
@@ -30,7 +30,7 @@ export const useBusMgOn = (busId, mgId) => {
 
 
 export const useBusMgUnassignAllOf = (mgId) => {
-    const { features: { bus: { options, mg: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { options, mg: { on } } } } = useContext(DeviceContext);
 
     const idsToEvaluate = useMemo(() => options.map(o => [o.id, mgId]), [options, mgId]);
     const conditionToEvaluate = useCallback(value => !!value, []);
@@ -56,7 +56,7 @@ export const busMgUnassignAll = (changeSchedule, bus, mg, busId) => {
 
 
 export const useBusMgUnassignAllOfAll = () => {
-    const { features: { bus, mg } } = useContext(DeviceContextRoot);
+    const { features: { bus, mg } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const unassignAll = useCallback(async () => {

@@ -24,7 +24,7 @@ export const vaultSetProvider = async (p) => {
 };
 
 
-export const VaultContext = ({ children }) => {
+export const VaultProvider = ({ children }) => {
     const [vaults, setVaults] = useState([]);
 
     useEffect(() => {

@@ -1,12 +1,12 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
 import { useBusToOnMonitorSetMany, useDcaSolo } from '@magical-mixing/mixers-react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Internal
 const useFallbackSolo = (dcaId) => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
 
     const busesIds = useMemo(() => {
         const r = [];
@@ -60,7 +60,7 @@ const DeviceSolo = ({ dcaId, children }) => {
 
 // Exported
 export const FallbackDcaSolo = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions
         .find(o => o.id === dcaId)) return <DeviceSolo dcaId={dcaId}>{children}</DeviceSolo>;
     return <FallbackSolo dcaId={dcaId}>{children}</FallbackSolo>;

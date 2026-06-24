@@ -66,7 +66,7 @@ export const ICON_SPACER = { style: ICON_STYLE };
 /** Radix DropdownMenu.Content / SubContent — always normal regardless of UI text size. */
 export const DROPDOWN_MENU_CONTENT_SIZE = '2';
 
-/** D3/SVG chart axis and threshold labels (see ThemeContext). */
+/** D3/SVG chart axis and threshold labels (see ThemeProvider). */
 export const CHART_FONT_SIZE = 'var(--mmc-chart-font-size)';
 
 export const getChartThresholdTextLineHeight = () => {

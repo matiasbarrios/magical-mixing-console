@@ -1,7 +1,7 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
 import { scaleLog } from 'd3';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHas } from '../../helpers/has';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
@@ -11,7 +11,7 @@ import { defaultOption, useChanges } from '../../helpers/changes';
 
 // Exported
 export const useBusEqualizer = (busId) => {
-    const { features: { bus: { equalizer } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer } } } = useContext(DeviceContext);
 
     const has = useHas(equalizer, busId);
 
@@ -20,7 +20,7 @@ export const useBusEqualizer = (busId) => {
 
 
 export const useBusEqualizerOn = (busId) => {
-    const { features: { bus: { equalizer: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -31,7 +31,7 @@ export const useBusEqualizerOn = (busId) => {
 
 
 export const useBusEqualizerMode = (busId) => {
-    const { features: { bus: { equalizer: { mode } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { mode } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(mode, busId);
 
@@ -47,7 +47,7 @@ export const useBusEqualizerMode = (busId) => {
 
 
 export const useBusEqualizerParametric = (busId) => {
-    const { features: { bus: { equalizer: { parametric } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { parametric } } } } = useContext(DeviceContext);
 
     const has = useHas(parametric, busId);
 
@@ -56,7 +56,7 @@ export const useBusEqualizerParametric = (busId) => {
 
 
 export const useBusEqualizerParametricOptions = (busId) => {
-    const { features: { bus: { equalizer: { parametric } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { parametric } } } } = useContext(DeviceContext);
 
     const options = useOptions(parametric, busId);
 
@@ -67,7 +67,7 @@ export const useBusEqualizerParametricOptions = (busId) => {
 export const useBusEqualizerParametricOn = (busId, parameterId) => {
     const {
         features: { bus: { equalizer: { parametric: { on } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, [busId, parameterId]);
 
@@ -80,7 +80,7 @@ export const useBusEqualizerParametricOn = (busId, parameterId) => {
 export const useBusEqualizerParametricType = (busId, parameterId) => {
     const {
         features: { bus: { equalizer: { parametric: { type } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(type, [busId, parameterId]);
 
@@ -95,7 +95,7 @@ export const useBusEqualizerParametricType = (busId, parameterId) => {
 export const useBusEqualizerParametricFrequency = (busId, parameterId) => {
     const {
         features: { bus: { equalizer: { parametric: { frequency } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(frequency, [busId, parameterId]);
 
@@ -113,7 +113,7 @@ export const useBusEqualizerParametricFrequency = (busId, parameterId) => {
 export const useBusEqualizerParametricQ = (busId, parameterId) => {
     const {
         features: { bus: { equalizer: { parametric: { q } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(q, [busId, parameterId]);
 
@@ -129,7 +129,7 @@ export const useBusEqualizerParametricQ = (busId, parameterId) => {
 export const useBusEqualizerParametricGain = (busId, parameterId) => {
     const {
         features: { bus: { equalizer: { parametric: { gain } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(gain, [busId, parameterId]);
 
@@ -171,7 +171,7 @@ export const busEqualizerParametricReset = (changeSchedule, parametric, busId) =
 
 
 export const useBusEqualizerParametricReset = (busId) => {
-    const { features: { bus: { equalizer: { parametric } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { parametric } } } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -185,7 +185,7 @@ export const useBusEqualizerParametricReset = (busId) => {
 
 
 export const useBusEqualizerGraphic = (busId) => {
-    const { features: { bus: { equalizer: { graphic } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { graphic } } } } = useContext(DeviceContext);
 
     const has = useHas(graphic, busId);
 
@@ -194,7 +194,7 @@ export const useBusEqualizerGraphic = (busId) => {
 
 
 export const useBusEqualizerGraphicOptions = (busId) => {
-    const { features: { bus: { equalizer: { graphic } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { graphic } } } } = useContext(DeviceContext);
 
     const options = useOptions(graphic, busId);
 
@@ -205,7 +205,7 @@ export const useBusEqualizerGraphicOptions = (busId) => {
 export const useBusEqualizerGraphicGain = (busId, graphId) => {
     const {
         features: { bus: { equalizer: { graphic: { gain } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(gain, [busId, graphId]);
 
@@ -228,7 +228,7 @@ export const busEqualizerGraphicReset = (changeSchedule, graphic, busId) => {
 
 
 export const useBusEqualizerGraphicReset = (busId) => {
-    const { features: { bus: { equalizer: { graphic } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { graphic } } } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -242,7 +242,7 @@ export const useBusEqualizerGraphicReset = (busId) => {
 
 
 export const useBusEqualizerTrue = (busId) => {
-    const { features: { bus: { equalizer: { true: trueE } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { true: trueE } } } } = useContext(DeviceContext);
 
     const has = useHas(trueE, busId);
 
@@ -251,7 +251,7 @@ export const useBusEqualizerTrue = (busId) => {
 
 
 export const useBusEqualizerTrueOptions = (busId) => {
-    const { features: { bus: { equalizer: { true: trueE } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { true: trueE } } } } = useContext(DeviceContext);
 
     const options = useOptions(trueE, busId);
 
@@ -262,7 +262,7 @@ export const useBusEqualizerTrueOptions = (busId) => {
 export const useBusEqualizerTrueGain = (busId, graphId) => {
     const {
         features: { bus: { equalizer: { true: { gain } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(gain, [busId, graphId]);
 
@@ -285,7 +285,7 @@ export const busEqualizerTrueReset = (changeSchedule, truE, busId) => {
 
 
 export const useBusEqualizerTrueReset = (busId) => {
-    const { features: { bus: { equalizer: { true: truE } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { equalizer: { true: truE } } } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {

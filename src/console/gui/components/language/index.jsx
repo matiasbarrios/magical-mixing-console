@@ -12,7 +12,7 @@ const Context = createContext({});
 
 
 // Exported
-export const LanguageContext = ({ children }) => {
+export const LanguageProvider = ({ children }) => {
     const [language, languageSet] = useSettings('language', getOSLanguage());
     const [translateConcepts, translateConceptsSet] = useSettings('translate-concepts', false);
 
@@ -108,9 +108,12 @@ export const useLanguage = () => {
 };
 
 
+export { LANGUAGE_OPTIONS } from './translations';
+
+
 export const busTypesPlural = {
     main: 'Mains',
-    secondary: 'Secondaries',
+    secondary: 'Aux buses',
     effect: 'Effect buses',
     channel: 'Channels',
     line: 'Lines',

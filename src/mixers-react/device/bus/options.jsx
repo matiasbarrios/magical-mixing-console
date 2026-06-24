@@ -1,11 +1,11 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useBusOptions = () => {
-    const { features: { bus: { options } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { options } } } = useContext(DeviceContext);
 
     const types = useMemo(() => [...new Set(options.map(o => o.type))], [options]);
 

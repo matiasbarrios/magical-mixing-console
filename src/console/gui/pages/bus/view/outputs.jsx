@@ -14,15 +14,17 @@ import {
     DropdownMenu, Flex, IconButton, Text,
 } from '@radix-ui/themes';
 import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
+import {
+    ADD_ROAM_ID, REMOVE_ROAM_ID, RESET_ROAM_ID, focusRoamAttrs,
+} from '../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../components/base/resetIcon';
-import { Label } from '../../../components/base/labelControlTable';
 import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
 import { useOutputNameTranslated } from '../../output/view/name';
+import ViewOutput from '../../output/view/openOutput';
 import { TapDropdown } from '../../output/view/tap';
 import { ucFirst } from '../../../helpers/format';
 import { ICON_STYLE } from '../../../helpers/values';
-import ListStack from '../../../components/layout/list/stack';
 import Volume from '../../output/view/volume';
 import { DropdownMenuTrigger } from '../../../components/base/dropdownMenuTrigger';
 import { Alert } from '../../../components/base/alert';
@@ -97,7 +99,12 @@ const AddOutputs = ({ busId }) => {
 
     return (
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
-            <DropdownMenuTrigger variant="soft" color="gray" onClick={toggleOpened}>
+            <DropdownMenuTrigger
+                variant="soft"
+                color="gray"
+                onClick={toggleOpened}
+                {...focusRoamAttrs(ADD_ROAM_ID)}
+            >
                 <PlusIcon style={ICON_STYLE} />
             </DropdownMenuTrigger>
             <DropdownMenuContent size="2">
@@ -133,6 +140,7 @@ const ResetOutputs = ({ busId }) => {
                     onClick={doOpen}
                     disabled={disabled}
                     aria-label={t('Reset')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
                 >
                     <ResetIcon />
                 </IconButton>
@@ -164,6 +172,7 @@ const UnassignOutput = ({ outputId, busId }) => {
             onClick={reset}
             disabled={disabled}
             aria-label={t('Unassign output')}
+            {...focusRoamAttrs(REMOVE_ROAM_ID)}
         >
             <MinusIcon style={ICON_STYLE} />
         </IconButton>
@@ -172,7 +181,6 @@ const UnassignOutput = ({ outputId, busId }) => {
 
 
 const OutputRow = ({ outputId, busId }) => {
-    const { name } = useOutputNameTranslated(outputId);
     const { has: tapHas } = useOutputTap(outputId);
     const { t } = useLanguage();
 
@@ -194,12 +202,8 @@ const OutputRow = ({ outputId, busId }) => {
             wrap="nowrap"
             minWidth="0"
         >
-            <Flex flexShrink="0" minWidth="0">
-                {tapHas ? (
-                    <TapDropdown outputId={outputId} label={name} fillWidth />
-                ) : (
-                    <Label>{ name }</Label>
-                )}
+            <Flex flexShrink="0">
+                <ViewOutput outputId={outputId} />
             </Flex>
             <Flex
                 flexGrow="1"
@@ -209,6 +213,15 @@ const OutputRow = ({ outputId, busId }) => {
             >
                 <Volume outputId={outputId} minWidth="0" fullWidth trackStart={levelTrackStart} />
             </Flex>
+            {tapHas && (
+                <Flex
+                    flexShrink="0"
+                    onPointerDown={stopRowOpen}
+                    onClick={stopRowOpen}
+                >
+                    <TapDropdown outputId={outputId} showValue abbreviate />
+                </Flex>
+            )}
             <Flex
                 flexShrink="0"
                 onPointerDown={stopRowOpen}
@@ -238,9 +251,7 @@ export default ({ busId }) => {
 
     return (
         <Flex direction="column" gapY="3" width="100%">
-            <ListStack>
-                {options.map(b => <Evaluate key={b.id} outputId={b.id} busId={busId} />)}
-            </ListStack>
+            {options.map(b => <Evaluate key={b.id} outputId={b.id} busId={busId} />)}
             <Flex align="center" justify="end" gap="1">
                 <ResetOutputs busId={busId} />
                 <AddOutputs busId={busId} />

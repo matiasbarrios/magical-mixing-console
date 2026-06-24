@@ -4,9 +4,11 @@ import {
 } from 'react';
 import { IconButton } from '@radix-ui/themes';
 import { useDevice, useInputOptions, useInputResetAll } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../components/base/resetIcon';
 import ListStack from '../../components/layout/list/stack';
 import { useLanguage } from '../../components/language';
+import { useScreen } from '../../components/base/screen';
 import { useUiSize } from '../../components/theme';
 import ListPageShell from '../../components/layout/list/shell';
 import { useListHeaderTrail } from '../../components/layout/headerTrail/hooks/useHeaderTrail';
@@ -14,43 +16,39 @@ import { ListFilterBar, ListFilterTitle, ListFilterActions } from '../../compone
 import { ListFilterScope, useListFilterVisibility } from '../../components/layout/list/filterEmpty';
 import TextFieldErasable from '../../components/base/textFieldErasable';
 import { Alert } from '../../components/base/alert';
-import ListFooter from '../../components/layout/list/footer';
 import { useInputNameTranslated } from './view/name';
 import ListRow from './listRow';
 
 
 // Internal
-const ListFooterActions = () => {
+const ListToolbarActions = () => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
     const { disabled } = useDevice();
     const { resetAll } = useInputResetAll();
 
     return (
-        <ListFooter
-            reset={(
-                <Alert onAccept={resetAll} accept={t('Restore all inputs')}>
-                    {doOpen => (
-                        <IconButton
-                            variant="soft"
-                            color="gray"
-                            size={textSize}
-                            radius="full"
-                            onClick={doOpen}
-                            disabled={disabled}
-                            aria-label={t('Restore all inputs')}
-                        >
-                            <ResetIcon />
-                        </IconButton>
-                    )}
-                </Alert>
+        <Alert onAccept={resetAll} accept={t('Restore all inputs')}>
+            {doOpen => (
+                <IconButton
+                    variant="soft"
+                    color="gray"
+                    size={textSize}
+                    radius="full"
+                    onClick={doOpen}
+                    disabled={disabled}
+                    aria-label={t('Restore all inputs')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
+                >
+                    <ResetIcon />
+                </IconButton>
             )}
-        />
+        </Alert>
     );
 };
 
 
-const Element = ({ inputId, filterBy }) => {
+const Element = ({ inputId, filterBy, inlineBuses }) => {
     const { translateOption } = useLanguage();
     const { get } = useInputOptions();
     const { name } = useInputNameTranslated(inputId);
@@ -66,11 +64,11 @@ const Element = ({ inputId, filterBy }) => {
 
     if (hide) return null;
 
-    return <ListRow inputId={inputId} />;
+    return <ListRow inputId={inputId} inlineBuses={inlineBuses} />;
 };
 
 
-const Elements = ({ filterBy }) => {
+const Elements = ({ filterBy, inlineBuses }) => {
     const { options } = useInputOptions();
 
     return options.map(i => (
@@ -78,15 +76,16 @@ const Elements = ({ filterBy }) => {
             key={i.id}
             inputId={i.id}
             filterBy={filterBy}
+            inlineBuses={inlineBuses}
         />
     ));
 };
 
 
-const List = ({ filterBy }) => (
+const List = ({ filterBy, inlineBuses }) => (
     <ListFilterScope filterBy={filterBy}>
         <ListStack>
-            <Elements filterBy={filterBy} />
+            <Elements filterBy={filterBy} inlineBuses={inlineBuses} />
         </ListStack>
     </ListFilterScope>
 );
@@ -95,6 +94,8 @@ const List = ({ filterBy }) => (
 // Exported
 export default () => {
     const { t } = useLanguage();
+    const { xs } = useScreen();
+    const inlineBuses = !xs;
 
     const [filterBy, setFilterBy] = useState('');
 
@@ -113,10 +114,11 @@ export default () => {
                         width="100%"
                     />
                 </ListFilterTitle>
-                <ListFilterActions />
+                <ListFilterActions>
+                    <ListToolbarActions />
+                </ListFilterActions>
             </ListFilterBar>
-            <List filterBy={filterBy} />
-            <ListFooterActions />
+            <List filterBy={filterBy} inlineBuses={inlineBuses} />
         </ListPageShell>
     );
 };

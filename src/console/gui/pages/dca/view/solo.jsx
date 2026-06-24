@@ -110,6 +110,7 @@ const Solo = ({
                 aria-label={t('Solo on')}
                 aria-pressed={value}
                 dense={dense}
+                focusRoam="solo"
             />
         );
     };

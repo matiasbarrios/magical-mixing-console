@@ -4,12 +4,12 @@ import {
     useBusMgUnassignAllOfAll,
 } from '@magical-mixing/mixers-react';
 import { useCallback, useContext, useMemo } from 'react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Internal
 const useFallbackMgOn = (busId, mgId) => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
 
     const value = useMemo(() => {
         const mg = mgOptions.find(o => o.id === mgId);
@@ -40,7 +40,7 @@ const useFallbackMgOn = (busId, mgId) => {
 
 
 const useFallbackMgUnassignAllOf = (mgId) => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
 
     const unassignAllOf = useCallback(() => {
         const r = mgOptions.find(o => o.id === mgId);
@@ -98,7 +98,7 @@ export const useFallbackBusMg = (busId) => {
 
 
 export const useFallbackBusMgUnassignAllOfAll = () => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
 
     const { unassignAll: unassignAllDevice } = useBusMgUnassignAllOfAll();
 
@@ -115,7 +115,7 @@ export const useFallbackBusMgUnassignAllOfAll = () => {
 
 
 export const FallbackBusMgOn = ({ busId, mgId, children }) => {
-    const { mgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions } = useContext(FallbackContext);
     if (!mgOptions.find(o => o.id === mgId)) {
         return <DeviceBusMgOn busId={busId} mgId={mgId}>{children}</DeviceBusMgOn>;
     }
@@ -124,7 +124,7 @@ export const FallbackBusMgOn = ({ busId, mgId, children }) => {
 
 
 export const FallbackBusMgUnassignAllOf = ({ mgId, children }) => {
-    const { mgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions } = useContext(FallbackContext);
     if (!mgOptions.find(o => o.id === mgId)) {
         return <DeviceBusMgUnassignAllOf mgId={mgId}>{children}</DeviceBusMgUnassignAllOf>;
     }

@@ -8,6 +8,7 @@ import {
     useBusEqualizerMode, useBusEqualizerOn,
     useBusRTA, useBusRTAPosition, useDevice,
 } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../../components/base/resetIcon';
 import { ICON_STYLE } from '../../../../helpers/values';
 import { useLanguage } from '../../../../components/language';
@@ -16,7 +17,7 @@ import { ActiveToggleButton } from '../../../../components/base/activeToggleButt
 import { DropdownSelect } from '../../../../components/base/dropdownSelect';
 import { useEqualizer } from './context';
 import Edit, { HasEditableFilters, ResetWhich } from './edit';
-import { PresetContext, PresetSave, PresetsMenu } from './presets';
+import { PresetProvider, PresetSave, PresetsMenu } from './presets';
 
 
 // Internal
@@ -186,6 +187,7 @@ const EditButton = ({ busId }) => {
                                 onClick={reset}
                                 disabled={disabled}
                                 aria-label={t('Reset')}
+                                {...focusRoamAttrs(RESET_ROAM_ID)}
                             >
                                 <ResetIcon />
                             </IconButton>
@@ -254,9 +256,9 @@ export default ({ busId }) => {
     if (!isParametric) return toolbar;
 
     return (
-        <PresetContext>
+        <PresetProvider>
             {toolbar}
             <PresetSave busId={busId} open={presetSaveOpen} onOpenChange={setPresetSaveOpen} />
-        </PresetContext>
+        </PresetProvider>
     );
 };

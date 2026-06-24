@@ -4,6 +4,7 @@ import {
 } from 'react';
 import { IconButton } from '@radix-ui/themes';
 import { useDevice, useFxOptions, useFxResetAll } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../components/base/resetIcon';
 import ListStack from '../../components/layout/list/stack';
 import { useLanguage } from '../../components/language';
@@ -14,39 +15,35 @@ import { ListFilterBar, ListFilterTitle, ListFilterActions } from '../../compone
 import { ListFilterScope, useListFilterVisibility } from '../../components/layout/list/filterEmpty';
 import TextFieldErasable from '../../components/base/textFieldErasable';
 import { Alert } from '../../components/base/alert';
-import ListFooter from '../../components/layout/list/footer';
 import { useFxNameTranslated } from './view/name';
 import { useFxTypeName } from './view/type';
 import ListRow from './listRow';
 
 
 // Internal
-const ListFooterActions = () => {
+const ListToolbarActions = () => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
     const { disabled } = useDevice();
     const { resetAll } = useFxResetAll();
 
     return (
-        <ListFooter
-            reset={(
-                <Alert onAccept={resetAll} accept={t('Restore all FX')}>
-                    {doOpen => (
-                        <IconButton
-                            variant="soft"
-                            color="gray"
-                            size={textSize}
-                            radius="full"
-                            onClick={doOpen}
-                            disabled={disabled}
-                            aria-label={t('Restore all FX')}
-                        >
-                            <ResetIcon />
-                        </IconButton>
-                    )}
-                </Alert>
+        <Alert onAccept={resetAll} accept={t('Restore all FX')}>
+            {doOpen => (
+                <IconButton
+                    variant="soft"
+                    color="gray"
+                    size={textSize}
+                    radius="full"
+                    onClick={doOpen}
+                    disabled={disabled}
+                    aria-label={t('Restore all FX')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
+                >
+                    <ResetIcon />
+                </IconButton>
             )}
-        />
+        </Alert>
     );
 };
 
@@ -111,10 +108,11 @@ export default () => {
                         width="100%"
                     />
                 </ListFilterTitle>
-                <ListFilterActions />
+                <ListFilterActions>
+                    <ListToolbarActions />
+                </ListFilterActions>
             </ListFilterBar>
             <List filterBy={filterBy} />
-            <ListFooterActions />
         </ListPageShell>
     );
 };

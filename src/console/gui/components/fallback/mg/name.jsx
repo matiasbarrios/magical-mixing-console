@@ -1,7 +1,7 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
 import { useMgName, useMgNameResetAll, useMgOptions } from '@magical-mixing/mixers-react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 import { useLanguage } from '../../language';
 import { useFallbackName, useFallbackNames } from '../shared/name';
 import { useFallbackMgOptions } from './options';
@@ -9,7 +9,7 @@ import { useFallbackMgOptions } from './options';
 
 // Internal
 const FallbackName = ({ mgId, defaultName, children }) => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
     const { value: nameValue, set: nameSet } = useFallbackName('mg', mgId);
 
     const { options: deviceOptions } = useMgOptions();
@@ -53,7 +53,7 @@ const DeviceMgName = ({ mgId, defaultName, children }) => {
 
 // Exported
 export const useFallbackMgNames = () => {
-    const { mgOptions, setMgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions, setMgOptions } = useContext(FallbackContext);
     const { namesReset } = useFallbackNames('mg');
     const { resetAll: mgNameResetAll } = useMgNameResetAll();
 
@@ -69,7 +69,7 @@ export const useFallbackMgNames = () => {
 
 
 export const FallbackMgName = ({ mgId, children }) => {
-    const { mgOptions } = useContext(FallbackContextRoot);
+    const { mgOptions } = useContext(FallbackContext);
 
     const { t } = useLanguage();
     const { get } = useFallbackMgOptions();

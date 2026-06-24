@@ -1,6 +1,6 @@
 # Magical Mixing Console — Domain Concepts
 
-This document describes the **mixer domain model** as Magical Mixing Console (MMC) understands it. It is meant for UI and navigation work — not for driver implementation details.
+This document describes the **mixer domain model** as Magical Mixing Console (MMC) understands it. It is meant for product and UI work — especially navigation — not for driver implementation details.
 
 **Scope today:** Behringer X Air / M Air family (X18, XR18, MR18, XR16, MR12, and v2 variants). Concepts are expressed in **industry-standard English** (bus, channel, aux, DCA, etc.) regardless of UI locale.
 
@@ -305,7 +305,7 @@ The bus detail page (`/bus/:busId`) is the richest screen. Tabs vary by bus type
 | Outputs | Quick output source assignment |
 | DCA / MG | Group assignments |
 
-The header **trail** shows the current entity label and instance (e.g. "CH 5" with picker) plus prev/next within the same entity type. Bus areas (Gate, From, Input, …) are **tabs**, not separate routes.
+The header **trail** shows the current entity label and instance (e.g. "CH 5" with picker) plus prev/next within the same entity type. Entity areas (Gate, From, Input, …) are **tabs in the sticky header**, not separate routes or inline tab bars below the trail.
 
 ---
 

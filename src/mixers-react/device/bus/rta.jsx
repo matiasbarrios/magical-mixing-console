@@ -1,6 +1,6 @@
 // Requirements
 import { useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 import { useHasGet } from '../../helpers/hasGet';
@@ -8,7 +8,7 @@ import { useHasGet } from '../../helpers/hasGet';
 
 // Exported
 export const useBusRTA = (busId) => {
-    const { features: { bus: { rta } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { rta } } } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(rta, busId);
 
@@ -17,7 +17,7 @@ export const useBusRTA = (busId) => {
 
 
 export const useBusRTAPosition = (busId) => {
-    const { features: { bus: { rta: { position } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { rta: { position } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(position, busId);
 

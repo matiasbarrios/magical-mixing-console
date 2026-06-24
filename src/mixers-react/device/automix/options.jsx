@@ -1,11 +1,11 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useAutomixOptions = () => {
-    const { features: { automix: { options } } } = useContext(DeviceContextRoot);
+    const { features: { automix: { options } } } = useContext(DeviceContext);
 
     const get = useCallback(automixId => options.find(o => o.id === automixId), [options]);
 

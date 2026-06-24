@@ -29,6 +29,7 @@ const Mute = ({
             aria-label={t('Muted')}
             aria-pressed={value}
             dense={dense}
+            focusRoam="mute"
         />
     );
 };

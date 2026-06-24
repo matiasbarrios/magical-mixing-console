@@ -1,11 +1,11 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useSceneLoad = (sceneId) => {
-    const { features: { scene, cacheRefetch } } = useContext(DeviceContextRoot);
+    const { features: { scene, cacheRefetch } } = useContext(DeviceContext);
 
     const load = useCallback(() => {
         scene.load(sceneId);

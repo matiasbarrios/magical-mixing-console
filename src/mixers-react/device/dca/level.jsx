@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useHasGet } from '../../helpers/hasGet';
 import { useChanges } from '../../helpers/changes';
@@ -8,7 +8,7 @@ import { useChanges } from '../../helpers/changes';
 
 // Exported
 export const useDcaLevel = (dcaId) => {
-    const { features: { dca: { level } } } = useContext(DeviceContextRoot);
+    const { features: { dca: { level } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(level, dcaId);
 
@@ -22,7 +22,7 @@ export const useDcaLevel = (dcaId) => {
 
 
 export const useDcaLevelResetAll = () => {
-    const { features: { dca } } = useContext(DeviceContextRoot);
+    const { features: { dca } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {
@@ -38,7 +38,7 @@ export const useDcaLevelResetAll = () => {
 
 
 export const useDcaLevelPre = (dcaId) => {
-    const { features: { dca: { level: { pre } } } } = useContext(DeviceContextRoot);
+    const { features: { dca: { level: { pre } } } } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(pre, dcaId);
 
@@ -47,7 +47,7 @@ export const useDcaLevelPre = (dcaId) => {
 
 
 export const useDcaLevelPost = (dcaId) => {
-    const { features: { dca: { level: { post } } } } = useContext(DeviceContextRoot);
+    const { features: { dca: { level: { post } } } } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(post, dcaId);
 

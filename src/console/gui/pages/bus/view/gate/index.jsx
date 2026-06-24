@@ -7,7 +7,7 @@ import Sidechain from './sidechain';
 import Options from './options';
 import Parameters from './parameters';
 import {
-    PaginationContents, PaginationContext, PaginationNext, PaginationPrevious,
+    PaginationContents, PaginationProvider, PaginationNext, PaginationPrevious,
 } from './pagination';
 import Chart from './chart';
 
@@ -60,8 +60,8 @@ export default ({ busId }) => {
     const { has } = useBusGate(busId);
     if (!has) return null;
     return (
-        <PaginationContext busId={busId}>
+        <PaginationProvider busId={busId}>
             <Gate busId={busId} />
-        </PaginationContext>
+        </PaginationProvider>
     );
 };

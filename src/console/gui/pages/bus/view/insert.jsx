@@ -10,7 +10,7 @@ import {
     useBusInsertOn,
 } from '@magical-mixing/mixers-react';
 import {
-    AlertDialog, Button, Callout, Flex, Text,
+    AlertDialog, Button, Flex, Text,
 } from '@radix-ui/themes';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { ICON_STYLE } from '../../../helpers/values';
@@ -27,7 +27,7 @@ import { useUiSize } from '../../../components/theme';
 
 
 // Internal
-const InsertModeWarning = ({ fxId }) => {
+const InsertModeHint = ({ fxId }) => {
     const { t } = useLanguage();
     const { has: insertHas } = useFxInsertHas(fxId);
     const { has, value } = useFxInsertOn(fxId);
@@ -39,25 +39,13 @@ const InsertModeWarning = ({ fxId }) => {
     if (!showWarning) return null;
 
     return (
-        <Callout.Root color="amber" mb="3">
-            <Callout.Icon>
-                <ExclamationTriangleIcon />
-            </Callout.Icon>
-            <Callout.Text>
+        <Flex align="center" gapX="1">
+            <Text size="2" color="amber"><ExclamationTriangleIcon style={ICON_STYLE} /></Text>
+            <Text size="2" color="amber" wrap="nowrap">
                 { t('This FX is not in insert mode') }
-            </Callout.Text>
-        </Callout.Root>
+            </Text>
+        </Flex>
     );
-};
-
-
-const AssignedInsertModeWarning = ({ busId }) => {
-    const { has, value, get } = useBusInsertFx(busId);
-    const option = useMemo(() => get(value), [get, value]);
-
-    if (!has || !option || option.fxId === null) return null;
-
-    return <InsertModeWarning fxId={option.fxId} />;
 };
 
 
@@ -298,6 +286,8 @@ const StatusRow = ({ busId }) => {
 
 const EffectRow = ({ busId }) => {
     const { t } = useLanguage();
+    const { value, get } = useBusInsertFx(busId);
+    const option = useMemo(() => get(value), [get, value]);
 
     return (
         <LabelControlTable.Row>
@@ -307,8 +297,11 @@ const EffectRow = ({ busId }) => {
                 </Label>
             </LabelControlTable.Cell>
             <LabelControlTable.Cell>
-                <Flex align="center" justify="end" width="100%" minWidth="0">
-                    <FxInsertSelect busId={busId} />
+                <Flex direction="column" align="end" gap="1" width="100%" minWidth="0">
+                    <Flex align="center" justify="end" width="100%" minWidth="0">
+                        <FxInsertSelect busId={busId} />
+                    </Flex>
+                    {!!option?.fxId && <InsertModeHint fxId={option.fxId} />}
                 </Flex>
             </LabelControlTable.Cell>
         </LabelControlTable.Row>
@@ -338,15 +331,12 @@ const Insert = ({ busId }) => {
     const { textSize: controlSize } = useUiSize();
 
     return (
-        <>
-            <AssignedInsertModeWarning busId={busId} />
-            <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
-                <StatusRow busId={busId} />
-                <EffectRow busId={busId} />
-                <FxType busId={busId} controlSize={controlSize} />
-                <ParametersIFHas busId={busId} controlSize={controlSize} />
-            </LabelControlTable.List>
-        </>
+        <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
+            <StatusRow busId={busId} />
+            <EffectRow busId={busId} />
+            <FxType busId={busId} controlSize={controlSize} />
+            <ParametersIFHas busId={busId} controlSize={controlSize} />
+        </LabelControlTable.List>
     );
 };
 

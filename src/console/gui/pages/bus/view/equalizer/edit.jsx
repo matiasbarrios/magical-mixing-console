@@ -13,6 +13,7 @@ import {
     useBusEqualizerTrue, useBusEqualizerTrueReset,
     useDevice,
 } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../../components/base/resetIcon';
 import { ICON_STYLE } from '../../../../helpers/values';
 import FrequencyInput from '../../../../components/base/frequencyInput';
@@ -291,6 +292,7 @@ export default ({ busId, open, onOpenChange }) => {
                                 onClick={reset}
                                 disabled={disabled}
                                 aria-label={t('Reset')}
+                                {...focusRoamAttrs(RESET_ROAM_ID)}
                             >
                                 <ResetIcon />
                             </IconButton>

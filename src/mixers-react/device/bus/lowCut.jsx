@@ -1,13 +1,13 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useHas } from '../../helpers/has';
 
 
 // Exported
 export const useBusLowCut = (busId) => {
-    const { features: { bus: { lowCut } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { lowCut } } } = useContext(DeviceContext);
 
     const has = useHas(lowCut, busId);
 
@@ -16,7 +16,7 @@ export const useBusLowCut = (busId) => {
 
 
 export const useBusLowCutOn = (busId) => {
-    const { features: { bus: { lowCut: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { lowCut: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -27,7 +27,7 @@ export const useBusLowCutOn = (busId) => {
 
 
 export const useBusLowCutFrequency = (busId) => {
-    const { features: { bus: { lowCut: { frequency } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { lowCut: { frequency } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(frequency, busId);
 

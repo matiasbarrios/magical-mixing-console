@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { hasCall, hasGetOnlyOnce } from '../../helpers/feature';
 import { defaultOption, useChanges } from '../../helpers/changes';
 
@@ -43,7 +43,7 @@ export const outputResetAllWithSource = (changeSchedule, output, sourceType, sou
 
 
 export const useOutputReset = (outputId) => {
-    const { features: { output } } = useContext(DeviceContextRoot);
+    const { features: { output } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -57,7 +57,7 @@ export const useOutputReset = (outputId) => {
 
 
 export const useOutputResetAll = () => {
-    const { features: { output } } = useContext(DeviceContextRoot);
+    const { features: { output } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {
@@ -71,7 +71,7 @@ export const useOutputResetAll = () => {
 
 
 export const useOutputResetAllWithSource = (sourceType, sourceId) => {
-    const { features: { output } } = useContext(DeviceContextRoot);
+    const { features: { output } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {

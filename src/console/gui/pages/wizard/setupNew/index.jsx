@@ -7,6 +7,7 @@ import { Button, Dialog, Flex } from '@radix-ui/themes';
 import { useDevice } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
+import ConditionalScrollY from '../../../components/base/conditionalScrollY';
 import DialogHeader from '../../../components/base/dialogHeader';
 import { getSetupType } from './options';
 import { isKickSidechainSourceValid, kickSidechainFromSetupType } from './kickBassSidechain';
@@ -255,15 +256,9 @@ export default ({ open, onOpenChange }) => {
                 <DialogHeader mb="0">
                     { t('Configure something new') }
                 </DialogHeader>
-                <Flex
-                    direction="column"
-                    flexGrow="1"
-                    minHeight="0"
-                    width="100%"
-                    className="mmc-scroll-y"
-                >
+                <ConditionalScrollY width="100%">
                     { stepContent }
-                </Flex>
+                </ConditionalScrollY>
                 {!applying && (stepIndex > 0 || !autoAdvanceStep) && (
                     <Flex
                         align="center"

@@ -25,6 +25,7 @@ const Mute = ({
             disabled={disabled}
             onClick={onClick}
             dense={dense}
+            focusRoam="mute"
         />
     );
 };

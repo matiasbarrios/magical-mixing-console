@@ -37,6 +37,20 @@ const settingsSet = (key, value) => {
 };
 
 
+const migrateLegacySettings = () => {
+    let migrated = false;
+    if (settings['entity-view-layout'] === undefined && settings['bus-view-layout'] !== undefined) {
+        settings['entity-view-layout'] = settings['bus-view-layout'];
+        migrated = true;
+    }
+    if (settings['header-navigation'] === undefined && settings['header-bus-navigation'] !== undefined) {
+        settings['header-navigation'] = settings['header-bus-navigation'];
+        migrated = true;
+    }
+    if (migrated) settingsFlush();
+};
+
+
 const settingsGetForDevice = (deviceId, settingId, defaultValue) => {
     if (!provider) return defaultValue;
     if (!settings.devices) settings.devices = {};
@@ -63,6 +77,7 @@ export const writeSetting = (key, value) => settingsSet(key, value);
 export const settingsSetProvider = async (p) => {
     provider = p;
     settings = await provider.settingsLoad();
+    migrateLegacySettings();
 };
 
 

@@ -1,15 +1,16 @@
 // Requirements
 import { useCallback } from 'react';
-import { IconButton } from '@radix-ui/themes';
+import { Flex, IconButton } from '@radix-ui/themes';
 import {
     useAutomixReset, useBusAutomixResetAll, useDevice,
 } from '@magical-mixing/mixers-react';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../components/base/resetIcon';
 import { useLanguage } from '../../../components/language';
 import ListPageShell from '../../../components/layout/list/shell';
 import { useListHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
+import { ListFilterBar, ListFilterTitle, ListFilterActions } from '../../../components/layout/list/filterBar';
 import { Alert } from '../../../components/base/alert';
-import ListFooter from '../../../components/layout/list/footer';
 import { useUiSize } from '../../../components/theme';
 import Buses from './buses';
 import Strip from './strip';
@@ -39,6 +40,7 @@ const ResetAll = () => {
                     onClick={doOpen}
                     disabled={disabled}
                     aria-label={t('Restore automix')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
                 >
                     <ResetIcon />
                 </IconButton>
@@ -56,9 +58,17 @@ export default () => {
 
     return (
         <ListPageShell>
-            <Strip />
+            <ListFilterBar>
+                <ListFilterTitle>
+                    <Flex justify="center" width="100%" minWidth="0">
+                        <Strip />
+                    </Flex>
+                </ListFilterTitle>
+                <ListFilterActions>
+                    <ResetAll />
+                </ListFilterActions>
+            </ListFilterBar>
             <Buses />
-            <ListFooter reset={<ResetAll />} />
         </ListPageShell>
     );
 };

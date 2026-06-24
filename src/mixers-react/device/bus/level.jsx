@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useGet } from '../../helpers/get';
 import { useGetSetMany } from '../../helpers/getSetMany';
@@ -9,7 +9,7 @@ import { useSetMany } from '../../helpers/setMany';
 
 // Exported
 export const useBusLevel = (busId) => {
-    const { features: { bus: { level } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { level } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(level, busId);
 
@@ -23,7 +23,7 @@ export const useBusLevel = (busId) => {
 
 
 export const useBusLevelSetIncrementMany = (busIds) => {
-    const { features: { bus: { options, level } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { options, level } } } = useContext(DeviceContext);
 
     const selectedBusIds = useMemo(() => options
         .filter(o => busIds.includes(o.id))
@@ -36,7 +36,7 @@ export const useBusLevelSetIncrementMany = (busIds) => {
 
 
 export const useBusLevelLowerMany = () => {
-    const { features: { bus: { level } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { level } } } = useContext(DeviceContext);
 
     const minimum = useMemo(() => level.minimum, [level]);
     const setMany = useSetMany(level);
@@ -47,7 +47,7 @@ export const useBusLevelLowerMany = () => {
 
 
 export const useBusLevelPre = (busId) => {
-    const { features: { bus: { level: { pre } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { level: { pre } } } } = useContext(DeviceContext);
 
     const value = useGet(pre, busId);
 
@@ -56,7 +56,7 @@ export const useBusLevelPre = (busId) => {
 
 
 export const useBusLevelPost = (busId) => {
-    const { features: { bus: { level: { post } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { level: { post } } } } = useContext(DeviceContext);
 
     const value = useGet(post, busId);
 

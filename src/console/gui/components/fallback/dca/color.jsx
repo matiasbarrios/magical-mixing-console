@@ -4,7 +4,7 @@ import { useCallback, useContext } from 'react';
 import {
     colorOptions, useFallbackColor, useFallbackColors, useFallbackColorValueSet,
 } from '../shared/color';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Exported
@@ -31,6 +31,22 @@ const DeviceColor = ({ dcaId, defaultValue, children }) => {
 };
 
 
+export const useFallbackDcaColor = (dcaId, defaultValue = 'gray') => {
+    const { dcaOptions } = useContext(FallbackContext);
+    const deviceColor = useDcaColor(dcaId);
+    const fallbackColor = useFallbackColor('dca', dcaId);
+    const { value, set } = useFallbackColorValueSet(deviceColor, fallbackColor, defaultValue);
+
+    const isVirtual = dcaOptions?.find(o => o.id === dcaId);
+    return {
+        has: isVirtual ? true : deviceColor.has,
+        value,
+        set,
+        options: colorOptions,
+    };
+};
+
+
 // Exported
 export const useFallbackDcaColors = () => {
     const { colorsReset } = useFallbackColors('dca');
@@ -46,7 +62,7 @@ export const useFallbackDcaColors = () => {
 
 
 export const FallbackDcaColor = ({ dcaId, defaultValue, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions.find(o => o.id === dcaId)) {
         return <DeviceColor dcaId={dcaId} defaultValue={defaultValue}>{children}</DeviceColor>;
     }

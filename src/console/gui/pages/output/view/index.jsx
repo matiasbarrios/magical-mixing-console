@@ -1,10 +1,9 @@
 // Requirements
 import { useMemo } from 'react';
-import { useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 import { useOutputOptions } from '@magical-mixing/mixers-react';
 import { useEntityHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
 import EntityViewShell from '../../../components/layout/entity/shell';
-import EntityNotFound from '../../../components/base/entityNotFound';
 import OutputTabs from './tabs';
 
 
@@ -51,6 +50,6 @@ export default () => {
     const { outputId } = useParsedParams();
     const { get } = useOutputOptions();
     const output = useMemo(() => get(outputId), [get, outputId]);
-    if (!output) return <EntityNotFound listTo="/output/list" />;
+    if (!output) return <Navigate to="/output/list" replace />;
     return <Output outputId={outputId} />;
 };

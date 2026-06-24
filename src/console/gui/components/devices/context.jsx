@@ -13,7 +13,7 @@ const Context = createContext({});
 
 
 // Exported
-export const DevicesContext = ({ children }) => {
+export const DevicesProvider = ({ children }) => {
     const [devices, setDevices] = useState([]);
     const [focused, setFocused] = useState(null);
 

@@ -1,17 +1,9 @@
 // Requirements
-import {
-    useCallback, useMemo, useState,
-} from 'react';
-import { useParams } from 'react-router';
-import { Pencil1Icon } from '@radix-ui/react-icons';
-import { useDevice } from '@magical-mixing/mixers-react';
-import { HeaderIconButton } from '../../../components/layout/header/iconButton';
-import { ICON_STYLE } from '../../../helpers/values';
+import { useMemo } from 'react';
+import { Navigate, useParams } from 'react-router';
 import { useEntityHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
 import EntityViewShell from '../../../components/layout/entity/shell';
-import EntityNotFound from '../../../components/base/entityNotFound';
 import { useFallbackMgOptions } from '../../../components/fallback';
-import Edit from './edit';
 import MgTabs from './tabs';
 
 
@@ -23,7 +15,6 @@ const useParsedParams = () => {
 
 
 const Mg = ({ element }) => {
-    const { disabled } = useDevice();
     const { options } = useFallbackMgOptions();
 
     const previous = useMemo(() => {
@@ -36,15 +27,6 @@ const Mg = ({ element }) => {
         return index < options.length - 1 ? options[index + 1] : null;
     }, [options, element.id]);
 
-    const [editOpened, setEditOpened] = useState(false);
-    const editOpen = useCallback(() => setEditOpened(true), []);
-
-    const actions = useMemo(() => (
-        <HeaderIconButton disabled={disabled} onClick={editOpen}>
-            <Pencil1Icon style={ICON_STYLE} />
-        </HeaderIconButton>
-    ), [disabled, editOpen]);
-
     const instance = useMemo(() => ({
         mgId: element.id,
     }), [element.id]);
@@ -53,20 +35,12 @@ const Mg = ({ element }) => {
         instance,
         previous: previous && `/mg/${previous.id}`,
         next: next && `/mg/${next.id}`,
-        actions,
     });
 
     return (
-        <>
-            <Edit
-                mgId={element.id}
-                open={editOpened}
-                onOpenChange={setEditOpened}
-            />
-            <EntityViewShell>
-                <MgTabs mgId={element.id} />
-            </EntityViewShell>
-        </>
+        <EntityViewShell>
+            <MgTabs mgId={element.id} />
+        </EntityViewShell>
     );
 };
 
@@ -76,6 +50,6 @@ export default () => {
     const { mgId } = useParsedParams();
     const { get } = useFallbackMgOptions();
     const element = useMemo(() => get(mgId), [get, mgId]);
-    if (!element) return <EntityNotFound listTo="/mg/list" />;
+    if (!element) return <Navigate to="/mg/list" replace />;
     return <Mg element={element} />;
 };

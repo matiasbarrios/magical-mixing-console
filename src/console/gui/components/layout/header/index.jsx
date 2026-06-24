@@ -4,11 +4,14 @@ import { Flex, Spinner, Text } from '@radix-ui/themes';
 import { useDevice } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../language';
 import {
-    HeaderTrail, HeaderTrailActions, HeaderTrailNavigation,
+    HeaderTrail, HeaderTrailActions, HeaderTrailCenter, HeaderTrailNavigation,
 } from '../headerTrail';
 import WizardTrigger from '../../../pages/wizard/trigger';
 import { SetupWizardProvider } from '../../../pages/wizard/context';
 import { HelpProvider } from '../../help/context';
+import { AppearanceProvider } from '../../../pages/settings/appearance';
+import { HotkeysSettingsProvider } from '../../../pages/settings/hotkeys';
+import ActiveScene from './activeScene';
 import { HeaderActions } from './actions';
 import Menu from './menu';
 import { Logo } from './logo';
@@ -53,8 +56,15 @@ const HeaderContent = ({ fixed }) => {
 
     return (
         <header style={headerStyleFinal}>
-            <Flex align="center" justify="between" gapX="3" flexGrow="1" px={fixed ? '4' : undefined}>
-                <Flex align="center" gapX="2">
+            <Flex
+                align="center"
+                justify="between"
+                gapX="3"
+                flexGrow="1"
+                px={fixed ? '4' : undefined}
+                position="relative"
+            >
+                <Flex align="center" gapX="2" flexShrink="1" minWidth="0">
                     <Logo />
                     <HeaderTrail />
                 </Flex>
@@ -73,7 +83,9 @@ const HeaderContent = ({ fixed }) => {
                         </Text>
                     </Flex>
                 )}
+                {isOnline && !isHalted && <HeaderTrailCenter />}
                 <HeaderActions>
+                    <ActiveScene />
                     <WizardTrigger />
                     <HeaderTrailActions />
                     <HeaderTrailNavigation />
@@ -91,8 +103,12 @@ export { headerHeight };
 
 export default ({ fixed = false }) => (
     <SetupWizardProvider>
-        <HelpProvider>
-            <HeaderContent fixed={fixed} />
-        </HelpProvider>
+        <AppearanceProvider>
+            <HotkeysSettingsProvider>
+                <HelpProvider>
+                    <HeaderContent fixed={fixed} />
+                </HelpProvider>
+            </HotkeysSettingsProvider>
+        </AppearanceProvider>
     </SetupWizardProvider>
 );

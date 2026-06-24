@@ -1,6 +1,18 @@
 // Requirements
-import { useEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useHeaderTrail } from '../header';
+
+
+// Internal
+const entityTrailKeys = ['entity', 'instance', 'actions', 'previous', 'next'];
+
+const clearEntityTrail = (prev) => {
+    const next = { ...prev };
+    entityTrailKeys.forEach((key) => {
+        delete next[key];
+    });
+    return next;
+};
 
 
 // Exported
@@ -13,15 +25,16 @@ export const useEntityHeaderTrail = ({
 }) => {
     const { setHeaderTrail } = useHeaderTrail();
 
-    useEffect(() => {
-        setHeaderTrail({
+    useLayoutEffect(() => {
+        setHeaderTrail(prev => ({
+            ...prev,
             ...(entity != null && { entity }),
             ...(instance != null && { instance }),
             ...(actions != null && { actions }),
             ...(previous != null && { previous }),
             ...(next != null && { next }),
-        });
-        return () => setHeaderTrail({});
+        }));
+        return () => setHeaderTrail(clearEntityTrail);
     }, [instance, entity, actions, previous, next, setHeaderTrail]);
 };
 

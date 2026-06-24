@@ -5,10 +5,10 @@ import {
     DropdownMenu, Flex, IconButton,
 } from '@radix-ui/themes';
 import { PlusIcon } from '@radix-ui/react-icons';
+import { ADD_ROAM_ID, RESET_ROAM_ID, focusRoamAttrs } from '../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../components/base/resetIcon';
 import { FallbackBusMgOn, FallbackBusMgUnassignAllOf } from '../../../components/fallback';
 import { ICON_STYLE } from '../../../helpers/values';
-import ListStack from '../../../components/layout/list/stack';
 import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
 import { DropdownMenuTrigger } from '../../../components/base/dropdownMenuTrigger';
@@ -44,7 +44,12 @@ const AddBuses = ({ mgId }) => {
 
     return (
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
-            <DropdownMenuTrigger variant="soft" color="gray" onClick={toggleOpened}>
+            <DropdownMenuTrigger
+                variant="soft"
+                color="gray"
+                onClick={toggleOpened}
+                {...focusRoamAttrs(ADD_ROAM_ID)}
+            >
                 <PlusIcon style={ICON_STYLE} />
             </DropdownMenuTrigger>
             <DropdownMenuContent size="2">
@@ -80,6 +85,7 @@ const ResetBuses = ({ mgId }) => {
                             onClick={doOpen}
                             disabled={disabled}
                             aria-label={t('Reset')}
+                            {...focusRoamAttrs(RESET_ROAM_ID)}
                         >
                             <ResetIcon />
                         </IconButton>
@@ -102,12 +108,10 @@ const List = ({ mgId }) => {
     const { options } = useBusOptions();
 
     return (
-        <Flex direction="column" flexGrow="1" minHeight="0" width="100%" className="mmc-scroll-y" gap="3">
-            <ListStack>
-                {options.map(o => (
-                    <Evaluate key={o.id} busId={o.id} mgId={mgId} />
-                ))}
-            </ListStack>
+        <Flex direction="column" gapY="3" width="100%">
+            {options.map(o => (
+                <Evaluate key={o.id} busId={o.id} mgId={mgId} />
+            ))}
             <Flex align="center" justify="end" gap="1">
                 <ResetBuses mgId={mgId} />
                 <AddBuses mgId={mgId} />

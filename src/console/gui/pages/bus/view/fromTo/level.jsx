@@ -36,27 +36,21 @@ const toLinear = db => 10 ** (db / 20);
 const toDB = lin => Math.min(20 * Math.log10(Math.max(lin, 1e-10)), 0);
 
 
-const BusToMeterSingle = ({ busIdFrom, busIdTo }) => {
+const BusToMeterSingle = ({ busIdFrom, busIdTo, isVertical }) => {
     const { value } = useBusToMeter(busIdFrom, busIdTo);
-    const { has: panHas, value: panValue } = useBusToPan(busIdFrom, busIdTo);
-
-    const valueFinal = useMemo(() => {
-        if (panHas && panValue === 0 && value?.length
-            && Math.round(value[0]) === Math.round(value[1])) return value[0];
-        return value;
-    }, [panHas, panValue, value]);
 
     return (
         <Meter
-            value={valueFinal}
+            value={value}
             valueToDecimal={minus60To0ToDecimal}
             valuesShow
+            isVertical={isVertical}
         />
     );
 };
 
 
-const BusToMeterStereoLinked = ({ busIdFrom, busIdTo, busIdStereoLinked }) => {
+const BusToMeterStereoLinked = ({ busIdFrom, busIdTo, busIdStereoLinked, isVertical }) => {
     const { value } = useBusToMeter(busIdFrom, busIdTo);
     const { has: panHas, value: panValue } = useBusToPan(busIdFrom, busIdTo);
 
@@ -87,20 +81,22 @@ const BusToMeterStereoLinked = ({ busIdFrom, busIdTo, busIdStereoLinked }) => {
             value={valueFinal}
             valueToDecimal={minus60To0ToDecimal}
             valuesShow
+            isVertical={isVertical}
         />
     );
 };
 
 
-const BusToMeter = ({ busIdFrom, busIdTo, busIdStereoLinked }) => {
+const BusToMeter = ({ busIdFrom, busIdTo, busIdStereoLinked, isVertical }) => {
     if (!busIdStereoLinked) {
-        return <BusToMeterSingle busIdFrom={busIdFrom} busIdTo={busIdTo} />;
+        return <BusToMeterSingle busIdFrom={busIdFrom} busIdTo={busIdTo} isVertical={isVertical} />;
     }
     return (
         <BusToMeterStereoLinked
             busIdFrom={busIdFrom}
             busIdTo={busIdTo}
             busIdStereoLinked={busIdStereoLinked}
+            isVertical={isVertical}
         />
     );
 };
@@ -111,6 +107,7 @@ const BusMeterSlider = ({
     onResetValueClicked, busIdStereoLinked, ariaLabel, readOnly, trackStart,
     assignableMinimum,
     valueToDecimal, decimalToValue,
+    isVertical,
 }) => {
     const {
         value, set, minimum, maximum,
@@ -137,11 +134,13 @@ const BusMeterSlider = ({
             valueShowAlways
             showPlusIfPositive
             trackStart={trackStart}
+            isVertical={isVertical}
             meter={hasMeter && (
                 <BusToMeter
                     busIdFrom={busIdFrom}
                     busIdTo={busIdTo}
                     busIdStereoLinked={busIdStereoLinked}
+                    isVertical={isVertical}
                 />
             )}
         />
@@ -152,6 +151,7 @@ const BusMeterSlider = ({
 // Exported
 const Level = ({
     busIdFrom, busIdTo, busIdStereoLinked, minWidth = '20dvw', maxWidth, readOnly, trackStart,
+    isVertical = false,
 }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
@@ -203,20 +203,39 @@ const Level = ({
         [t, nameFrom, nameTo]);
 
     return (
-        <Flex align="center" flexGrow="1" minWidth={minWidth} maxWidth={maxWidth} width={trackStart ? '100%' : undefined}>
-            <BusMeterSlider
-                busIdFrom={busIdFrom}
-                busIdTo={busIdTo}
-                onDisplayedValueClicked={doOpen}
-                onResetValueClicked={doReset}
-                busIdStereoLinked={busIdStereoLinked}
-                ariaLabel={ariaLabel}
-                readOnly={readOnly}
-                trackStart={trackStart}
-                assignableMinimum={assignableMinimum}
-                valueToDecimal={valueToDecimal}
-                decimalToValue={decimalToValue}
-            />
+        <Flex
+            align="center"
+            direction={isVertical ? 'column' : 'row'}
+            flexGrow="1"
+            minWidth={isVertical ? '0' : minWidth}
+            maxWidth={isVertical ? undefined : maxWidth}
+            width="100%"
+            height={isVertical ? '100%' : undefined}
+            minHeight={isVertical ? '0' : undefined}
+        >
+            <Flex
+                flexGrow="1"
+                align="center"
+                justify="center"
+                minWidth={isVertical ? undefined : '0'}
+                minHeight={isVertical ? '0' : undefined}
+                width="100%"
+            >
+                <BusMeterSlider
+                    busIdFrom={busIdFrom}
+                    busIdTo={busIdTo}
+                    onDisplayedValueClicked={doOpen}
+                    onResetValueClicked={doReset}
+                    busIdStereoLinked={busIdStereoLinked}
+                    ariaLabel={ariaLabel}
+                    readOnly={readOnly}
+                    trackStart={isVertical ? undefined : trackStart}
+                    assignableMinimum={assignableMinimum}
+                    valueToDecimal={valueToDecimal}
+                    decimalToValue={decimalToValue}
+                    isVertical={isVertical}
+                />
+            </Flex>
             {!readOnly && (
                 <Dialog.Root open={opened} onOpenChange={setOpened}>
                     <Dialog.Content aria-describedby={undefined}>
@@ -244,7 +263,7 @@ const Level = ({
 
 // Exported
 export default ({
-    busIdFrom, busIdTo, busIdStereoLinked, minWidth, maxWidth, readOnly, trackStart,
+    busIdFrom, busIdTo, busIdStereoLinked, minWidth, maxWidth, readOnly, trackStart, isVertical,
 }) => {
     const { has } = useBusToLevel(busIdFrom, busIdTo);
     if (!has) return null;
@@ -257,6 +276,7 @@ export default ({
             maxWidth={maxWidth}
             readOnly={readOnly}
             trackStart={trackStart}
+            isVertical={isVertical}
         />
     );
 };

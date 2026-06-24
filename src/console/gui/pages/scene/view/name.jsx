@@ -1,6 +1,8 @@
 // Requirements
-import { useMemo } from 'react';
-import { useSceneName, useSceneOptions } from '@magical-mixing/mixers-react';
+import {
+    useCallback, useEffect, useMemo, useRef, useState,
+} from 'react';
+import { useSceneName, useSceneOptions, useSceneSave } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../components/language';
 import { NameEditRow } from '../../../components/base/nameEditRow';
 
@@ -29,18 +31,38 @@ export const useSceneFinalName = (sceneId) => {
 
 export const NameEdit = ({ sceneId, onEnter }) => {
     const { t } = useLanguage();
-    const { has, value, set } = useSceneName(sceneId);
+    const { has, value } = useSceneName(sceneId);
+    const { save } = useSceneSave(sceneId);
     const placeholder = useSceneFinalName(sceneId);
+    const [editValue, setEditValue] = useState(undefined);
+    const synced = useRef(false);
 
-    if (!has || value === undefined) return null;
+    useEffect(() => {
+        synced.current = false;
+        setEditValue(undefined);
+    }, [sceneId]);
+
+    useEffect(() => {
+        if (value !== undefined && !synced.current) {
+            setEditValue(value);
+            synced.current = true;
+        }
+    }, [value]);
+
+    const onSet = useCallback((name) => {
+        setEditValue(name);
+        save(name);
+    }, [save]);
+
+    if (!has || value === undefined || editValue === undefined) return null;
 
     return (
         <NameEditRow
             id="scene-name"
             label={t('Name')}
             placeholder={placeholder}
-            value={value}
-            set={set}
+            value={editValue}
+            set={onSet}
             onEnter={onEnter}
         />
     );

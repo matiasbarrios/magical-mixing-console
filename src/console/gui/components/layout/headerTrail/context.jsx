@@ -3,11 +3,11 @@ import { createContext, useMemo, useState } from 'react';
 
 
 // Variables
-export const HeaderTrailContextState = createContext({});
+export const HeaderTrailContext = createContext({});
 
 
 // Exported
-export const HeaderTrailContext = ({ children }) => {
+export const HeaderTrailProvider = ({ children }) => {
     const emptyObject = useMemo(() => ({}), []);
     const [headerTrail, setHeaderTrail] = useState(emptyObject);
 
@@ -16,8 +16,8 @@ export const HeaderTrailContext = ({ children }) => {
     }), [headerTrail, setHeaderTrail]);
 
     return (
-        <HeaderTrailContextState.Provider value={state}>
+        <HeaderTrailContext.Provider value={state}>
             {children}
-        </HeaderTrailContextState.Provider>
+        </HeaderTrailContext.Provider>
     );
 };

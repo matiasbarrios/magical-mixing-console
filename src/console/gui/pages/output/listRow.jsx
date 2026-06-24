@@ -1,6 +1,7 @@
 // Requirements
 import { useCallback, useMemo } from 'react';
 import { Flex, Text } from '@radix-ui/themes';
+import { useOutputTap } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../components/language';
 import ViewOutput from './view/openOutput';
 import { SourceViewSelect } from './view/source';
@@ -19,6 +20,8 @@ const LevelTrackStart = ({ label }) => (
 // Exported
 export default ({ outputId, inlineSource = false }) => {
     const { t } = useLanguage();
+
+    const { has: tapHas } = useOutputTap(outputId);
 
     const stopRowOpen = useCallback((e) => {
         e.stopPropagation();
@@ -59,13 +62,15 @@ export default ({ outputId, inlineSource = false }) => {
                 <Volume outputId={outputId} minWidth="0" fullWidth trackStart={levelTrackStart} />
             </Flex>
             {inlineSource && source}
-            <Flex
-                flexShrink="0"
-                onPointerDown={stopRowOpen}
-                onClick={stopRowOpen}
-            >
-                <TapDropdown outputId={outputId} showValue abbreviate />
-            </Flex>
+            {tapHas && (
+                <Flex
+                    flexShrink="0"
+                    onPointerDown={stopRowOpen}
+                    onClick={stopRowOpen}
+                >
+                    <TapDropdown outputId={outputId} showValue abbreviate />
+                </Flex>
+            )}
         </Flex>
     );
 

@@ -9,6 +9,7 @@ import { useLanguage } from '../../../components/language';
 import { useVault, useVaultName } from '../../../components/vault';
 import { DropdownMenuTrigger } from '../../../components/base/dropdownMenuTrigger';
 import { DropdownMenuContent } from '../../../components/base/dropdownMenuContent';
+import { useUiSize } from '../../../components/theme';
 
 
 // Internal
@@ -28,6 +29,7 @@ export default ({ vaultId, vaultType, color = 'gray' }) => {
     const { disabled } = useDevice();
     const navigate = useNavigate();
     const { t } = useLanguage();
+    const { textSize } = useUiSize();
     const { vaults } = useVault(vaultType);
     const { vaultName } = useVaultName(vaultId);
 
@@ -43,7 +45,7 @@ export default ({ vaultId, vaultType, color = 'gray' }) => {
     const hasOthers = others.length > 0;
 
     const label = (
-        <Text size="2" color={color} wrap="nowrap">
+        <Text size={textSize} color={color} wrap="nowrap">
             { vaultName }
         </Text>
     );
@@ -60,7 +62,6 @@ export default ({ vaultId, vaultType, color = 'gray' }) => {
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
             <DropdownMenuTrigger
                 square
-                size="2"
                 variant="ghost"
                 color={color}
                 onClick={toggleOpened}

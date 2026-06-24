@@ -2,7 +2,7 @@
 import {
     useCallback, useEffect, useMemo, useState,
 } from 'react';
-import { useParams, useSearchParams } from 'react-router';
+import { Navigate, useParams, useSearchParams } from 'react-router';
 import {
     useBusCompressor,
     useBusEqualizer,
@@ -22,27 +22,24 @@ import {
     useBusStereoLink,
     useBusToOn,
     useBusToOptions,
-    useDevice,
     useOutputOptions,
 } from '@magical-mixing/mixers-react';
 import { Flex } from '@radix-ui/themes';
-import { Pencil1Icon } from '@radix-ui/react-icons';
 import { useScreen } from '../../../components/base/screen';
-import { isMobile } from '../../../platform';
-import { HeaderIconButton } from '../../../components/layout/header/iconButton';
-import { ICON_STYLE } from '../../../helpers/values';
+import ConditionalScrollY from '../../../components/base/conditionalScrollY';
 import { useEntityHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
 import {
-    EntityTabsShell, TabPanelFill, TabPanelScrollable,
+    EntityTabsShell, TabPanelFill,
 } from '../../../components/layout/entity/tabs';
+import HeaderTabBar from '../../../components/layout/entity/headerTabBar';
+import { useHeaderTrailCenter } from '../../../components/layout/headerTrail/hooks/useHeaderTrailCenter';
 import EntityViewShell from '../../../components/layout/entity/shell';
-import EntityNotFound from '../../../components/base/entityNotFound';
 import {
     useFallbackBusColor, useFallbackBusesSorted, useFallbackBusDca, useFallbackBusMg,
 } from '../../../components/fallback';
 import { useLanguage } from '../../../components/language';
+import { useEntityViewLayout } from '../../../components/theme';
 import { buildBusPath, useBusViewTab } from './useBusViewTab';
-import Edit from './edit';
 import From from './fromTo/from';
 import Input from './input';
 import To from './fromTo/to';
@@ -55,8 +52,8 @@ import Outputs from './outputs';
 import Monitor from './monitor';
 import Mg from './mg';
 import Dca from './dca';
-import General from './general';
-
+import GeneralTop from './generalTop';
+import GeneralRight from './generalRight';
 
 // Internal
 const useParsedParams = () => {
@@ -78,7 +75,8 @@ const SoloHasReader = ({ busId, soloBusId, onHasChange }) => {
 
 const BusTabs = ({ bus }) => {
     const { t } = useLanguage();
-    const { isLandscape } = useScreen();
+    const { isXSLandscape } = useScreen();
+    const { isVertical: isVerticalLayout } = useEntityViewLayout();
     const { soloOne } = useBusOptions();
     const { has: gateHas } = useBusGate(bus.id);
     const { has: equalizerHas } = useBusEqualizer(bus.id);
@@ -126,8 +124,9 @@ const BusTabs = ({ bus }) => {
     const generalTab = useMemo(() => levelHas || panHas || hasQuickActions,
         [levelHas, panHas, hasQuickActions]);
 
-    const generalInTab = useMemo(() => isMobile && isLandscape && generalTab,
-        [isLandscape, generalTab]);
+    const sideFaderLayout = useMemo(() => levelHas && (
+        isVerticalLayout || isXSLandscape
+    ), [levelHas, isVerticalLayout, isXSLandscape]);
 
     const mgTab = useMemo(() => mgHas, [mgHas]);
     const dcaTab = useMemo(() => dcaHas, [dcaHas]);
@@ -136,7 +135,6 @@ const BusTabs = ({ bus }) => {
 
     const tabs = useMemo(() => {
         const res = [];
-        if (generalInTab) res.push({ id: 'general', label: t('General') });
         if (inputTab) res.push({ id: 'input', label: t('Input') });
         if (fromTab) res.push({ id: 'from', label: t('Reception') });
         if (toTab) res.push({ id: 'to', label: t('Sends') });
@@ -151,17 +149,16 @@ const BusTabs = ({ bus }) => {
         if (dcaTab) res.push({ id: 'dca', label: t('DCAs') });
         return res;
     }, [
-        generalInTab, fromTab, toTab, gateHas, equalizerHas, compressorHas, fxTab,
+        fromTab, toTab, gateHas, equalizerHas, compressorHas, fxTab,
         insertTab, inputTab, outputsTab, monitorHas, mgTab, dcaTab, t,
     ]);
 
     const defaultTab = useMemo(() => {
-        if (generalInTab) return 'general';
         if (inputTab) return 'input';
         if (fromTab) return 'from';
         if (toTab) return 'to';
         return tabs[0]?.id;
-    }, [generalInTab, inputTab, fromTab, toTab, tabs]);
+    }, [inputTab, fromTab, toTab, tabs]);
 
     const { tabActive, onTabChange } = useBusViewTab({
         busId: bus.id,
@@ -169,18 +166,116 @@ const BusTabs = ({ bus }) => {
         defaultTab,
     });
 
-    const generalHeader = useMemo(() => (
-        generalTab && !generalInTab
+    const headerTabPicker = useMemo(() => (
+        tabs.length > 0
             ? (
-                <Flex flexShrink="0" width="100%" minWidth="0" mt="1" mb="3">
-                    <General
+                <HeaderTabBar
+                    tabs={tabs}
+                    active={tabActive}
+                    onChange={onTabChange}
+                />
+            )
+            : null
+    ), [tabs, tabActive, onTabChange]);
+
+    useHeaderTrailCenter(headerTabPicker);
+
+    const generalHeader = useMemo(() => (
+        generalTab && !sideFaderLayout
+            ? (
+                <Flex flexShrink="0" width="100%" minWidth="0" mt="0" pb="4" mb="4" style={{ borderBottom: '1px solid var(--gray-a4)' }}>
+                    <GeneralTop
                         busId={bus.id}
                         showQuickActions
                     />
                 </Flex>
             )
             : undefined
-    ), [generalTab, generalInTab, bus.id]);
+    ), [generalTab, sideFaderLayout, bus.id]);
+
+    const tabsShell = (
+        <EntityTabsShell
+            tabs={tabs}
+            tabActive={tabActive}
+            onTabChange={onTabChange}
+            header={generalHeader}
+            tabPanelMt="3"
+            hideTabBar
+        >
+            {inputTab && tabActive === 'input' && (
+                <ConditionalScrollY>
+                    <Input busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+            {fromTab && tabActive === 'from' && (
+                isVerticalLayout ? (
+                    <TabPanelFill>
+                        <From busId={bus.id} />
+                    </TabPanelFill>
+                ) : (
+                    <ConditionalScrollY>
+                        <From busId={bus.id} />
+                    </ConditionalScrollY>
+                )
+            )}
+            {gateHas && tabActive === 'gate' && (
+                <TabPanelFill>
+                    <Gate busId={bus.id} />
+                </TabPanelFill>
+            )}
+            {equalizerHas && tabActive === 'eq' && (
+                <TabPanelFill>
+                    <Equalizer busId={bus.id} />
+                </TabPanelFill>
+            )}
+            {compressorHas && tabActive === 'compressor' && (
+                <TabPanelFill>
+                    <Compressor busId={bus.id} />
+                </TabPanelFill>
+            )}
+            {fxTab && tabActive === 'fx' && (
+                <ConditionalScrollY>
+                    <Fx busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+            {toTab && tabActive === 'to' && (
+                isVerticalLayout ? (
+                    <TabPanelFill>
+                        <To busId={bus.id} linkDestination />
+                    </TabPanelFill>
+                ) : (
+                    <ConditionalScrollY>
+                        <To busId={bus.id} linkDestination />
+                    </ConditionalScrollY>
+                )
+            )}
+            {insertTab && tabActive === 'insert' && (
+                <ConditionalScrollY>
+                    <Insert busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+            {outputsTab && tabActive === 'outputs' && (
+                <ConditionalScrollY>
+                    <Outputs busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+            {monitorHas && tabActive === 'monitor' && (
+                <ConditionalScrollY>
+                    <Monitor busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+            {mgTab && tabActive === 'mg' && (
+                <ConditionalScrollY>
+                    <Mg busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+            {dcaTab && tabActive === 'dca' && (
+                <ConditionalScrollY>
+                    <Dca busId={bus.id} />
+                </ConditionalScrollY>
+            )}
+        </EntityTabsShell>
+    );
 
     return (
         <>
@@ -191,90 +286,22 @@ const BusTabs = ({ bus }) => {
                     onHasChange={onSoloHasChange}
                 />
             )}
-            <EntityTabsShell
-                tabs={tabs}
-                tabActive={tabActive}
-                onTabChange={onTabChange}
-                header={generalHeader}
-                mt={generalInTab ? '-2' : undefined}
-                tabPanelMt={generalInTab ? '2' : '3'}
-            >
-                {generalInTab && tabActive === 'general' && (
-                    <TabPanelScrollable>
-                        <General
-                            busId={bus.id}
-                            showQuickActions
-                        />
-                    </TabPanelScrollable>
-                )}
-                {inputTab && tabActive === 'input' && (
-                    <TabPanelScrollable>
-                        <Input busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {fromTab && tabActive === 'from' && (
-                    <TabPanelScrollable>
-                        <From busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {gateHas && tabActive === 'gate' && (
-                    <TabPanelFill>
-                        <Gate busId={bus.id} />
-                    </TabPanelFill>
-                )}
-                {equalizerHas && tabActive === 'eq' && (
-                    <TabPanelFill>
-                        <Equalizer busId={bus.id} />
-                    </TabPanelFill>
-                )}
-                {compressorHas && tabActive === 'compressor' && (
-                    <TabPanelFill>
-                        <Compressor busId={bus.id} />
-                    </TabPanelFill>
-                )}
-                {fxTab && tabActive === 'fx' && (
-                    <TabPanelScrollable>
-                        <Fx busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {toTab && tabActive === 'to' && (
-                    <TabPanelScrollable>
-                        <To busId={bus.id} linkDestination />
-                    </TabPanelScrollable>
-                )}
-                {insertTab && tabActive === 'insert' && (
-                    <TabPanelScrollable>
-                        <Insert busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {outputsTab && tabActive === 'outputs' && (
-                    <TabPanelScrollable>
-                        <Outputs busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {monitorHas && tabActive === 'monitor' && (
-                    <TabPanelScrollable>
-                        <Monitor busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {mgTab && tabActive === 'mg' && (
-                    <TabPanelScrollable>
-                        <Mg busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-                {dcaTab && tabActive === 'dca' && (
-                    <TabPanelScrollable>
-                        <Dca busId={bus.id} />
-                    </TabPanelScrollable>
-                )}
-            </EntityTabsShell>
+            {sideFaderLayout ? (
+                <Flex flexGrow="1" minHeight="0" minWidth="0" width="100%" overflow="hidden">
+                    <Flex direction="column" flexGrow="1" minWidth="0" minHeight="0">
+                        {tabsShell}
+                    </Flex>
+                    <GeneralRight busId={bus.id} />
+                </Flex>
+            ) : (
+                tabsShell
+            )}
         </>
     );
 };
 
 
 const Bus = ({ bus }) => {
-    const { disabled } = useDevice();
     const [searchParams] = useSearchParams();
     const { previousBusGet, nextBusGet } = useFallbackBusesSorted();
     const { value: color } = useFallbackBusColor(bus.id, 'gray');
@@ -289,15 +316,6 @@ const Bus = ({ bus }) => {
     const nextPath = useMemo(() => (next ? buildBusPath(next.id, tab) : undefined),
         [next, tab]);
 
-    const [editOpened, setEditOpened] = useState(false);
-    const editOpen = useCallback(() => setEditOpened(true), []);
-
-    const actions = useMemo(() => (
-        <HeaderIconButton disabled={disabled} onClick={editOpen}>
-            <Pencil1Icon style={ICON_STYLE} />
-        </HeaderIconButton>
-    ), [disabled, editOpen]);
-
     const instance = useMemo(() => ({
         busId: bus.id,
         color,
@@ -307,16 +325,12 @@ const Bus = ({ bus }) => {
         instance,
         previous: previousPath,
         next: nextPath,
-        actions,
     });
 
     return (
-        <>
-            <Edit busId={bus.id} open={editOpened} onOpenChange={setEditOpened} />
-            <EntityViewShell>
-                <BusTabs bus={bus} />
-            </EntityViewShell>
-        </>
+        <EntityViewShell>
+            <BusTabs bus={bus} />
+        </EntityViewShell>
     );
 };
 
@@ -326,6 +340,6 @@ export default () => {
     const { busId } = useParsedParams();
     const { get } = useBusOptions();
     const bus = useMemo(() => get(busId), [get, busId]);
-    if (!bus) return <EntityNotFound listTo="/bus/list" />;
+    if (!bus) return <Navigate to="/bus/list" replace />;
     return <Bus bus={bus} />;
 };

@@ -1,12 +1,12 @@
 // Requirements
 import { useContext } from 'react';
 import { useHas } from '../../helpers/has';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useConfigurationHas = () => {
-    const { features: { configuration } } = useContext(DeviceContextRoot);
+    const { features: { configuration } } = useContext(DeviceContext);
 
     const has = useHas(configuration);
 

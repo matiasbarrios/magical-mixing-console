@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 import { useHas } from '../../helpers/has';
@@ -12,7 +12,7 @@ import { useChanges, defaultOption } from '../../helpers/changes';
 
 // Exported
 export const useBusInput = (busId) => {
-    const { features: { bus: { input } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { input } } } = useContext(DeviceContext);
 
     const has = useHas(input, busId);
 
@@ -21,7 +21,7 @@ export const useBusInput = (busId) => {
 
 
 export const useBusInputId = (busId) => {
-    const { features: { bus: { input: { id } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { input: { id } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(id, busId);
 
@@ -36,7 +36,7 @@ export const useBusInputId = (busId) => {
 
 
 export const useBusInputTrim = (busId, inputId) => {
-    const { features: { bus: { input: { trim } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { input: { trim } } } } = useContext(DeviceContext);
 
     const ids = useMemo(() => [busId, inputId], [busId, inputId]);
     const [has, value, set] = useHasGetSet(trim, ids);
@@ -51,7 +51,7 @@ export const useBusInputTrim = (busId, inputId) => {
 
 
 export const useBusInputTrimPre = (busId, inputId) => {
-    const { features: { bus: { input: { trim: { pre } } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { input: { trim: { pre } } } } } = useContext(DeviceContext);
 
     const ids = useMemo(() => [busId, inputId], [busId, inputId]);
     const [has, value] = useHasGet(pre, ids);
@@ -61,7 +61,7 @@ export const useBusInputTrimPre = (busId, inputId) => {
 
 
 export const useBusInputTrimPost = (busId, inputId) => {
-    const { features: { bus: { input: { trim: { post } } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { input: { trim: { post } } } } } = useContext(DeviceContext);
 
     const ids = useMemo(() => [busId, inputId], [busId, inputId]);
     const [has, value] = useHasGet(post, ids);
@@ -71,7 +71,7 @@ export const useBusInputTrimPost = (busId, inputId) => {
 
 
 export const useBusInputVolume = (busId) => {
-    const { features: { bus: { input: { volume } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { input: { volume } } } } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(volume, busId);
 
@@ -102,7 +102,7 @@ export const busInputResetDeep = (changeSchedule, bus, input, busId) => {
 
 
 export const useBusInputReset = (busId) => {
-    const { features: { bus } } = useContext(DeviceContextRoot);
+    const { features: { bus } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -116,7 +116,7 @@ export const useBusInputReset = (busId) => {
 
 
 export const useBusInputResetDeep = (busId) => {
-    const { features: { bus, input } } = useContext(DeviceContextRoot);
+    const { features: { bus, input } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {

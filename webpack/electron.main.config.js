@@ -15,5 +15,5 @@ module.exports = {
         rules: electronRules,
     },
     devtool: false,
-    optimization: isProd ? optimization(true) : { minimize: false },
+    optimization: isProd ? optimization() : { minimize: false },
 };

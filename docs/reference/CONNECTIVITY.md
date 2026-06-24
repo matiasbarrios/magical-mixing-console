@@ -131,7 +131,7 @@ GUI never sees `searchSocket` or other internal fields; mixers strips them befor
 
 These are **two different registries**. Do not conflate them.
 
-| | mixers `search` | GUI `DevicesContext` |
+| | mixers `search` | GUI `DevicesProvider` |
 |--|-----------------|----------------------|
 | **Location** | `mixers/devices/search.js` | `console/gui/components/devices/context.jsx` |
 | **Lifetime** | While search runs (and briefly for manual connect) | Whole app session |
@@ -143,7 +143,7 @@ Flow when the user connects:
 
 1. mixers `search` holds `{ ip, port, name, … }` for each discovered desk.
 2. `getFound(ip, port)` builds a **session** `device` (socket adopted, driver initialized).
-3. GUI calls `deviceAdd(device)` — the session object enters `DevicesContext`, not the search entry.
+3. GUI calls `deviceAdd(device)` — the session object enters `DevicesProvider`, not the search entry.
 4. `deviceRemove` calls `device.dispose()` after a short delay — that is when mixers closes the session socket.
 
 Search can list a desk the user never adds. The app list can hold multiple connected sessions (keyed by `deviceId`, today `ip:port`) while search is stopped. Header `focus` / `focused` is purely GUI state for which connected desk the UI shows.

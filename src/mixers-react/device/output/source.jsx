@@ -1,20 +1,20 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 
 
 // Exported
 export const useOutputSourceDefault = (outputId) => {
-    const { features: { output: { source } } } = useContext(DeviceContextRoot);
+    const { features: { output: { source } } } = useContext(DeviceContext);
 
     return useMemo(() => source.defaultOption(outputId), [source, outputId]);
 };
 
 
 export const useOutputSource = (outputId) => {
-    const { features: { output: { source } } } = useContext(DeviceContextRoot);
+    const { features: { output: { source } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(source, outputId);
 

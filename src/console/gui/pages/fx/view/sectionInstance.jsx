@@ -5,6 +5,7 @@ import { useFxOptions } from '@magical-mixing/mixers-react';
 import { useNavigate } from 'react-router';
 import { useLanguage } from '../../../components/language';
 import SectionInstanceDropdown from '../../../components/layout/headerTrail/instance/dropdown';
+import { useUiSize } from '../../../components/theme';
 import { useFxNameTranslated } from './name';
 
 
@@ -24,6 +25,7 @@ const FxMenuItem = ({ fxId, onSelect }) => {
 export default ({ fxId, color = 'gray' }) => {
     const { t } = useLanguage();
     const navigate = useNavigate();
+    const { textSize } = useUiSize();
     const { options } = useFxOptions();
     const { name } = useFxNameTranslated(fxId);
 
@@ -33,7 +35,7 @@ export default ({ fxId, color = 'gray' }) => {
     const onSelect = useCallback(id => () => navigate(`/fx/${id}`), [navigate]);
     const goToList = useCallback(() => navigate('/fx/list'), [navigate]);
 
-    const label = <Text size="2" color={color}>{ name }</Text>;
+    const label = <Text size={textSize} color={color}>{ name }</Text>;
 
     return (
         <SectionInstanceDropdown color={color} label={label} hasMenu>

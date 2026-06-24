@@ -50,6 +50,7 @@ const Pan = ({ busId }) => {
                 ariaLabel={ariaLabel}
                 orientation="horizontal"
                 disabled={disabled}
+                focusRoam="pan"
             />
             <Dialog.Root open={opened} onOpenChange={setOpened}>
                 <Dialog.Content aria-describedby={undefined}>

@@ -1,19 +1,22 @@
 // Requirements
-import { DevicesContext } from '../devices/context';
-import { LanguageContext } from '../language';
-import { ThemeContext } from '../theme';
-import { GlobalCalloutContext } from './callout';
+import { ScreenProvider } from '../base/screen';
+import { DevicesProvider } from '../devices/context';
+import { LanguageProvider } from '../language';
+import { ThemeProvider } from '../theme';
+import { HotkeysProvider } from '../hotkeys/context';
 
 
 // Exported
 export default ({ children }) => (
-    <ThemeContext>
-        <LanguageContext>
-            <GlobalCalloutContext>
-                <DevicesContext>
-                    {children}
-                </DevicesContext>
-            </GlobalCalloutContext>
-        </LanguageContext>
-    </ThemeContext>
+    <ThemeProvider>
+        <HotkeysProvider>
+            <LanguageProvider>
+                <DevicesProvider>
+                    <ScreenProvider>
+                        {children}
+                    </ScreenProvider>
+                </DevicesProvider>
+            </LanguageProvider>
+        </HotkeysProvider>
+    </ThemeProvider>
 );

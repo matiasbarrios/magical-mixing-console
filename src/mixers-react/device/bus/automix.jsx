@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGet } from '../../helpers/hasGet';
 import { useHas } from '../../helpers/has';
 import { useOptions } from '../../helpers/options';
@@ -11,7 +11,7 @@ import { useChanges, defaultOption } from '../../helpers/changes';
 
 // Exported
 export const useBusAutomix = (busId) => {
-    const { features: { bus: { automix } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { automix } } } = useContext(DeviceContext);
 
     const has = useHas(automix, busId);
 
@@ -20,7 +20,7 @@ export const useBusAutomix = (busId) => {
 
 
 export const useBusAutomixId = (busId) => {
-    const { features: { bus: { automix: { id } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { automix: { id } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(id, busId);
 
@@ -33,7 +33,7 @@ export const useBusAutomixId = (busId) => {
 
 
 export const useBusAutomixWeight = (busId) => {
-    const { features: { bus: { automix: { weight } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { automix: { weight } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(weight, busId);
 
@@ -49,7 +49,7 @@ export const useBusAutomixWeight = (busId) => {
 export const useBusAutomixGainReduction = (busId) => {
     const {
         features: { bus: { automix: { gainReduction } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(gainReduction, busId);
 
@@ -64,7 +64,7 @@ export const busAutomixReset = (changeSchedule, automix, busId) => {
 
 
 export const useBusAutomixResetAll = () => {
-    const { features: { bus } } = useContext(DeviceContextRoot);
+    const { features: { bus } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
     const { options, automix } = bus;
 

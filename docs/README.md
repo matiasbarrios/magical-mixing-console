@@ -13,7 +13,7 @@ Implementation guides for the Magical Mixing Console codebase.
 
 1. [reference/CONCEPTS.md](./reference/CONCEPTS.md) — entities, navigation, signal flow
 2. [gui/GUI.md](./gui/GUI.md) — GUI conventions and performance
-3. [gui/LAYOUT.md](./gui/LAYOUT.md) — layout and navigation
+3. [gui/LAYOUT.md](./gui/LAYOUT.md) — page shells, header trail, entity view tabs and layout modes
 4. [gui/LIST_PATTERN.md](./gui/LIST_PATTERN.md) — list UI patterns
 
 ## All documents
@@ -25,7 +25,8 @@ Implementation guides for the Magical Mixing Console codebase.
 | [reference/CONNECTIVITY.md](./reference/CONNECTIVITY.md) | Device search, sockets, platform UDP |
 | [development/DEVELOPMENT.md](./development/DEVELOPMENT.md) | Dev setup and day-to-day |
 | [development/DEBUGGING_NETWORK.md](./development/DEBUGGING_NETWORK.md) | Wireshark filters for OSC/UDP |
+| [development/HOTKEYS.md](./development/HOTKEYS.md) | Configurable keyboard shortcuts |
 | [TESTING.md](./TESTING.md) | Vitest setup, `tests/` layout, npm scripts |
 | [gui/GUI.md](./gui/GUI.md) | GUI conventions |
-| [gui/LAYOUT.md](./gui/LAYOUT.md) | Page shells and header trail |
+| [gui/LAYOUT.md](./gui/LAYOUT.md) | Page shells, header trail, entity view layout |
 | [gui/LIST_PATTERN.md](./gui/LIST_PATTERN.md) | List UI patterns |

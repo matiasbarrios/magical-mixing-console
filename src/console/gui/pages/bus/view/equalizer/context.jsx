@@ -10,7 +10,7 @@ const Context = createContext({});
 
 
 // Exported
-export const EqualizerContext = ({ children }) => {
+export const EqualizerProvider = ({ children }) => {
     const [rtaOn, setRtaOn] = useState(false);
     const [rtaMin, setRtaMin] = useDeviceSettings('bus-equalizer-rta-min', RTA_DB_MINIMUM);
     const [spectrumActive, setSpectrumActive] = useState(false);

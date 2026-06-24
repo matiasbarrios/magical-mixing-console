@@ -40,7 +40,9 @@ const hasDisplayableMeter = (value) => {
     return isValidMeterSample(value);
 };
 
-const scaledPx = (base, trackSizePx) => `${Math.round((base * trackSizePx) / 22)}px`;
+const scaledPxNum = (base, trackSizePx) => Math.round((base * trackSizePx) / 22);
+
+const scaledPx = (base, trackSizePx) => `${scaledPxNum(base, trackSizePx)}px`;
 
 const trackBackgroundGray = {
     backgroundColor: 'var(--gray-4)',
@@ -148,7 +150,24 @@ export const Meter = ({
 }) => {
     const { disabled } = useDevice();
     const prefersReducedMotion = usePrefersReducedMotion();
-    const { meterSliderTrackSizePx, textSize } = useUiSize();
+    const { meterSliderTrackSizePx, meterSliderSizePx, textSize } = useUiSize();
+
+    const verticalLayout = useMemo(() => {
+        const monoMeterWidthPx = scaledPxNum(10, meterSliderTrackSizePx);
+        const stereoMeterWidthPx = scaledPxNum(5, meterSliderTrackSizePx);
+        const stereoMeterGapPx = scaledPxNum(6, meterSliderTrackSizePx);
+
+        return {
+            monoMeterWidthPx,
+            stereoMeterWidthPx,
+            stereoMeterGapPx,
+            meterTopPx: scaledPxNum(8, meterSliderTrackSizePx),
+            meterHeightInsetPx: scaledPxNum(16, meterSliderTrackSizePx),
+            meterLeftMono: (meterSliderSizePx + monoMeterWidthPx) / 2,
+            meterLeftStereo: (meterSliderSizePx - stereoMeterGapPx) / 2 + stereoMeterWidthPx / 2,
+            meterValuesTextLeftMonoPx: scaledPxNum(1, meterSliderTrackSizePx),
+        };
+    }, [meterSliderTrackSizePx, meterSliderSizePx]);
 
     const meterTransition = prefersReducedMotion ? undefined : '0.15s ease-out';
     const isStereo = useMemo(() => Array.isArray(value) && value.length === 2, [value]);
@@ -212,16 +231,20 @@ export const Meter = ({
             top: 0,
         } : {
             ...(isVertical ? { width: '0' } : { width: 'calc(100% - 8px)' }),
-            ...(isVertical ? { height: 'calc(100% - 16px)' } : { height: scaledPx(10, meterSliderTrackSizePx) }),
-            ...(isVertical && { top: '8px' }),
+            ...(isVertical
+                ? { height: `calc(100% - ${verticalLayout.meterHeightInsetPx}px)` }
+                : { height: scaledPx(10, meterSliderTrackSizePx) }),
+            ...(isVertical && { top: `${verticalLayout.meterTopPx}px` }),
             ...(!isVertical && (isStereo
                 ? { top: scaledPx(4, meterSliderTrackSizePx) }
                 : { top: scaledPx(6, meterSliderTrackSizePx) })),
             ...(!isVertical && dir === 'ltr' && { left: '0px' }),
             ...(!isVertical && dir === 'rtl' && { right: '8px' }),
-            ...(isVertical && (isStereo ? { left: '9.5px' } : { left: '15px' })),
+            ...(isVertical && (isStereo
+                ? { left: `${verticalLayout.meterLeftStereo}px` }
+                : { left: `${verticalLayout.meterLeftMono}px` })),
         }),
-    }), [isStereo, isVertical, dir, flush, meterSliderTrackSizePx]);
+    }), [isStereo, isVertical, dir, flush, meterSliderTrackSizePx, verticalLayout]);
 
     const flushRadius = '0 0 var(--radius-3) var(--radius-3)';
 
@@ -351,7 +374,7 @@ export const Meter = ({
         ...meterValuesTextStyle,
         ...(isVertical && { bottom: '2px' }),
         ...(isVertical && isStereo && { left: scaledPx(7, meterSliderTrackSizePx) }),
-        ...(isVertical && !isStereo && { left: '1px' }),
+        ...(isVertical && !isStereo && { left: `${verticalLayout.meterValuesTextLeftMonoPx}px` }),
         ...(isVertical && { transformOrigin: 'bottom left', transform: 'rotate(270deg)' }),
         ...(isVertical && { minWidth: scaledPx(20, meterSliderTrackSizePx) }),
         ...(isVertical && { maxWidth: scaledPx(20, meterSliderTrackSizePx) }),
@@ -361,7 +384,7 @@ export const Meter = ({
         ...(isVertical && (isStereo
             ? { lineHeight: scaledPx(5, meterSliderTrackSizePx) }
             : { lineHeight: scaledPx(9, meterSliderTrackSizePx) })),
-    }), [isStereo, isVertical, meterSliderTrackSizePx, textSize]);
+    }), [isStereo, isVertical, meterSliderTrackSizePx, textSize, verticalLayout]);
 
     const meterValuesTextLeftStyleFinal = useMemo(() => ({
         ...(leftValue < minimumPercentageToShow ? { color: 'var(--gray-a9)' } : { color: 'var(--white-a9)' }),
@@ -471,6 +494,7 @@ export const MeterSlider = ({
     ariaLabel,
     label,
     trackStart,
+    focusRoam = 'slider',
 }) => {
     const { t } = useLanguage();
     const { disabled: deviceDisabled } = useDevice();
@@ -713,7 +737,10 @@ export const MeterSlider = ({
     const displayedValueStyleFinal = useMemo(() => ({
         ...displayedValueStyle,
         ...(isVertical && { transformOrigin: 'top right', transform: 'rotate(270deg)' }),
-        ...(isVertical ? { top: '8px', right: '17px' } : {
+        ...(isVertical ? {
+            top: scaledPx(8, meterSliderTrackSizePx),
+            right: scaledPx(17, meterSliderTrackSizePx),
+        } : {
             top: 0,
             right: '8px',
             height: '100%',
@@ -723,7 +750,7 @@ export const MeterSlider = ({
         }),
         ...({ fontSize: 'var(--font-size-1)' }),
         pointerEvents: 'none',
-    }), [isVertical]);
+    }), [isVertical, meterSliderTrackSizePx]);
 
     const displayedValueInlineStyle = useMemo(() => ({
         color: 'var(--gray-a9)',
@@ -739,12 +766,15 @@ export const MeterSlider = ({
     const trackEndOverlayStyle = useMemo(() => ({
         position: 'absolute',
         ...(isVertical && { transformOrigin: 'top right', transform: 'rotate(270deg)' }),
-        ...(isVertical ? { top: '8px', right: '17px' } : { top: 0, right: '8px', height: '100%' }),
+        ...(isVertical ? {
+            top: scaledPx(8, meterSliderTrackSizePx),
+            right: scaledPx(17, meterSliderTrackSizePx),
+        } : { top: 0, right: '8px', height: '100%' }),
         display: 'flex',
         alignItems: 'center',
         gap: 'var(--space-1)',
         pointerEvents: 'none',
-    }), [isVertical]);
+    }), [isVertical, meterSliderTrackSizePx]);
 
     const trackLabelStyle = useMemo(() => ({
         color: 'var(--gray-a9)',
@@ -808,18 +838,18 @@ export const MeterSlider = ({
         whiteSpace: 'nowrap',
         pointerEvents: 'none',
         ...(isVertical ? {
-            top: '8px',
-            left: '2px',
+            top: scaledPx(8, meterSliderTrackSizePx),
+            left: scaledPx(2, meterSliderTrackSizePx),
             transformOrigin: 'top left',
             transform: 'rotate(270deg)',
-            fontSize: '7px',
+            fontSize: scaledPx(7, meterSliderTrackSizePx),
         } : {
             top: 0,
             left: '8px',
             height: '100%',
             fontSize: '8px',
         }),
-    }), [isVertical]);
+    }), [isVertical, meterSliderTrackSizePx]);
 
     const thumbStyleFinal = useMemo(() => ({
         ...thumbStyle,
@@ -904,6 +934,7 @@ export const MeterSlider = ({
                     aria-valuemax={valueMaximum}
                     aria-valuetext={displayedValue}
                     {...(thumbKeyboardFocus ? { 'data-keyboard-focus': '' } : {})}
+                    {...(focusRoam ? { 'data-focus-roam': focusRoam } : {})}
                     onPointerDown={onThumbFocusRingPointerDown}
                     onFocus={onThumbFocus}
                     onBlur={onThumbBlur}

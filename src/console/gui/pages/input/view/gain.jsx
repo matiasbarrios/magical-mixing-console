@@ -13,16 +13,22 @@ import { InputName, useInputNameTranslated } from './name';
 
 
 // Internal
-const InputMeterGainPost = ({ inputId }) => {
+const InputMeterGainPost = ({ inputId, isVertical }) => {
     const { value } = useInputGainPost(inputId);
     return (
-        <Meter value={value} valueToDecimal={minus60To0ToDecimal} valuesShow />
+        <Meter
+            value={value}
+            valueToDecimal={minus60To0ToDecimal}
+            valuesShow
+            isVertical={isVertical}
+        />
     );
 };
 
 
 const GainMeterSlider = ({
     inputId, onDisplayedValueClicked, disabled, onResetValueClicked, ariaLabel, label,
+    isVertical,
 }) => {
     const {
         value, set, minimum, maximum,
@@ -46,8 +52,9 @@ const GainMeterSlider = ({
             disabled={disabled}
             valueShowAlways
             showPlusIfPositive
-            trackStart={label}
-            meter={<InputMeterGainPost inputId={inputId} />}
+            trackStart={isVertical ? undefined : label}
+            isVertical={isVertical}
+            meter={<InputMeterGainPost inputId={inputId} isVertical={isVertical} />}
         />
     );
 };
@@ -55,7 +62,7 @@ const GainMeterSlider = ({
 
 // Exported
 export default ({
-    inputId, minWidth, maxWidth, fullWidth, label,
+    inputId, minWidth, maxWidth, label, isVertical = false,
 }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
@@ -78,18 +85,31 @@ export default ({
     return (
         <Flex
             align="center"
+            direction={isVertical ? 'column' : 'row'}
             flexGrow="1"
-            minWidth={minWidth}
-            maxWidth={maxWidth}
-            width={fullWidth ? '100%' : undefined}
+            minWidth={isVertical ? '0' : minWidth}
+            maxWidth={isVertical ? undefined : maxWidth}
+            width="100%"
+            height={isVertical ? '100%' : undefined}
+            minHeight={isVertical ? '0' : undefined}
         >
-            <GainMeterSlider
-                inputId={inputId}
-                onDisplayedValueClicked={doOpen}
-                onResetValueClicked={doReset}
-                ariaLabel={ariaLabel}
-                label={label}
-            />
+            <Flex
+                flexGrow="1"
+                align="center"
+                justify="center"
+                minWidth={isVertical ? undefined : '0'}
+                minHeight={isVertical ? '0' : undefined}
+                width="100%"
+            >
+                <GainMeterSlider
+                    inputId={inputId}
+                    onDisplayedValueClicked={doOpen}
+                    onResetValueClicked={doReset}
+                    ariaLabel={ariaLabel}
+                    label={label}
+                    isVertical={isVertical}
+                />
+            </Flex>
             <Dialog.Root open={opened} onOpenChange={setOpened}>
                 <Dialog.Content aria-describedby={undefined}>
                     <DialogHeader>

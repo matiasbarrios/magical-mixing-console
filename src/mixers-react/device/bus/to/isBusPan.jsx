@@ -1,13 +1,13 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '../..';
+import { DeviceContext } from '../..';
 import { useGet } from '../../../helpers/get';
 import { useHas } from '../../../helpers/has';
 
 
 // Exported
 export const useBusToPanIsBusPan = (busIdFrom, busIdTo) => {
-    const { features: { bus: { to: { pan: { isBusPan } } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { to: { pan: { isBusPan } } } } } = useContext(DeviceContext);
 
     const ids = useMemo(() => [busIdFrom, busIdTo], [busIdFrom, busIdTo]);
     const has = useHas(isBusPan, ids);

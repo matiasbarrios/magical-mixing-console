@@ -1,13 +1,13 @@
 // Requirements
 import { useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useIfHasCalculate } from '../../helpers/ifHasCalculate';
 
 
 // Exported
 export const useBusStereoLink = (busId) => {
-    const { features: { bus: { stereoLink } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { stereoLink } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(stereoLink, busId);
 

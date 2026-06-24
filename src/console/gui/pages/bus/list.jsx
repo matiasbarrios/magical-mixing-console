@@ -12,6 +12,7 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../components/base/resetIcon';
 import { useLanguage } from '../../components/language';
 import ListPageShell from '../../components/layout/list/shell';
@@ -24,7 +25,6 @@ import { DropdownMenuTrigger } from '../../components/base/dropdownMenuTrigger';
 import { ICON_STYLE } from '../../helpers/values';
 import ListStack from '../../components/layout/list/stack';
 import { Alert } from '../../components/base/alert';
-import ListFooter from '../../components/layout/list/footer';
 import { formatBusIdentifierShort, useBusNameTranslated } from './view/name';
 import Edit from './view/edit';
 import ListRow from './listRow';
@@ -183,6 +183,7 @@ const ResetMenu = () => {
                 color="gray"
                 onClick={toggleOpened}
                 aria-label={t('Reset')}
+                {...focusRoamAttrs(RESET_ROAM_ID)}
             >
                 <ResetIcon />
             </DropdownMenuTrigger>
@@ -275,6 +276,7 @@ export default () => {
                     </ListFilterTitle>
                     <ListFilterActions>
                         <ApplyFilteredMenu filtered={filtered} />
+                        <ResetMenu />
                     </ListFilterActions>
                 </ListFilterBar>
                 <DndContext sensors={sensors} onDragEnd={onDragEnd}>
@@ -282,7 +284,6 @@ export default () => {
                         <List filterBy={filterBy} filtered={filtered} onEdit={onEdit} />
                     </SortableContext>
                 </DndContext>
-                <ListFooter reset={<ResetMenu />} />
             </ListPageShell>
         </>
     );

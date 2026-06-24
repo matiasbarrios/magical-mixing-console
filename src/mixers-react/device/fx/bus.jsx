@@ -1,13 +1,13 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 
 
 // Exported
 export const useFxBus = (fxId) => {
-    const { features: { fx: { bus } } } = useContext(DeviceContextRoot);
+    const { features: { fx: { bus } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(bus, fxId);
 

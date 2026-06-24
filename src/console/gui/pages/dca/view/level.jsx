@@ -13,13 +13,14 @@ import { DcaFinalName } from './name';
 
 
 // Internal
-const DcaMeterLevelPost = ({ dcaId }) => (
+const DcaMeterLevelPost = ({ dcaId, isVertical }) => (
     <FallbackDcaLevelPost dcaId={dcaId}>
         {({ value }) => (
             <Meter
                 value={value}
                 valueToDecimal={minus60To0ToDecimal}
                 valuesShow
+                isVertical={isVertical}
             />
         )}
     </FallbackDcaLevelPost>
@@ -28,7 +29,7 @@ const DcaMeterLevelPost = ({ dcaId }) => (
 
 const DcaMeterSlider = ({
     dcaId, value, set, minimum, maximum, onDisplayedValueClicked, disabled, onResetValueClicked,
-    ariaLabel, label, trackStart,
+    ariaLabel, label, trackStart, isVertical,
 }) => (
     <FallbackDcaMeterLevelPostHas dcaId={dcaId}>
         {({ has }) => (
@@ -43,11 +44,12 @@ const DcaMeterSlider = ({
                 onResetValueClicked={onResetValueClicked}
                 ariaLabel={ariaLabel}
                 disabled={disabled}
-                meter={has && <DcaMeterLevelPost dcaId={dcaId} />}
+                meter={has && <DcaMeterLevelPost dcaId={dcaId} isVertical={isVertical} />}
                 meterNotAvailable={!has}
                 valueShowAlways
                 showPlusIfPositive
-                trackStart={trackStart ?? label}
+                trackStart={isVertical ? undefined : (trackStart ?? label)}
+                isVertical={isVertical}
             />
         )}
     </FallbackDcaMeterLevelPostHas>
@@ -56,6 +58,7 @@ const DcaMeterSlider = ({
 
 const Level = ({
     dcaId, has, value, set, minimum, maximum, minWidth = '20dvw', fullWidth, label, trackStart,
+    isVertical = false,
 }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
@@ -77,22 +80,35 @@ const Level = ({
                 return (
                     <Flex
                         align="center"
+                        direction={isVertical ? 'column' : 'row'}
                         flexGrow="1"
-                        minWidth={minWidth}
+                        minWidth={isVertical ? '0' : minWidth}
                         width={fullWidth ? '100%' : undefined}
+                        height={isVertical ? '100%' : undefined}
+                        minHeight={isVertical ? '0' : undefined}
                     >
-                        <DcaMeterSlider
-                            dcaId={dcaId}
-                            value={value}
-                            set={set}
-                            minimum={minimum}
-                            maximum={maximum}
-                            onDisplayedValueClicked={doOpen}
-                            onResetValueClicked={doReset}
-                            ariaLabel={ariaLabel}
-                            label={label}
-                            trackStart={trackStart}
-                        />
+                        <Flex
+                            flexGrow="1"
+                            align="center"
+                            justify="center"
+                            minWidth={isVertical ? undefined : '0'}
+                            minHeight={isVertical ? '0' : undefined}
+                            width="100%"
+                        >
+                            <DcaMeterSlider
+                                dcaId={dcaId}
+                                value={value}
+                                set={set}
+                                minimum={minimum}
+                                maximum={maximum}
+                                onDisplayedValueClicked={doOpen}
+                                onResetValueClicked={doReset}
+                                ariaLabel={ariaLabel}
+                                label={label}
+                                trackStart={trackStart}
+                                isVertical={isVertical}
+                            />
+                        </Flex>
                         <Dialog.Root open={opened} onOpenChange={setOpened}>
                             <Dialog.Content aria-describedby={undefined}>
                                 <DialogHeader>
@@ -121,7 +137,7 @@ const Level = ({
 
 // Exported
 export default ({
-    dcaId, minWidth = '20dvw', fullWidth, label, trackStart,
+    dcaId, minWidth = '20dvw', fullWidth, label, trackStart, isVertical = false,
 }) => (
     <FallbackDcaLevel dcaId={dcaId}>
         {({
@@ -138,6 +154,7 @@ export default ({
                 fullWidth={fullWidth}
                 label={label}
                 trackStart={trackStart}
+                isVertical={isVertical}
             />
         )}
     </FallbackDcaLevel>

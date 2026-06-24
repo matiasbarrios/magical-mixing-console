@@ -43,7 +43,7 @@ const Context = createContext({});
 
 
 // Exported
-export const PresetContext = ({ children }) => {
+export const PresetProvider = ({ children }) => {
     const [currentConfiguration, setCurrentConfiguration] = useState(null);
 
     const state = useMemo(() => ({

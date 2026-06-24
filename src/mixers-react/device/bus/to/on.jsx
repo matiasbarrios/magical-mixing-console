@@ -1,13 +1,13 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '../..';
+import { DeviceContext } from '../..';
 import { useHasGetSet } from '../../../helpers/hasGetSet';
 import { useSetMany } from '../../../helpers/setMany';
 
 
 // Exported
 export const useBusToOn = (busIdFrom, busIdTo) => {
-    const { features: { bus: { to: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { to: { on } } } } = useContext(DeviceContext);
 
     const ids = useMemo(() => [busIdFrom, busIdTo], [busIdFrom, busIdTo]);
     const [has, value, set, toggle] = useHasGetSet(on, ids);
@@ -19,7 +19,7 @@ export const useBusToOn = (busIdFrom, busIdTo) => {
 
 
 export const useBusToOnMonitorSetMany = (busIds) => {
-    const { features: { bus: { options, to: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { options, to: { on } } } } = useContext(DeviceContext);
 
     const from = useMemo(() => options.filter(o => busIds.includes(o.id)), [options, busIds]);
     const to = useMemo(() => options.filter(o => o.type === 'monitor'), [options]);

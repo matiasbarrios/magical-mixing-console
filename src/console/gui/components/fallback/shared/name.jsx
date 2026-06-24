@@ -1,11 +1,11 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Exported
 export const useFallbackNames = (type) => {
-    const { names, setNames } = useContext(FallbackContextRoot);
+    const { names, setNames } = useContext(FallbackContext);
 
     const nameGet = useCallback(id => names[`${type}-${id}`], [names, type]);
 

@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHas } from '../../helpers/has';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
@@ -10,7 +10,7 @@ import { defaultOption, useChanges } from '../../helpers/changes';
 
 // Exported
 export const useBusCompressor = (busId) => {
-    const { features: { bus: { compressor } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor } } } = useContext(DeviceContext);
 
     const has = useHas(compressor, busId);
 
@@ -19,7 +19,7 @@ export const useBusCompressor = (busId) => {
 
 
 export const useBusCompressorOn = (busId) => {
-    const { features: { bus: { compressor: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -30,7 +30,7 @@ export const useBusCompressorOn = (busId) => {
 
 
 export const useBusCompressorMode = (busId) => {
-    const { features: { bus: { compressor: { mode } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { mode } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(mode, busId);
 
@@ -47,7 +47,7 @@ export const useBusCompressorMode = (busId) => {
 export const useBusCompressorKnee = (busId) => {
     const {
         features: { bus: { compressor: { knee } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(knee, busId);
 
@@ -64,7 +64,7 @@ export const useBusCompressorKnee = (busId) => {
 export const useBusCompressorThreshold = (busId) => {
     const {
         features: { bus: { compressor: { threshold } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(threshold, busId);
 
@@ -78,7 +78,7 @@ export const useBusCompressorThreshold = (busId) => {
 
 
 export const useBusCompressorRatio = (busId) => {
-    const { features: { bus: { compressor: { ratio } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { ratio } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(ratio, busId);
 
@@ -95,7 +95,7 @@ export const useBusCompressorRatio = (busId) => {
 export const useBusCompressorMix = (busId) => {
     const {
         features: { bus: { compressor: { mix } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(mix, busId);
 
@@ -111,7 +111,7 @@ export const useBusCompressorMix = (busId) => {
 export const useBusCompressorGain = (busId) => {
     const {
         features: { bus: { compressor: { gain } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(gain, busId);
 
@@ -125,7 +125,7 @@ export const useBusCompressorGain = (busId) => {
 
 
 export const useBusCompressorEnvelope = (busId) => {
-    const { features: { bus: { compressor: { envelope } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { envelope } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(envelope, busId);
 
@@ -140,7 +140,7 @@ export const useBusCompressorEnvelope = (busId) => {
 
 
 export const useBusCompressorDetermination = (busId) => {
-    const { features: { bus: { compressor: { determination } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { determination } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(determination, busId);
 
@@ -156,7 +156,7 @@ export const useBusCompressorDetermination = (busId) => {
 
 
 export const useBusCompressorAutomatic = (busId) => {
-    const { features: { bus: { compressor: { automatic } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { automatic } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(automatic, busId);
 
@@ -169,7 +169,7 @@ export const useBusCompressorAutomatic = (busId) => {
 export const useBusCompressorAttack = (busId) => {
     const {
         features: { bus: { compressor: { attack } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(attack, busId);
 
@@ -185,7 +185,7 @@ export const useBusCompressorAttack = (busId) => {
 export const useBusCompressorHold = (busId) => {
     const {
         features: { bus: { compressor: { hold } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(hold, busId);
 
@@ -201,7 +201,7 @@ export const useBusCompressorHold = (busId) => {
 export const useBusCompressorRelease = (busId) => {
     const {
         features: { bus: { compressor: { release } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(release, busId);
 
@@ -215,7 +215,7 @@ export const useBusCompressorRelease = (busId) => {
 
 
 export const useBusCompressorSidechain = (busId) => {
-    const { features: { bus: { compressor: { sidechain } } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor: { sidechain } } } } = useContext(DeviceContext);
 
     const has = useHas(sidechain, busId);
 
@@ -226,7 +226,7 @@ export const useBusCompressorSidechain = (busId) => {
 export const useBusCompressorSidechainOn = (busId) => {
     const {
         features: { bus: { compressor: { sidechain: { on } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, busId);
 
@@ -239,7 +239,7 @@ export const useBusCompressorSidechainOn = (busId) => {
 export const useBusCompressorSidechainSource = (busId) => {
     const {
         features: { bus: { compressor: { sidechain: { source } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(source, busId);
 
@@ -256,7 +256,7 @@ export const useBusCompressorSidechainSource = (busId) => {
 export const useBusCompressorSidechainType = (busId) => {
     const {
         features: { bus: { compressor: { sidechain: { type } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(type, busId);
 
@@ -273,7 +273,7 @@ export const useBusCompressorSidechainType = (busId) => {
 export const useBusCompressorSidechainFrequency = (busId) => {
     const {
         features: { bus: { compressor: { sidechain: { frequency } } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(frequency, busId);
 
@@ -289,7 +289,7 @@ export const useBusCompressorSidechainFrequency = (busId) => {
 export const useBusCompressorGainReduction = (busId) => {
     const {
         features: { bus: { compressor: { gainReduction } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(gainReduction, busId);
 
@@ -300,7 +300,7 @@ export const useBusCompressorGainReduction = (busId) => {
 export const useBusCompressorKey = (busId) => {
     const {
         features: { bus: { compressor: { key } } },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(key, busId);
 
@@ -329,7 +329,7 @@ export const busCompressorReset = (changeSchedule, compressor, busId) => {
 
 
 export const useBusCompressorReset = (busId) => {
-    const { features: { bus: { compressor } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { compressor } } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {

@@ -9,6 +9,7 @@ import {
     useDevice, useOutputOptions, useOutputResetAll, useOutputTapOptions, useOutputTapSetMany,
 } from '@magical-mixing/mixers-react';
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
+import { RESET_ROAM_ID, focusRoamAttrs } from '../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../components/base/resetIcon';
 import { ICON_STYLE } from '../../helpers/values';
 import ListStack from '../../components/layout/list/stack';
@@ -22,7 +23,6 @@ import { ListFilterBar, ListFilterTitle, ListFilterActions } from '../../compone
 import { ListFilterScope, useListFilterVisibility } from '../../components/layout/list/filterEmpty';
 import DialogHeader from '../../components/base/dialogHeader';
 import { Alert } from '../../components/base/alert';
-import ListFooter from '../../components/layout/list/footer';
 import { DropdownSelect } from '../../components/base/dropdownSelect';
 import {
     Label, LabelControlTable, LABEL_CONTROL_CLASS, LABEL_WIDTH,
@@ -139,32 +139,29 @@ const FilterToolbar = ({ filtered }) => {
 };
 
 
-const ListFooterActions = () => {
+const ListToolbarActions = () => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
     const { disabled } = useDevice();
     const { resetAll } = useOutputResetAll();
 
     return (
-        <ListFooter
-            reset={(
-                <Alert onAccept={resetAll} accept={t('Restore all outputs')}>
-                    {doOpen => (
-                        <IconButton
-                            variant="soft"
-                            color="gray"
-                            size={textSize}
-                            radius="full"
-                            onClick={doOpen}
-                            disabled={disabled}
-                            aria-label={t('Restore all outputs')}
-                        >
-                            <ResetIcon />
-                        </IconButton>
-                    )}
-                </Alert>
+        <Alert onAccept={resetAll} accept={t('Restore all outputs')}>
+            {doOpen => (
+                <IconButton
+                    variant="soft"
+                    color="gray"
+                    size={textSize}
+                    radius="full"
+                    onClick={doOpen}
+                    disabled={disabled}
+                    aria-label={t('Restore all outputs')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
+                >
+                    <ResetIcon />
+                </IconButton>
             )}
-        />
+        </Alert>
     );
 };
 
@@ -241,6 +238,7 @@ const List = () => {
                 </ListFilterTitle>
                 <ListFilterActions>
                     <FilterToolbar filtered={filtered} />
+                    <ListToolbarActions />
                 </ListFilterActions>
             </ListFilterBar>
             <ListFilterScope filterBy={filterBy}>
@@ -252,7 +250,6 @@ const List = () => {
                     />
                 </ListStack>
             </ListFilterScope>
-            <ListFooterActions />
         </ListPageShell>
     );
 };

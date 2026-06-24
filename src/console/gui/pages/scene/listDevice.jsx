@@ -1,11 +1,13 @@
-
 // Requirements
 import {
-    useMemo, useState,
+    useCallback, useMemo, useState,
 } from 'react';
+import { useNavigate } from 'react-router';
+import { Button } from '@radix-ui/themes';
 import { useSceneHas, useSceneOptions } from '@magical-mixing/mixers-react';
 import ListStack from '../../components/layout/list/stack';
 import { useLanguage } from '../../components/language';
+import { useUiSize } from '../../components/theme';
 import ListPageShell from '../../components/layout/list/shell';
 import { useListHeaderTrail } from '../../components/layout/headerTrail/hooks/useHeaderTrail';
 import TextFieldErasable from '../../components/base/textFieldErasable';
@@ -16,6 +18,26 @@ import ListDeviceRow from './listDeviceRow';
 
 
 // Internal
+const AppScenesLink = () => {
+    const navigate = useNavigate();
+    const { t } = useLanguage();
+    const { textSize } = useUiSize();
+
+    const goToAppScenes = useCallback(() => {
+        navigate('/scene/list/app');
+    }, [navigate]);
+
+    return (
+        <Button
+            size={textSize}
+            variant="soft"
+            color="gray"
+            onClick={goToAppScenes}
+        >
+            { t('Use app scenes for more') }
+        </Button>
+    );
+};
 const Element = ({ sceneId, filterBy }) => {
     const name = useSceneFinalName(sceneId);
     const identifier = useSceneDefaultName(sceneId);
@@ -66,7 +88,9 @@ const List = () => {
                         width="100%"
                     />
                 </ListFilterTitle>
-                <ListFilterActions />
+                <ListFilterActions>
+                    <AppScenesLink />
+                </ListFilterActions>
             </ListFilterBar>
             <ListFilterScope filterBy={filterBy}>
                 <ListStack>

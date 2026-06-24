@@ -41,6 +41,7 @@ export default ({ children }) => {
                 udpSocketClose: platform.udpSocketClose,
                 udpMessageSend: platform.udpMessageSend,
                 onUDPMessageReceived: platform.onUDPMessageReceived,
+                cacheMaxEntries: 1024,
             });
 
             setInitialized(true);

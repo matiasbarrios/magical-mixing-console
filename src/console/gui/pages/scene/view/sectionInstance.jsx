@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useSceneOptions } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../components/language';
 import SectionInstanceDropdown from '../../../components/layout/headerTrail/instance/dropdown';
+import { useUiSize } from '../../../components/theme';
 import { useSceneFinalName } from './name';
 
 
@@ -24,6 +25,7 @@ const SceneMenuItem = ({ sceneId, onSelect }) => {
 export default ({ sceneId, color = 'gray' }) => {
     const { t } = useLanguage();
     const navigate = useNavigate();
+    const { textSize } = useUiSize();
     const { options } = useSceneOptions();
     const name = useSceneFinalName(sceneId);
 
@@ -33,7 +35,7 @@ export default ({ sceneId, color = 'gray' }) => {
     const onSelect = useCallback(id => () => navigate(`/scene/${id}`), [navigate]);
     const goToList = useCallback(() => navigate('/scene/list/device'), [navigate]);
 
-    const label = <Text size="2" color={color}>{ name }</Text>;
+    const label = <Text size={textSize} color={color}>{ name }</Text>;
 
     return (
         <SectionInstanceDropdown color={color} label={label} hasMenu>

@@ -1,11 +1,11 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useFxOptions = () => {
-    const { features: { fx: { options } } } = useContext(DeviceContextRoot);
+    const { features: { fx: { options } } } = useContext(DeviceContext);
 
     const get = useCallback(fxId => options.find(o => o.id === fxId), [options]);
 

@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { hasCall } from '../../helpers/feature';
 import { useChanges, defaultOption } from '../../helpers/changes';
 
@@ -32,7 +32,7 @@ export const fxsReset = (changeSchedule, fx) => {
 
 
 export const useFxReset = (fxId) => {
-    const { features: { fx } } = useContext(DeviceContextRoot);
+    const { features: { fx } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -46,7 +46,7 @@ export const useFxReset = (fxId) => {
 
 
 export const useFxResetAll = () => {
-    const { features: { fx } } = useContext(DeviceContextRoot);
+    const { features: { fx } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

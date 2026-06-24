@@ -21,8 +21,14 @@ export const useBusQuickActionsCount = (busId) => {
 
 
 // Exported
-export default ({ busId }) => (
-    <Flex align="center" gapX="1" flexShrink="0">
+export default ({ busId, stacked = false }) => (
+    <Flex
+        direction={stacked ? 'column' : 'row'}
+        align="center"
+        gap={stacked ? '1' : undefined}
+        gapX={stacked ? undefined : '1'}
+        flexShrink="0"
+    >
         <Solo busId={busId} />
         <Mute busId={busId} />
     </Flex>

@@ -1,6 +1,6 @@
 // Requirements
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { hasGet } from '../../helpers/feature';
 
 
@@ -14,7 +14,7 @@ const isAssignedToBus = (source, outputId, sourceId, busId) => {
 
 // Exported
 export const useBusAssignableOutputs = (busId) => {
-    const { features: { output: { source, options } } } = useContext(DeviceContextRoot);
+    const { features: { output: { source, options } } } = useContext(DeviceContext);
 
     const outputs = useMemo(() => {
         if (busId === null || busId === undefined) return [];
@@ -37,7 +37,7 @@ export const useBusAssignableOutputs = (busId) => {
 
 
 export const useBusAddableOutputs = (busId) => {
-    const { features: { output: { source } } } = useContext(DeviceContextRoot);
+    const { features: { output: { source } } } = useContext(DeviceContext);
     const { outputs: assignable } = useBusAssignableOutputs(busId);
     const [assignedById, setAssignedById] = useState({});
 

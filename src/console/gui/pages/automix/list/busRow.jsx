@@ -11,7 +11,7 @@ import { scaleLinear } from 'd3';
 import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
 import { LetterIconButton } from '../../../components/base/letterIconButton';
-import { SourceIcon, SourceViewBus } from '../../bus/view/fromTo/openFrom';
+import { SourceIcon, SourceViewBus } from '../../bus/view/fromTo/from/openFrom';
 import { BusIconNameLabeled, useBusNameTranslated } from '../../bus/view/name';
 import { minus60To0ToDecimal, ONE } from '../../../helpers/values';
 import { Meter, MeterSlider } from '../../../components/base/meterSlider';

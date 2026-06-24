@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useFallbackMgOptions } from '../../../components/fallback';
 import { useLanguage } from '../../../components/language';
 import SectionInstanceDropdown from '../../../components/layout/headerTrail/instance/dropdown';
+import { useUiSize } from '../../../components/theme';
 import { MgIconName } from './name';
 
 
@@ -20,6 +21,7 @@ const MgMenuItem = ({ mgId, onSelect }) => (
 export default ({ mgId, color = 'gray' }) => {
     const { t } = useLanguage();
     const navigate = useNavigate();
+    const { textSize } = useUiSize();
     const { options } = useFallbackMgOptions();
 
     const others = useMemo(() => options.filter(o => o.id !== mgId),
@@ -28,7 +30,7 @@ export default ({ mgId, color = 'gray' }) => {
     const onSelect = useCallback(id => () => navigate(`/mg/${id}`), [navigate]);
     const goToList = useCallback(() => navigate('/mg/list'), [navigate]);
 
-    const label = <MgIconName mgId={mgId} size="2" hideNameIfDefault />;
+    const label = <MgIconName mgId={mgId} size={textSize} hideNameIfDefault />;
 
     return (
         <SectionInstanceDropdown color={color} label={label} hasMenu>

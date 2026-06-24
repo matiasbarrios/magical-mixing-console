@@ -1,6 +1,6 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useSetMany } from '../../helpers/setMany';
 import { useOptions } from '../../helpers/options';
@@ -9,7 +9,7 @@ import { toIds } from '../../helpers/feature';
 
 // Exported
 export const useDcaMute = (dcaId) => {
-    const { features: { dca: { mute } } } = useContext(DeviceContextRoot);
+    const { features: { dca: { mute } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(mute, dcaId);
 
@@ -20,7 +20,7 @@ export const useDcaMute = (dcaId) => {
 
 
 export const useDcaMuteAll = () => {
-    const { features: { dca } } = useContext(DeviceContextRoot);
+    const { features: { dca } } = useContext(DeviceContext);
 
     const options = useOptions(dca);
 

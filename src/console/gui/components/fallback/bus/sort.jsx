@@ -3,14 +3,14 @@ import { useCallback, useContext, useEffect } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
 import { useBusOptions } from '@magical-mixing/mixers-react';
 import { compareBusesByTypeOrder, buildBusChevronNavigationOrder } from '../../../helpers/busTypeOrder';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Exported
 export const useFallbackBusesSorted = () => {
     const {
         sortedIds, setSortedIds, sortedBuses, setSortedBuses,
-    } = useContext(FallbackContextRoot);
+    } = useContext(FallbackContext);
     const { options } = useBusOptions();
 
     const sort = useCallback(() => {

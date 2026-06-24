@@ -1,16 +1,9 @@
 // Requirements
-import {
-    useCallback, useMemo, useState,
-} from 'react';
-import { useParams } from 'react-router';
-import { Pencil1Icon } from '@radix-ui/react-icons';
-import { useDevice, useSceneOptions } from '@magical-mixing/mixers-react';
-import { HeaderIconButton } from '../../../components/layout/header/iconButton';
-import { ICON_STYLE } from '../../../helpers/values';
+import { useMemo } from 'react';
+import { Navigate, useParams } from 'react-router';
+import { useSceneOptions } from '@magical-mixing/mixers-react';
 import { useEntityHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
 import EntityViewShell from '../../../components/layout/entity/shell';
-import EntityNotFound from '../../../components/base/entityNotFound';
-import Edit from './edit';
 import SceneTabs from './tabs';
 
 
@@ -22,7 +15,6 @@ const useParsedParams = () => {
 
 
 const Scene = ({ element }) => {
-    const { disabled } = useDevice();
     const { options } = useSceneOptions();
 
     const previous = useMemo(() => {
@@ -35,15 +27,6 @@ const Scene = ({ element }) => {
         return index < options.length - 1 ? options[index + 1] : null;
     }, [options, element.id]);
 
-    const [editOpened, setEditOpened] = useState(false);
-    const editOpen = useCallback(() => setEditOpened(true), []);
-
-    const actions = useMemo(() => (
-        <HeaderIconButton disabled={disabled} onClick={editOpen}>
-            <Pencil1Icon style={ICON_STYLE} />
-        </HeaderIconButton>
-    ), [disabled, editOpen]);
-
     const instance = useMemo(() => ({
         sceneId: element.id,
     }), [element.id]);
@@ -52,20 +35,12 @@ const Scene = ({ element }) => {
         instance,
         previous: previous && `/scene/${previous.id}`,
         next: next && `/scene/${next.id}`,
-        actions,
     });
 
     return (
-        <>
-            <Edit
-                sceneId={element.id}
-                open={editOpened}
-                onOpenChange={setEditOpened}
-            />
-            <EntityViewShell>
-                <SceneTabs sceneId={element.id} />
-            </EntityViewShell>
-        </>
+        <EntityViewShell>
+            <SceneTabs sceneId={element.id} />
+        </EntityViewShell>
     );
 };
 
@@ -77,7 +52,7 @@ export default () => {
 
     const element = useMemo(() => get(sceneId), [get, sceneId]);
 
-    if (!element) return <EntityNotFound listTo="/scene/list/device" />;
+    if (!element) return <Navigate to="/scene/list/device" replace />;
 
     return <Scene element={element} />;
 };

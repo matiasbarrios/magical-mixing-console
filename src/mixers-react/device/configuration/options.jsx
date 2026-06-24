@@ -1,19 +1,19 @@
 // Requirements
 import { useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 
 
 // Exported
 export const useConfigurationOptions = () => {
-    const { features: { configuration: { categories, options } } } = useContext(DeviceContextRoot);
+    const { features: { configuration: { categories, options } } } = useContext(DeviceContext);
 
     return { categories, options };
 };
 
 
 export const useConfigurationOption = (optionId) => {
-    const { features: { configuration } } = useContext(DeviceContextRoot);
+    const { features: { configuration } } = useContext(DeviceContext);
 
     const { options: configurationOptions } = useConfigurationOptions();
     const o = useMemo(() => configurationOptions

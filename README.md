@@ -4,7 +4,11 @@
 
 # Magical Mixing Console
 
-Open-source mixer control for **Behringer X Air** and **M Air** digital mixers — React UI, Electron/Capacitor, OSC/UDP.
+[magicalmixingconsole.com](https://magicalmixingconsole.com)
+
+**Free** and **open source** app for **Behringer X Air** and **M Air** digital mixers.
+
+**Download** from the [releases](https://github.com/matiasbarrios/magical-mixing-console/releases) page.
 
 If looking for a Node.js library for communicating with X Air devices only, check out [magical-mixers](https://github.com/matiasbarrios/magical-mixers).
 

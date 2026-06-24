@@ -4,7 +4,7 @@ import {
 } from 'react';
 import { hasCall, hasGetOnlyOnce } from '../../helpers/feature';
 import { pathGet } from '../../helpers/path';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useChanges } from '../../helpers/changes';
 import { APP_SCENE_PATH_PREFIXES, runAppSceneCaptureDiscovery } from './capturePaths';
 
@@ -18,11 +18,11 @@ const CAPTURE_WATCHDOG = 60 * 1000;
 
 
 // Variables
-const ContextRoot = createContext({});
+const SceneAppContext = createContext({});
 
 
 // Exported
-export const SceneAppContext = ({ children }) => {
+export const SceneAppProvider = ({ children }) => {
     const runningCheckTimer = useRef(null);
     const runningLastUpdate = useRef(null);
     const pathsToGet = useRef({});
@@ -49,20 +49,20 @@ export const SceneAppContext = ({ children }) => {
     }), [running, valuesCaptured, remaining, captureTotal, captureCompleted]);
 
     return (
-        <ContextRoot.Provider value={state}>
+        <SceneAppContext.Provider value={state}>
             {children}
-        </ContextRoot.Provider>
+        </SceneAppContext.Provider>
     );
 };
 
 
 export const useSceneApp = () => {
-    const { features } = useContext(DeviceContextRoot);
+    const { features } = useContext(DeviceContext);
     const {
         runningCheckTimer, runningLastUpdate, running, setRunning, pathsToGet,
         valuesCaptured, remaining, setRemaining,
         captureTotal, setCaptureTotal, captureCompleted, setCaptureCompleted,
-    } = useContext(ContextRoot);
+    } = useContext(SceneAppContext);
     const { runScheduled } = useChanges();
 
     const capture = useCallback((onComplete) => {

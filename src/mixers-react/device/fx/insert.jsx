@@ -1,6 +1,6 @@
 // Requirements
 import { useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useHas } from '../../helpers/has';
 import { useOptions } from '../../helpers/options';
@@ -8,7 +8,7 @@ import { useOptions } from '../../helpers/options';
 
 // Exported
 export const useFxInsertHas = (fxId) => {
-    const { features: { fx: { insert } } } = useContext(DeviceContextRoot);
+    const { features: { fx: { insert } } } = useContext(DeviceContext);
 
     const has = useHas(insert, fxId);
 
@@ -17,7 +17,7 @@ export const useFxInsertHas = (fxId) => {
 
 
 export const useFxInsertOn = (fxId) => {
-    const { features: { fx: { insert: { on } } } } = useContext(DeviceContextRoot);
+    const { features: { fx: { insert: { on } } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(on, fxId);
 
@@ -28,7 +28,7 @@ export const useFxInsertOn = (fxId) => {
 
 
 export const useFxInsertLeft = (fxId) => {
-    const { features: { fx: { insert: { left } } } } = useContext(DeviceContextRoot);
+    const { features: { fx: { insert: { left } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(left, fxId);
 
@@ -41,7 +41,7 @@ export const useFxInsertLeft = (fxId) => {
 
 
 export const useFxInsertRight = (fxId) => {
-    const { features: { fx: { insert: { right } } } } = useContext(DeviceContextRoot);
+    const { features: { fx: { insert: { right } } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(right, fxId);
 

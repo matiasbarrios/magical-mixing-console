@@ -1,9 +1,8 @@
 // Requirements
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router';
-import { useBusFromOptions, useBusOptions } from '@magical-mixing/mixers-react';
-import { buildBusPath } from '../../../pages/bus/view/useBusViewTab';
 import logo from '../../../static/logo.svg';
+import { resetFocusForHotkeys } from '../../../helpers/hotkeys/guards';
+import { useNavigateHome } from './useNavigateHome';
 
 
 // Constants
@@ -15,20 +14,12 @@ const logoStyle = {
 
 // Exported
 export const Logo = () => {
-    const navigate = useNavigate();
-    const { mainOne } = useBusOptions();
-    const { options: fromOptions } = useBusFromOptions(mainOne?.id);
+    const navigateHome = useNavigateHome();
+
     const onClick = useCallback(() => {
-        if (!mainOne) {
-            navigate('/');
-            return;
-        }
-        if (fromOptions.length > 0) {
-            navigate(buildBusPath(mainOne.id, 'from'));
-            return;
-        }
-        navigate(buildBusPath(mainOne.id));
-    }, [mainOne, fromOptions.length, navigate]);
+        navigateHome();
+        requestAnimationFrame(resetFocusForHotkeys);
+    }, [navigateHome]);
 
     return (
         <div role="button" tabIndex="0" onClick={onClick} style={logoStyle}>

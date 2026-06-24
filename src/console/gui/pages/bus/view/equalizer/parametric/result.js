@@ -7,7 +7,7 @@ import { biquadFilterGet, noQNeeded } from './biquad';
 
 
 // Internal
-const getPoints = (chart, parameters) => {
+export const getResultPoints = (chart, parameters) => {
     const { xScale, width } = chart;
     if (Object.values(parameters).some(f => (noQNeeded(f.type)
         ? [f.type, f.frequency, f.gain].includes(undefined)
@@ -47,7 +47,7 @@ export const createResult = (chart, parameters) => {
         yScaleLeft, zeroLineY, areaFade, lineCurve,
     } = chart;
 
-    const points = getPoints(chart, parameters);
+    const points = getResultPoints(chart, parameters);
 
     // Build the function for creating the line
     chart.resultLine = line()
@@ -98,7 +98,7 @@ export const updateResult = (chart, parameters) => {
         resultContainer, resultLine, resultArea,
     } = chart;
 
-    const points = getPoints(chart, parameters);
+    const points = getResultPoints(chart, parameters);
 
     // Creating the line
     resultContainer.selectAll('#eqLineResult')

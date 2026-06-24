@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 import { useChanges, defaultOption } from '../../helpers/changes';
@@ -8,7 +8,7 @@ import { useChanges, defaultOption } from '../../helpers/changes';
 
 // Exported
 export const useDcaColor = (dcaId) => {
-    const { features: { dca: { color } } } = useContext(DeviceContextRoot);
+    const { features: { dca: { color } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(color, dcaId);
 
@@ -23,7 +23,7 @@ export const useDcaColor = (dcaId) => {
 
 
 export const useDcaColorResetAll = () => {
-    const { features: { dca } } = useContext(DeviceContextRoot);
+    const { features: { dca } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

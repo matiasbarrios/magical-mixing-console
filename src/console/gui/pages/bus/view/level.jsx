@@ -12,16 +12,22 @@ import { useBusNameTranslated } from './name';
 
 
 // Internal
-const BusMeterLevelPost = ({ busId }) => {
+const BusMeterLevelPost = ({ busId, isVertical }) => {
     const { value } = useBusLevelPost(busId);
     return (
-        <Meter value={value} valueToDecimal={minus60To0ToDecimal} valuesShow />
+        <Meter
+            value={value}
+            valueToDecimal={minus60To0ToDecimal}
+            valuesShow
+            isVertical={isVertical}
+        />
     );
 };
 
 
 const BusMeterSlider = ({
     busId, onDisplayedValueClicked, disabled, onResetValueClicked, ariaLabel, label, trackStart,
+    isVertical,
 }) => {
     const {
         value, set, minimum, maximum,
@@ -42,7 +48,8 @@ const BusMeterSlider = ({
             valueShowAlways
             showPlusIfPositive
             trackStart={trackStart ?? label}
-            meter={<BusMeterLevelPost busId={busId} />}
+            isVertical={isVertical}
+            meter={<BusMeterLevelPost busId={busId} isVertical={isVertical} />}
         />
     );
 };
@@ -50,7 +57,7 @@ const BusMeterSlider = ({
 
 // Exported
 export default ({
-    busId, minWidth, maxWidth, fullWidth, label, trackStart,
+    busId, minWidth, maxWidth, label, trackStart, isVertical = false,
 }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
@@ -74,19 +81,32 @@ export default ({
     return (
         <Flex
             align="center"
+            direction={isVertical ? 'column' : 'row'}
             flexGrow="1"
-            minWidth={minWidth}
-            maxWidth={maxWidth}
-            width={fullWidth ? '100%' : undefined}
+            minWidth={isVertical ? '0' : minWidth}
+            maxWidth={isVertical ? undefined : maxWidth}
+            width="100%"
+            height={isVertical ? '100%' : undefined}
+            minHeight={isVertical ? '0' : undefined}
         >
-            <BusMeterSlider
-                busId={busId}
-                onDisplayedValueClicked={doOpen}
-                onResetValueClicked={doReset}
-                ariaLabel={ariaLabel}
-                label={label ?? t('Level')}
-                trackStart={trackStart}
-            />
+            <Flex
+                flexGrow="1"
+                align="center"
+                justify="center"
+                minWidth={isVertical ? undefined : '0'}
+                minHeight={isVertical ? '0' : undefined}
+                width="100%"
+            >
+                <BusMeterSlider
+                    busId={busId}
+                    onDisplayedValueClicked={doOpen}
+                    onResetValueClicked={doReset}
+                    ariaLabel={ariaLabel}
+                    label={isVertical ? undefined : (label ?? t('Level'))}
+                    trackStart={isVertical ? undefined : trackStart}
+                    isVertical={isVertical}
+                />
+            </Flex>
             <Dialog.Root open={opened} onOpenChange={setOpened}>
                 <Dialog.Content aria-describedby={undefined}>
                     <DialogHeader>

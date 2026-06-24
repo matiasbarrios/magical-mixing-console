@@ -1,6 +1,6 @@
 // Requirements
 import { useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useHasGet } from '../../helpers/hasGet';
 import { useIfHasCalculate } from '../../helpers/ifHasCalculate';
@@ -8,7 +8,7 @@ import { useIfHasCalculate } from '../../helpers/ifHasCalculate';
 
 // Exported
 export const useInputGain = (inputId) => {
-    const { features: { input: { gain } } } = useContext(DeviceContextRoot);
+    const { features: { input: { gain } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(gain, inputId);
 
@@ -22,7 +22,7 @@ export const useInputGain = (inputId) => {
 
 
 export const useInputGainPost = (inputId) => {
-    const { features: { input: { gain: { post } } } } = useContext(DeviceContextRoot);
+    const { features: { input: { gain: { post } } } } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(post, inputId);
 

@@ -8,6 +8,7 @@ import { useLanguage } from '../../../components/language';
 import { useUiSize } from '../../../components/theme';
 import { BusIconNameLink } from '../../bus/view/name';
 import Mute from '../../bus/view/mute';
+import { REMOVE_ROAM_ID, focusRoamAttrs } from '../../../helpers/hotkeys/focusRoam';
 import { ICON_STYLE } from '../../../helpers/values';
 
 
@@ -26,6 +27,7 @@ const UnassignBus = ({ set }) => {
             onClick={() => set(false)}
             disabled={disabled}
             aria-label={t('Unassign bus')}
+            {...focusRoamAttrs(REMOVE_ROAM_ID)}
         >
             <MinusIcon style={ICON_STYLE} />
         </IconButton>

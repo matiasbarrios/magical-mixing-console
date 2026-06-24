@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { hasCall } from '../../helpers/feature';
 import { useChanges } from '../../helpers/changes';
 
@@ -17,7 +17,7 @@ export const automixReset = (changeSchedule, automix) => {
 
 
 export const useAutomixReset = () => {
-    const { features: { automix } } = useContext(DeviceContextRoot);
+    const { features: { automix } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {

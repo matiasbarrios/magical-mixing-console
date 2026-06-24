@@ -2,7 +2,6 @@
 import {
     createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
-import { getCurrentFeatures } from '../device/featuresBridge';
 import { pathHas, pathSet } from './path';
 import { pendingHasDoCount, waitForPendingHasDo } from './feature';
 
@@ -18,7 +17,7 @@ const syncPendingPollMs = 50;
 
 
 // Variables
-const ChangesContextRoot = createContext({});
+const ChangesContext = createContext({});
 
 
 // Internal
@@ -27,18 +26,14 @@ const wait = milliseconds => new Promise((resolve) => {
 });
 
 
-const measureSyncPending = () => {
-    const features = getCurrentFeatures();
-    const queue = features?.sendQueueOutstanding?.() ?? 0;
-    return pendingHasDoCount() + queue;
-};
-
-
 // Exported
 export { defaultOption };
 
 
-export const ChangesContext = ({ children }) => {
+export const ChangesProvider = ({ features = null, children }) => {
+    const featuresRef = useRef(features);
+    featuresRef.current = features;
+
     const changesScheduled = useRef([]);
     const changesRunning = useRef(false);
     const changesRan = useRef(0);
@@ -52,6 +47,7 @@ export const ChangesContext = ({ children }) => {
     const [awaitingDesk, setAwaitingDesk] = useState(false);
 
     const state = useMemo(() => ({
+        featuresRef,
         changesScheduled,
         changesRunning,
         changesRan,
@@ -71,15 +67,16 @@ export const ChangesContext = ({ children }) => {
     }), [changesRemaining, changesTotal, batchTotal, syncPending, awaitingDesk]);
 
     return (
-        <ChangesContextRoot.Provider value={state}>
+        <ChangesContext.Provider value={state}>
             {children}
-        </ChangesContextRoot.Provider>
+        </ChangesContext.Provider>
     );
 };
 
 
 export const useChanges = () => {
     const {
+        featuresRef,
         changesScheduled, changesRunning, changesRan,
         pathHasPending, pathHasFlushResolve,
         changesRemaining, setChangesRemaining,
@@ -88,7 +85,7 @@ export const useChanges = () => {
         syncPending, setSyncPending,
         changesOnComplete,
         awaitingDesk, setAwaitingDesk,
-    } = useContext(ChangesContextRoot);
+    } = useContext(ChangesContext);
 
     useEffect(() => {
         if (changesTotal <= 0 && !awaitingDesk) {
@@ -96,11 +93,15 @@ export const useChanges = () => {
             return undefined;
         }
 
-        const tick = () => setSyncPending(measureSyncPending());
+        const tick = () => {
+            const f = featuresRef?.current;
+            const queue = f?.sendQueueOutstanding?.() ?? 0;
+            setSyncPending(pendingHasDoCount() + queue);
+        };
         tick();
         const id = setInterval(tick, syncPendingPollMs);
         return () => clearInterval(id);
-    }, [changesTotal, awaitingDesk, setSyncPending]);
+    }, [changesTotal, awaitingDesk, setSyncPending, featuresRef]);
 
     const flushPathHas = useCallback(() => new Promise((resolve) => {
         if (pathHasPending.current === 0) {
@@ -187,21 +188,21 @@ export const useChanges = () => {
         await flushPathHas();
         await changesRunAsync();
 
-        const features = getCurrentFeatures();
-        if (!features) return;
+        const f = featuresRef?.current;
+        if (!f) return;
 
         setAwaitingDesk(true);
         try {
             await waitForPendingHasDo();
-            if (features.sendQueueDrained) await features.sendQueueDrained();
-            if (features.cacheRefetch) features.cacheRefetch({ purgeFrozen: true });
+            if (f.sendQueueDrained) await f.sendQueueDrained();
+            if (f.cacheRefetch) f.cacheRefetch({ purgeFrozen: true });
         } finally {
             setAwaitingDesk(false);
             setBatchTotal(0);
         }
     }, [
         changeSchedule, changesRunAsync, flushPathHas,
-        setAwaitingDesk, setBatchTotal,
+        setAwaitingDesk, setBatchTotal, featuresRef,
     ]);
 
     return {

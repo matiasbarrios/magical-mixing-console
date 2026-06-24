@@ -1,11 +1,11 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 
 
 // Exported
 export const useInputOptions = () => {
-    const { features: { input: { options } } } = useContext(DeviceContextRoot);
+    const { features: { input: { options } } } = useContext(DeviceContext);
 
     const get = useCallback(inputId => options.find(o => o.id === inputId), [options]);
 

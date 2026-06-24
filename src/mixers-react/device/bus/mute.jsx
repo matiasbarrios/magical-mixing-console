@@ -1,13 +1,13 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useSetMany } from '../../helpers/setMany';
 
 
 // Exported
 export const useBusMute = (busId) => {
-    const { features: { bus: { mute } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { mute } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(mute, busId);
 
@@ -18,7 +18,7 @@ export const useBusMute = (busId) => {
 
 
 export const useBusMuteSetMany = (busIds) => {
-    const { features: { bus: { options, mute } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { options, mute } } } = useContext(DeviceContext);
 
     const selectedBusIds = useMemo(() => options
         .filter(o => busIds.includes(o.id))
@@ -30,7 +30,7 @@ export const useBusMuteSetMany = (busIds) => {
 
 
 export const useBusMuteMany = () => {
-    const { features: { bus: { mute } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { mute } } } = useContext(DeviceContext);
 
     const setMany = useSetMany(mute);
     const muteMany = useCallback(ids => setMany(true, ids), [setMany]);
@@ -41,7 +41,7 @@ export const useBusMuteMany = () => {
 
 
 export const useBusMuteMains = () => {
-    const { features: { bus: { options, mute } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { options, mute } } } = useContext(DeviceContext);
 
     const mainBusIds = useMemo(() => options
         .filter(o => o.type === 'main')

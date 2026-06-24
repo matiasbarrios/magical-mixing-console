@@ -1,11 +1,19 @@
 // Requirements
+import de from './de';
 import es from './es';
 
 
 // Constants
 const languages = {
+    de,
     es,
 };
+
+const LANGUAGE_OPTIONS = [
+    { value: 'en', label: 'English' },
+    { value: 'de', label: 'German' },
+    { value: 'es', label: 'Spanish' },
+];
 
 
 // Variables
@@ -29,3 +37,6 @@ export const translationInitialize = async (platformOSLanguage) => {
 
 
 export const getOSLanguage = () => osLanguage;
+
+
+export { LANGUAGE_OPTIONS };

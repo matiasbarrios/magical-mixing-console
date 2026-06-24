@@ -1,10 +1,11 @@
 // Requirements
 import { Flex, ScrollArea } from '@radix-ui/themes';
 import { useMemo } from 'react';
+import HotkeyListener from '../hotkeys/listener';
 import {
-    Footer, FooterContext,
+    Footer, FooterProvider,
 } from './footer';
-import { HeaderTrailContext } from './headerTrail';
+import { HeaderTrailProvider } from './headerTrail';
 import Header from './header';
 import { layoutPaddingX, layoutPaddingY } from './contentPadding';
 
@@ -26,12 +27,13 @@ const Main = ({ children }) => {
         flex: 1,
         minHeight: 0,
         overflow: 'hidden',
+        outline: 'none',
     }), []);
 
     return (
-        <main style={scrollStyle}>
+        <main style={scrollStyle} tabIndex={-1}>
             <ScrollArea type="scroll" radius="full" scrollbars="both" height="100%">
-                <Flex px={layoutPaddingX} py={layoutPaddingY} width="auto">
+                <Flex px={layoutPaddingX} py={layoutPaddingY} width="100%" minWidth="0">
                     {children}
                 </Flex>
             </ScrollArea>
@@ -42,8 +44,9 @@ const Main = ({ children }) => {
 
 // Exported
 export default ({ children }) => (
-    <HeaderTrailContext>
-        <FooterContext>
+    <HeaderTrailProvider>
+        <FooterProvider>
+            <HotkeyListener />
             <div style={layoutStyle}>
                 <Header />
                 <Main>
@@ -51,6 +54,6 @@ export default ({ children }) => (
                 </Main>
                 <Footer />
             </div>
-        </FooterContext>
-    </HeaderTrailContext>
+        </FooterProvider>
+    </HeaderTrailProvider>
 );

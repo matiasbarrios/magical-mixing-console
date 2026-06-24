@@ -22,7 +22,7 @@ const Context = createContext({});
 
 
 // Internal
-const PaginationContext = ({ busId, children }) => {
+const PaginationProvider = ({ busId, children }) => {
     const { has: sidechainHas } = useBusCompressorSidechain(busId);
 
     const [tabs, setTabs] = useState(defaultTabs);
@@ -84,7 +84,7 @@ const usePagination = () => {
 
 
 // Exported
-export { PaginationContext };
+export { PaginationProvider };
 
 export const PaginationPrevious = () => {
     const { disabled } = useDevice();

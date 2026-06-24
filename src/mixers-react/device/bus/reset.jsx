@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { hasCall } from '../../helpers/feature';
 import { useChanges, defaultOption } from '../../helpers/changes';
 import { busInputResetDeep } from './input';
@@ -36,8 +36,8 @@ const busReset = (
 
         changeSchedule(bus, [`gate(${busId}).on`, false]);
 
-        changeSchedule(bus, [`fx(${busId}).on`, false]);
-        changeSchedule(bus, [`fx(${busId}).gain`, bus.fx.gain.minimum]);
+        changeSchedule(bus, [`fx(${busId}).on`, true]);
+        changeSchedule(bus, [`fx(${busId}).gain`, 0]);
 
         changeSchedule(bus, [`insert(${busId}).on`, false]);
         changeSchedule(bus, [`insert(${busId}).fx`, bus.insert.fx.unassignedOption.id]);
@@ -85,7 +85,7 @@ export const useBusReset = (busId) => {
         features: {
             bus, input, dca, mg,
         },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async () => {
@@ -105,7 +105,7 @@ export const useBusResetAll = () => {
         features: {
             bus, input, dca, mg,
         },
-    } = useContext(DeviceContextRoot);
+    } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

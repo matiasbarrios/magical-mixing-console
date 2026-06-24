@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useFallbackDcaOptions } from '../../../components/fallback';
 import { useLanguage } from '../../../components/language';
 import SectionInstanceDropdown from '../../../components/layout/headerTrail/instance/dropdown';
+import { useUiSize } from '../../../components/theme';
 import { DcaIconName } from './name';
 
 
@@ -20,6 +21,7 @@ const DcaMenuItem = ({ dcaId, onSelect }) => (
 export default ({ dcaId, color = 'gray' }) => {
     const { t } = useLanguage();
     const navigate = useNavigate();
+    const { textSize } = useUiSize();
     const { options } = useFallbackDcaOptions();
 
     const others = useMemo(() => options.filter(o => o.id !== dcaId),
@@ -28,7 +30,7 @@ export default ({ dcaId, color = 'gray' }) => {
     const onSelect = useCallback(id => () => navigate(`/dca/${id}`), [navigate]);
     const goToList = useCallback(() => navigate('/dca/list'), [navigate]);
 
-    const label = <DcaIconName dcaId={dcaId} size="2" hideNameIfDefault />;
+    const label = <DcaIconName dcaId={dcaId} size={textSize} hideNameIfDefault />;
 
     return (
         <SectionInstanceDropdown color={color} label={label} hasMenu>

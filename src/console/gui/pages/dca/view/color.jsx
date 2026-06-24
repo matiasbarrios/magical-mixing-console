@@ -1,64 +1,70 @@
 // Requirements
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
-    Box, Flex, Text,
+    Button, Dialog, Flex,
 } from '@radix-ui/themes';
+import { useDevice } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../components/language';
 import {
     Label, LabelControlTable, LABEL_WIDTH,
 } from '../../../components/base/labelControlTable';
-import { DropdownSelect } from '../../../components/base/dropdownSelect';
-import { FallbackDcaColor } from '../../../components/fallback';
+import { useFallbackDcaColor } from '../../../components/fallback';
 import { useUiSize } from '../../../components/theme';
 
 
-// Constants
-const menuContentStyle = {
-    maxHeight: 'min(320px, var(--radix-dropdown-menu-content-available-height, 320px))',
-    overflowY: 'auto',
-};
-
-const colorSwatchStyle = {
-    width: '16px',
-    height: '16px',
-    borderRadius: '9999px',
-    flexShrink: 0,
-};
-
-
 // Internal
-const ColorSwatch = ({ id }) => (
-    <Box
-        {...(id !== 'gray' && { 'data-accent-color': id })}
-        style={{
-            ...colorSwatchStyle,
-            ...(id === 'gray'
-                ? { boxShadow: 'inset 0 0 0 1px var(--gray-a7)' }
-                : { backgroundColor: 'var(--accent-9)' }),
-        }}
-    />
-);
-
-
-const ColorOption = ({ id, name, size = '2' }) => (
-    <Flex align="center" gapX="2">
-        <ColorSwatch id={id} />
-        <Text size={size} wrap="nowrap">{ name }</Text>
-    </Flex>
-);
-
-
 const useColorName = () => {
     const { t } = useLanguage();
     return useCallback(o => (o.id === 'gray' ? t('Default') : t(o.name)), [t]);
 };
 
 
-const ColorSelectFinal = ({
-    has, value, set, options,
+const buttonColor = id => (id === 'gray' ? 'gray' : id);
+
+
+const ColorPickerDialog = ({
+    open, onOpenChange, options, selectValue, onSelect,
 }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
+    const { disabled } = useDevice();
+    const colorName = useColorName();
+
+    return (
+        <Dialog.Root open={open} onOpenChange={onOpenChange}>
+            <Dialog.Content aria-describedby={undefined} maxWidth="360px">
+                <Dialog.Title size={textSize} mb="3">
+                    { t('Color') }
+                </Dialog.Title>
+                <Flex gap="2" wrap="wrap" justify="center">
+                    {options.map(o => (
+                        <Button
+                            key={o.id}
+                            size={textSize}
+                            variant={selectValue === o.id ? 'solid' : 'soft'}
+                            color={buttonColor(o.id)}
+                            disabled={disabled}
+                            onClick={() => onSelect(o.id)}
+                        >
+                            { colorName(o) }
+                        </Button>
+                    ))}
+                </Flex>
+            </Dialog.Content>
+        </Dialog.Root>
+    );
+};
+
+
+// Exported
+export const ColorSelect = ({ dcaId }) => {
+    const { t } = useLanguage();
+    const { textSize } = useUiSize();
+    const { disabled } = useDevice();
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const {
+        has, value, set, options,
+    } = useFallbackDcaColor(dcaId);
     const colorName = useColorName();
 
     const selectValue = value ?? 'gray';
@@ -66,56 +72,44 @@ const ColorSelectFinal = ({
     const selected = useMemo(() => options.find(o => o.id === selectValue),
         [options, selectValue]);
 
-    const onChange = useCallback((v) => {
+    const onSelect = useCallback((v) => {
         set(v === 'gray' ? null : v);
+        setPickerOpen(false);
     }, [set]);
+
+    const openPicker = useCallback(() => setPickerOpen(true), []);
 
     if (!has || value === undefined) return null;
 
     return (
-        <LabelControlTable.Row>
-            <LabelControlTable.Cell width={LABEL_WIDTH}>
-                <Label>
-                    { t('Color') }
-                </Label>
-            </LabelControlTable.Cell>
-            <LabelControlTable.Cell>
-                <Flex align="center" justify="end" width="100%" minWidth="0">
-                    <DropdownSelect.Root set={onChange} numeric={false}>
-                        <DropdownSelect.Trigger square variant="soft" color="gray">
-                            {selected && (
-                                <ColorOption
-                                    id={selected.id}
-                                    name={colorName(selected)}
-                                    size={textSize}
-                                />
-                            )}
-                        </DropdownSelect.Trigger>
-                        <DropdownSelect.Content style={menuContentStyle}>
-                            <DropdownSelect.Label>{ t('Color') }</DropdownSelect.Label>
-                            {options.map(o => (
-                                <DropdownSelect.Option
-                                    key={o.id}
-                                    id={o.id}
-                                    selected={selectValue === o.id}
-                                >
-                                    <ColorOption id={o.id} name={colorName(o)} />
-                                </DropdownSelect.Option>
-                            ))}
-                        </DropdownSelect.Content>
-                    </DropdownSelect.Root>
-                </Flex>
-            </LabelControlTable.Cell>
-        </LabelControlTable.Row>
+        <>
+            <LabelControlTable.Row>
+                <LabelControlTable.Cell width={LABEL_WIDTH}>
+                    <Label>
+                        { t('Color') }
+                    </Label>
+                </LabelControlTable.Cell>
+                <LabelControlTable.Cell>
+                    <Flex align="center" justify="end" width="100%" minWidth="0">
+                        <Button
+                            size={textSize}
+                            variant="soft"
+                            color={buttonColor(selectValue)}
+                            disabled={disabled}
+                            onClick={openPicker}
+                        >
+                            {selected && colorName(selected)}
+                        </Button>
+                    </Flex>
+                </LabelControlTable.Cell>
+            </LabelControlTable.Row>
+            <ColorPickerDialog
+                open={pickerOpen}
+                onOpenChange={setPickerOpen}
+                options={options}
+                selectValue={selectValue}
+                onSelect={onSelect}
+            />
+        </>
     );
 };
-
-
-// Exported
-export const ColorSelect = ({ dcaId }) => (
-    <FallbackDcaColor dcaId={dcaId} defaultValue="gray">
-        {({
-            has, value, set, options,
-        }) => <ColorSelectFinal has={has} value={value} set={set} options={options} />}
-    </FallbackDcaColor>
-);

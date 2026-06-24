@@ -1,6 +1,6 @@
 # Testing
 
-Guide to running and writing automated tests in Magical Mixing Console. Tests are triggered **manually**; they do not run in pre-commit or CI.
+Guide to running and writing automated tests in Magical Mixing Console. Tests are triggered **manually**; they do not run in pre-commit or CI for now.
 
 ---
 
@@ -113,7 +113,7 @@ Useful when iterating on an area or debugging:
 | See the app in E2E mode (manual) | `MMC_E2E=1 MMC_E2E_CDP_PORT=9222 npx electron-forge start` |
 | Single E2E spec | `npx playwright test tests/e2e/electron/connect.spec.js` |
 
-`npm run test:e2e` starts Electron in dev (no production bundle or obfuscation). The first run may take a while while Webpack compiles; subsequent runs are much faster.
+`npm run test:e2e` starts Electron in dev (no production bundle). The first run may take a while while Webpack compiles; subsequent runs are much faster.
 
 Local Playwright artifacts (`test-results/`, `playwright-report/`) are generated automatically and are in `.gitignore`.
 

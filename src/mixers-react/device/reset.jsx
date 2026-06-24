@@ -9,12 +9,12 @@ import { mgsReset } from './mg/reset';
 import { dcasReset } from './dca/reset';
 import { configurationReset } from './configuration/reset';
 import { busesReset } from './bus/reset';
-import { DeviceContextRoot } from '.';
+import { DeviceContext } from '.';
 
 
 // Exported
 export const useDeviceReset = () => {
-    const { features } = useContext(DeviceContextRoot);
+    const { features } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const reset = useCallback(async ({ onComplete } = {}) => {

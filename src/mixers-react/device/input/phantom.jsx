@@ -1,12 +1,12 @@
 // Requirements
 import { useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 
 
 // Exported
 export const useInputPhantom = (inputId) => {
-    const { features: { input: { phantom } } } = useContext(DeviceContextRoot);
+    const { features: { input: { phantom } } } = useContext(DeviceContext);
 
     const [has, value, set, toggle] = useHasGetSet(phantom, inputId);
 

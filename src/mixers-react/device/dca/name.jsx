@@ -1,13 +1,13 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useChanges } from '../../helpers/changes';
 
 
 // Exported
 export const useDcaName = (dcaId) => {
-    const { features: { dca: { name } } } = useContext(DeviceContextRoot);
+    const { features: { dca: { name } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(name, dcaId);
 
@@ -16,7 +16,7 @@ export const useDcaName = (dcaId) => {
 
 
 export const useDcaNameResetAll = () => {
-    const { features: { dca } } = useContext(DeviceContextRoot);
+    const { features: { dca } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

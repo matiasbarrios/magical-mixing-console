@@ -1,12 +1,12 @@
 // Requirements
 import { useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGet } from '../../helpers/hasGet';
 
 
 // Exported
 export const useOutputVolume = (outputId) => {
-    const { features: { output: { volume } } } = useContext(DeviceContextRoot);
+    const { features: { output: { volume } } } = useContext(DeviceContext);
 
     const [has, value] = useHasGet(volume, outputId);
 

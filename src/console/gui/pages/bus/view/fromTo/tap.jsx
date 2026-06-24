@@ -6,6 +6,7 @@ import { useLanguage } from '../../../../components/language';
 import { useUiSize } from '../../../../components/theme';
 import { DropdownSelect } from '../../../../components/base/dropdownSelect';
 import { LetterIconButtonLabel } from '../../../../components/base/letterIconButton';
+import { QUICK_LETTER_LABEL_STYLE } from '../../../../helpers/values';
 
 
 // Internal
@@ -54,6 +55,7 @@ const TapMenu = ({ options, value, t }) => (
 // Exported
 export const TapDropdown = ({
     busIdFrom, busIdTo, showValue, abbreviate = false, size: sizeProp,
+    iconTrigger = false,
 }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
@@ -71,6 +73,27 @@ export const TapDropdown = ({
     if (!has) return null;
 
     const menu = <TapMenu options={options} value={value} t={t} />;
+
+    if (iconTrigger) {
+        return (
+            <DropdownSelect.Root set={set}>
+                <DropdownSelect.Trigger
+                    size={size}
+                    variant="soft"
+                    color="gray"
+                    aria-label={t('Tap')}
+                >
+                    <LetterIconButtonLabel
+                        letter="T"
+                        textSize={textSizeFinal}
+                        dense
+                        textStyle={QUICK_LETTER_LABEL_STYLE}
+                    />
+                </DropdownSelect.Trigger>
+                { menu }
+            </DropdownSelect.Root>
+        );
+    }
 
     if (showValue) {
         return (

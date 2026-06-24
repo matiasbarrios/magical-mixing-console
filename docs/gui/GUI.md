@@ -76,7 +76,7 @@ Always `if (!has) return null` (or render nothing) so components do not keep sub
 
 ### Batch writes
 
-Multi-parameter edits use `ChangesContext` / `useChanges()` so OSC writes are queued, not fired ad hoc from random UI code.
+Multi-parameter edits use `ChangesProvider` / `useChanges()` so OSC writes are queued, not fired ad hoc from random UI code.
 
 ---
 
@@ -170,6 +170,8 @@ When redesigning navigation, read [CONCEPTS.md](../reference/CONCEPTS.md) first.
 - App shell: `components/layout/index.jsx`
 - Header menu: `components/layout/header/menu/`
 - Header trail + prev/next: `components/layout/headerTrail/`; registration: `useListHeaderTrail` / `useEntityHeaderTrail`
+- Entity view tabs in header center: `HeaderTabBar` + `useHeaderTrailCenter` (see [LAYOUT.md](./LAYOUT.md))
+- Entity view layout mode (vertical/horizontal): `useEntityViewLayout` in `components/theme.jsx`; setting in Appearance
 - List screens: [LIST_PATTERN.md](./LIST_PATTERN.md)
 
 Preserve subscription patterns when restructuring lists or moving controls between screens.

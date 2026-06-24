@@ -1,17 +1,9 @@
 // Requirements
-import {
-    useCallback, useMemo, useState,
-} from 'react';
-import { useParams } from 'react-router';
-import { Pencil1Icon } from '@radix-ui/react-icons';
-import { useDevice } from '@magical-mixing/mixers-react';
-import { HeaderIconButton } from '../../../components/layout/header/iconButton';
-import { ICON_STYLE } from '../../../helpers/values';
+import { useMemo } from 'react';
+import { Navigate, useParams } from 'react-router';
 import { useEntityHeaderTrail } from '../../../components/layout/headerTrail/hooks/useHeaderTrail';
 import EntityViewShell from '../../../components/layout/entity/shell';
-import EntityNotFound from '../../../components/base/entityNotFound';
 import { FallbackDcaColor, useFallbackDcaOptions } from '../../../components/fallback';
-import Edit from './edit';
 import DcaTabs from './tabs';
 
 
@@ -23,7 +15,6 @@ const useParsedParams = () => {
 
 
 const Dca = ({ element, color }) => {
-    const { disabled } = useDevice();
     const { options } = useFallbackDcaOptions();
 
     const previous = useMemo(() => {
@@ -36,15 +27,6 @@ const Dca = ({ element, color }) => {
         return index < options.length - 1 ? options[index + 1] : null;
     }, [options, element.id]);
 
-    const [editOpened, setEditOpened] = useState(false);
-    const editOpen = useCallback(() => setEditOpened(true), []);
-
-    const actions = useMemo(() => (
-        <HeaderIconButton disabled={disabled} onClick={editOpen}>
-            <Pencil1Icon style={ICON_STYLE} />
-        </HeaderIconButton>
-    ), [disabled, editOpen]);
-
     const instance = useMemo(() => ({
         dcaId: element.id,
         color,
@@ -54,20 +36,12 @@ const Dca = ({ element, color }) => {
         instance,
         previous: previous && `/dca/${previous.id}`,
         next: next && `/dca/${next.id}`,
-        actions,
     });
 
     return (
-        <>
-            <Edit
-                dcaId={element.id}
-                open={editOpened}
-                onOpenChange={setEditOpened}
-            />
-            <EntityViewShell>
-                <DcaTabs dcaId={element.id} />
-            </EntityViewShell>
-        </>
+        <EntityViewShell>
+            <DcaTabs dcaId={element.id} />
+        </EntityViewShell>
     );
 };
 
@@ -77,7 +51,7 @@ export default () => {
     const { dcaId } = useParsedParams();
     const { get } = useFallbackDcaOptions();
     const element = useMemo(() => get(dcaId), [get, dcaId]);
-    if (!element) return <EntityNotFound listTo="/dca/list" />;
+    if (!element) return <Navigate to="/dca/list" replace />;
     return (
         <FallbackDcaColor dcaId={dcaId} defaultValue="gray">
             {({ value: color }) => <Dca element={element} color={color} />}

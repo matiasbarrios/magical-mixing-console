@@ -6,7 +6,7 @@ import Parametric from './parametric';
 import Graphic from './graphic';
 import True from './true';
 import Options from './options';
-import { EqualizerContext } from './context';
+import { EqualizerProvider } from './context';
 
 
 const graphicAreaStyle = {
@@ -54,8 +54,8 @@ export default ({ busId }) => {
     const { has } = useBusEqualizer(busId);
     if (!has) return null;
     return (
-        <EqualizerContext>
+        <EqualizerProvider>
             <Equalizer busId={busId} />
-        </EqualizerContext>
+        </EqualizerProvider>
     );
 };

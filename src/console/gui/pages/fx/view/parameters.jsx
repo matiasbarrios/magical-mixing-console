@@ -30,7 +30,7 @@ const Context = createContext({});
 
 
 // Internal
-const ParametersContext = ({ children }) => {
+const ParametersProvider = ({ children }) => {
     const [abLinked, setABLinked] = useState(false);
 
     const state = useMemo(() => ({ abLinked, setABLinked }), [abLinked, setABLinked]);
@@ -503,9 +503,9 @@ const ParametersOfType = ({ fxId, typeId, controlSize = '2' }) => {
     if (!has) return null;
 
     return (
-        <ParametersContext>
+        <ParametersProvider>
             <Parameters fxId={fxId} typeId={typeId} options={options} controlSize={controlSize} />
-        </ParametersContext>
+        </ParametersProvider>
     );
 };
 

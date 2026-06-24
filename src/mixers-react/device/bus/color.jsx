@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useOptions } from '../../helpers/options';
 import { useChanges, defaultOption } from '../../helpers/changes';
@@ -8,7 +8,7 @@ import { useChanges, defaultOption } from '../../helpers/changes';
 
 // Exported
 export const useBusColor = (busId) => {
-    const { features: { bus: { color } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { color } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(color, busId);
 
@@ -23,7 +23,7 @@ export const useBusColor = (busId) => {
 
 
 export const useBusColorResetAll = () => {
-    const { features: { bus } } = useContext(DeviceContextRoot);
+    const { features: { bus } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router';
 import { useBusOptions, useDevice, useDeviceReset } from '@magical-mixing/mixers-react';
 import { useFallbackBusIcons } from '../../components/fallback/bus/icon';
 import { useFallbackBusColors } from '../../components/fallback/bus/color';
+import { useActiveDeviceScene } from '../../components/activeScene';
+import { buildBusPath } from '../bus/view/useBusViewTab';
 import SetupNewWizard from './setupNew';
 
 
@@ -31,22 +33,24 @@ const FreshStartEffectsConnected = ({
     const { reset } = useDeviceReset();
     const { iconsReset } = useFallbackBusIcons();
     const { colorsReset } = useFallbackBusColors();
+    const { clearLoadedScene } = useActiveDeviceScene();
 
     const onFreshStartComplete = useCallback(() => {
         iconsReset();
         colorsReset();
-        if (mainOne) navigate(`/bus/${mainOne.id}`);
+        if (mainOne) navigate(buildBusPath(mainOne.id, 'from'));
     }, [colorsReset, iconsReset, mainOne, navigate]);
 
     useEffect(() => {
         runFreshStartRef.current = ({ closeWizardFirst = false } = {}) => {
             if (closeWizardFirst) setWizardOpen(false);
+            clearLoadedScene();
             reset({ onComplete: onFreshStartComplete });
         };
         return () => {
             runFreshStartRef.current = () => {};
         };
-    }, [onFreshStartComplete, reset, runFreshStartRef, setWizardOpen]);
+    }, [clearLoadedScene, onFreshStartComplete, reset, runFreshStartRef, setWizardOpen]);
 
     return null;
 };

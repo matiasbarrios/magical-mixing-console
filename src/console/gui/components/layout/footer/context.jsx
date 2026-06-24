@@ -22,7 +22,7 @@ const BusToSolo = ({ busId, soloId, setBusFromOn }) => {
 
 
 // Exported
-export const FooterContext = ({ children }) => {
+export const FooterProvider = ({ children }) => {
     const [shown, setShown] = useDeviceSettings('footer-shown', false);
     const [mgShown, setMgShown] = useDeviceSettings('footer-mute-groups', 'auto');
 

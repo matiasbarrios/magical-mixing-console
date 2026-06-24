@@ -7,9 +7,21 @@ import { DropdownSelect } from '../../../../../components/base/dropdownSelect';
 import { GATE_INPUTS_WIDTH } from '../../../../../helpers/values';
 
 
+// Internal
+const sidechainSourceTypeAbbrev = {
+    Secondary: 'Aux',
+};
+
+const formatSidechainSourceName = (name) => {
+    const [type, ...rest] = name.split(' ');
+    const abbrev = sidechainSourceTypeAbbrev[type] ?? type;
+    return rest.length ? `${abbrev} ${rest.join(' ')}` : abbrev;
+};
+
+
 // Exported
 export default ({ busId }) => {
-    const { t, translateTry } = useLanguage();
+    const { t } = useLanguage();
 
     const {
         has, value, set, options, get,
@@ -26,12 +38,12 @@ export default ({ busId }) => {
             </Text>
             <DropdownSelect.Root set={set}>
                 <DropdownSelect.Trigger square variant="soft" maxWidth={GATE_INPUTS_WIDTH}>
-                    { translateTry(option.name) }
+                    { formatSidechainSourceName(option.name) }
                 </DropdownSelect.Trigger>
                 <DropdownSelect.Content>
                     {options.map(o => (
                         <DropdownSelect.Option key={o.id} id={o.id} selected={value === o.id}>
-                            <Text size="2">{ translateTry(o.name) }</Text>
+                            <Text size="2">{ formatSidechainSourceName(o.name) }</Text>
                         </DropdownSelect.Option>
                     ))}
                 </DropdownSelect.Content>

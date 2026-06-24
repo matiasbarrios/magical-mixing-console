@@ -5,6 +5,7 @@ import {
 } from '@radix-ui/themes';
 import { useBusName, useBusOptions, useDevice } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../components/language';
+import { useUiSize } from '../../../components/theme';
 import Link from '../../../components/base/link';
 import { FallbackBusIcon, useFallbackBusColor, useFallbackBusIcon } from '../../../components/fallback';
 import { NameEditRow } from '../../../components/base/nameEditRow';
@@ -71,6 +72,16 @@ const useBusNameTranslated = (busId) => {
 };
 
 
+const formatBusStereoName = ({
+    nameLeft, nameRight, isDefaultLeft, isDefaultRight, numberRight,
+}) => {
+    if (isDefaultLeft && isDefaultRight) return `${nameLeft} & ${numberRight}`;
+    if (isDefaultLeft) return nameRight;
+    if (isDefaultRight) return nameLeft;
+    return `${nameLeft} & ${nameRight}`;
+};
+
+
 const useBusStereoNameProps = (busIdLeft, busIdRight) => {
     const { name: nameLeft, isDefault: isDefaultLeft } = useBusNameTranslated(busIdLeft);
     const {
@@ -78,12 +89,30 @@ const useBusStereoNameProps = (busIdLeft, busIdRight) => {
         isDefault: isDefaultRight, number: numberRight,
     } = useBusNameTranslated(busIdRight);
 
-    const nameOverride = useMemo(() => {
-        if (isDefaultLeft && isDefaultRight) return `${nameLeft} & ${numberRight}`;
-        return `${nameLeft} & ${nameRight}`;
-    }, [isDefaultLeft, isDefaultRight, nameLeft, nameRight, numberRight]);
+    const nameOverride = useMemo(() => formatBusStereoName({
+        nameLeft, nameRight, isDefaultLeft, isDefaultRight, numberRight,
+    }),
+    [isDefaultLeft, isDefaultRight, nameLeft, nameRight, numberRight]);
 
-    return { nameOverride };
+    return { nameOverride, isDefaultLeft, isDefaultRight };
+};
+
+
+/** Custom bus name for edit buttons; null when only defaults apply. */
+const useBusEditDisplayName = (busId, { stereoLinked = false, stereoLinkPair } = {}) => {
+    const { name, isDefault } = useBusNameTranslated(busId);
+    const pairId = stereoLinkPair ?? busId;
+    const { nameOverride, isDefaultLeft, isDefaultRight } = useBusStereoNameProps(busId, pairId);
+
+    return useMemo(() => {
+        if (stereoLinked && stereoLinkPair !== undefined) {
+            if (isDefaultLeft && isDefaultRight) return null;
+            return nameOverride;
+        }
+        return isDefault ? null : name;
+    }, [
+        stereoLinked, stereoLinkPair, isDefaultLeft, isDefaultRight, isDefault, name, nameOverride,
+    ]);
 };
 
 
@@ -95,7 +124,7 @@ const BusIconNameDivider = () => (
 const BusIconNameContent = ({
     busId, name, size, color, disabled, identifierPrefix, monochrome = false,
     inheritTypography = false, hideNameIfDefault = false, hideIdentifier = false,
-    isDefault = false,
+    isDefault = false, truncate = false,
 }) => {
     const { get } = useBusOptions();
     const { has: iconHas, value: iconValue } = useFallbackBusIcon(busId);
@@ -119,6 +148,13 @@ const BusIconNameContent = ({
         ? { style: { font: 'inherit', color: 'inherit' } }
         : { size, color: textColor };
 
+    const nameTextStyle = truncate ? {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        minWidth: 0,
+    } : undefined;
+
     const showPrefix = !!prefix && !hideIdentifier && (!showName || prefix !== displayName);
 
     if (!showIcon && !showPrefix && !(showName && displayName)) {
@@ -129,6 +165,9 @@ const BusIconNameContent = ({
         <Flex
             align="center"
             gapX={showIcon ? '1' : '1'}
+            width={truncate ? '100%' : undefined}
+            minWidth={truncate ? '0' : undefined}
+            justify={truncate ? 'center' : undefined}
             style={inheritTypography ? {
                 color: 'inherit',
                 display: 'inline-flex',
@@ -150,7 +189,7 @@ const BusIconNameContent = ({
                 </Flex>
             )}
             {(showPrefix || showName) && (
-                <Flex align="center" gapX="1">
+                <Flex align="center" gapX="1" minWidth={truncate ? '0' : undefined} overflow={truncate ? 'hidden' : undefined}>
                     {showPrefix && (
                         <>
                             <Text {...textProps}>
@@ -162,7 +201,7 @@ const BusIconNameContent = ({
                         </>
                     )}
                     {showName && (
-                        <Text {...textProps}>
+                        <Text {...textProps} style={nameTextStyle}>
                             { displayName }
                         </Text>
                     )}
@@ -224,15 +263,18 @@ const useBusStereoIconNameVisible = (busIdLeft, busIdRight, { hideIdentifier = f
 export {
     formatBusIdentifierShort,
     formatBusStereoIdentifierShort,
+    formatBusStereoName,
     useBusNameTranslated,
     useBusIdentifierPrefix,
     useBusIconNameVisible,
     useBusStereoIconNameVisible,
+    useBusEditDisplayName,
 };
 
 export const BusIconName = ({
     busId, size = '2', color: colorProp, monochrome = false, inheritTypography = false,
     identifierPrefix, hideNameIfDefault = false, hideIdentifier = false, nameOverride,
+    truncate = false,
 }) => {
     const { disabled } = useDevice();
     const { name, isDefault } = useBusNameTranslated(busId);
@@ -251,19 +293,22 @@ export const BusIconName = ({
             isDefault={nameOverride ? false : isDefault}
             monochrome={monochrome}
             inheritTypography={inheritTypography}
+            truncate={truncate}
         />
     );
 };
 
 
 /** Header-style bus label: icon + type/number prefix + name when customized. */
-export const BusIconNameLabeled = ({ busId, ...props }) => {
+export const BusIconNameLabeled = ({ busId, size, ...props }) => {
+    const { textSize } = useUiSize();
     const identifierPrefix = useBusIdentifierPrefix(busId);
     return (
         <BusIconName
             busId={busId}
             identifierPrefix={identifierPrefix}
             hideNameIfDefault
+            size={size ?? textSize}
             {...props}
         />
     );
@@ -272,7 +317,7 @@ export const BusIconNameLabeled = ({ busId, ...props }) => {
 
 export const BusStereoIconName = ({
     busIdLeft, busIdRight, size = '2', color, monochrome = false, inheritTypography = false,
-    hideIdentifier = false,
+    hideIdentifier = false, truncate = false,
 }) => {
     const { nameOverride } = useBusStereoNameProps(busIdLeft, busIdRight);
     const { isDefault: isDefaultLeft } = useBusNameTranslated(busIdLeft);
@@ -288,6 +333,7 @@ export const BusStereoIconName = ({
             hideIdentifier={hideIdentifier}
             monochrome={monochrome}
             inheritTypography={inheritTypography}
+            truncate={truncate}
         />
     );
 };

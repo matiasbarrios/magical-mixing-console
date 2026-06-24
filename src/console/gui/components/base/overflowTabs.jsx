@@ -19,13 +19,35 @@ import { DropdownMenuContent } from './dropdownMenuContent';
 const TAB_GAP = 4;
 
 
-const containerStyle = {
-    borderTop: '0px solid var(--gray-6)',
-    borderBottom: '1px solid var(--gray-6)',
+const containerStyleBase = {
     position: 'relative',
     width: '100%',
     minWidth: 0,
     overflow: 'hidden',
+};
+
+const containerStyleDefault = {
+    ...containerStyleBase,
+    borderTop: '0px solid var(--gray-6)',
+    borderBottom: '1px solid var(--gray-6)',
+};
+
+
+const VARIANT_CONFIG = {
+    default: {
+        rowPt: '2',
+        rowPb: '2',
+        rowJustify: 'start',
+        scaleInactive: false,
+        containerStyle: containerStyleDefault,
+    },
+    header: {
+        rowPt: undefined,
+        rowPb: undefined,
+        rowJustify: 'center',
+        scaleInactive: true,
+        containerStyle: containerStyleBase,
+    },
 };
 
 
@@ -165,7 +187,7 @@ const TabButton = ({
     return (
         <Button
             size={textSize}
-            variant="soft"
+            variant={isActive ? 'soft' : 'ghost'}
             color={tabColor(isActive)}
             role="tab"
             aria-selected={isActive}
@@ -190,7 +212,7 @@ const OverflowMenu = ({
     return (
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
             <DropdownMenuTrigger
-                variant="soft"
+                variant="ghost"
                 color={tabColor(activeInOverflow)}
                 aria-label={t('More')}
                 onClick={toggleOpened}
@@ -216,9 +238,12 @@ const OverflowMenu = ({
 
 
 // Exported
-export default ({ tabs, active, onChange }) => {
+export default ({ tabs, active, onChange, variant = 'default' }) => {
     const { disabled } = useDevice();
     const { textSize } = useUiSize();
+    const {
+        rowPt, rowPb, rowJustify, scaleInactive, containerStyle: variantContainerStyle,
+    } = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.default;
     const containerRef = useRef(null);
     const tabRefs = useRef({});
     const moreMeasureRef = useRef(null);
@@ -239,7 +264,11 @@ export default ({ tabs, active, onChange }) => {
 
     useEffect(() => {
         window.addEventListener('resize', bumpLayout);
-        return () => window.removeEventListener('resize', bumpLayout);
+        window.addEventListener('orientationchange', bumpLayout);
+        return () => {
+            window.removeEventListener('resize', bumpLayout);
+            window.removeEventListener('orientationchange', bumpLayout);
+        };
     }, [bumpLayout]);
 
     useLayoutEffect(() => {
@@ -284,7 +313,7 @@ export default ({ tabs, active, onChange }) => {
     }, [onChange, disabled]);
 
     return (
-        <div ref={containerRef} style={containerStyle}>
+        <div ref={containerRef} style={variantContainerStyle}>
             <Flex aria-hidden gap="1" align="center" style={measureStyle}>
                 {tabs.map(tab => (
                     <Button
@@ -310,7 +339,17 @@ export default ({ tabs, active, onChange }) => {
                     <ChevronDownIcon style={ICON_STYLE} />
                 </IconButton>
             </Flex>
-            <Flex align="center" gap="1" pt="2" pb="2" flexShrink="0" minWidth="0" width="100%" role="tablist">
+            <Flex
+                align="center"
+                justify={rowJustify}
+                gap="3"
+                pt={rowPt}
+                pb={rowPb}
+                flexShrink="0"
+                minWidth="0"
+                width="100%"
+                role="tablist"
+            >
                 {visibleTabs.map(tab => (
                     <TabButton
                         key={tab.id}
@@ -318,6 +357,7 @@ export default ({ tabs, active, onChange }) => {
                         isActive={active === tab.id}
                         onSelect={onSelect}
                         textSize={textSize}
+                        scaleInactive={scaleInactive}
                     />
                 ))}
                 {hiddenTabs.length > 0 && (

@@ -8,6 +8,7 @@ import {
     DropdownMenu, Flex, IconButton,
 } from '@radix-ui/themes';
 import { PlusIcon } from '@radix-ui/react-icons';
+import { ADD_ROAM_ID, RESET_ROAM_ID, focusRoamAttrs } from '../../../helpers/hotkeys/focusRoam';
 import ResetIcon from '../../../components/base/resetIcon';
 import { ICON_STYLE } from '../../../helpers/values';
 import { useLanguage } from '../../../components/language';
@@ -61,7 +62,12 @@ const AddOutputs = ({ inputId }) => {
 
     return (
         <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
-            <DropdownMenuTrigger variant="soft" color="gray" onClick={toggleOpened}>
+            <DropdownMenuTrigger
+                variant="soft"
+                color="gray"
+                onClick={toggleOpened}
+                {...focusRoamAttrs(ADD_ROAM_ID)}
+            >
                 <PlusIcon style={ICON_STYLE} />
             </DropdownMenuTrigger>
             <DropdownMenuContent size="2">
@@ -97,6 +103,7 @@ const ResetOutputs = ({ inputId }) => {
                     onClick={doOpen}
                     disabled={disabled}
                     aria-label={t('Reset')}
+                    {...focusRoamAttrs(RESET_ROAM_ID)}
                 >
                     <ResetIcon />
                 </IconButton>
@@ -115,7 +122,7 @@ const List = ({ inputId }) => {
     const { options } = useOutputOptions();
 
     return (
-        <Flex direction="column" flexGrow="1" minHeight="0" width="100%" className="mmc-scroll-y" gap="3">
+        <Flex direction="column" gapY="3" width="100%">
             <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
                 {options.map(o => (
                     <Evaluate key={o.id} outputId={o.id} inputId={inputId} />

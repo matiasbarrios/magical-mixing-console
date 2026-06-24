@@ -4,7 +4,7 @@ import { useDcaIcon, useDcaIconResetAll } from '@magical-mixing/mixers-react';
 import {
     useFallbackIcons, useFallbackIcon, FallbackIcon, iconOptions,
 } from '../shared/icon';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 
 
 // Internal
@@ -27,6 +27,18 @@ const DeviceIconUse = ({ dcaId, children }) => {
 };
 
 
+export const useFallbackDcaIcon = (dcaId) => {
+    const { dcaOptions } = useContext(FallbackContext);
+    const deviceIcon = useDcaIcon(dcaId);
+    const fallbackIcon = useFallbackIcon('dca', dcaId);
+
+    const isVirtual = dcaOptions?.find(o => o.id === dcaId);
+    if (isVirtual) return fallbackIcon;
+    if (deviceIcon.has) return { ...deviceIcon, options: iconOptions };
+    return fallbackIcon;
+};
+
+
 // Exported
 export const useFallbackDcaIcons = () => {
     const { iconsReset } = useFallbackIcons('dca');
@@ -42,7 +54,7 @@ export const useFallbackDcaIcons = () => {
 
 
 export const FallbackDcaIconUse = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
     if (!dcaOptions
         .find(o => o.id === dcaId)) return <DeviceIconUse dcaId={dcaId}>{children}</DeviceIconUse>;
     return <FallbackIconUse dcaId={dcaId}>{children}</FallbackIconUse>;

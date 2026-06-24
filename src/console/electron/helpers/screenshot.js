@@ -58,7 +58,15 @@ const resolveScaleFactor = (mainWindow, options) => {
 };
 
 
-const getWebsiteAssetsDir = () => path.join(app.getPath('documents'), 'mmc-screenshots');
+const getWebsiteAssetsDir = () => {
+    const candidates = [
+        path.resolve(app.getAppPath(), '../magical-mixing-console-website/assets/features'),
+        path.resolve(app.getAppPath(), '../../magical-mixing-console-website/assets/features'),
+    ];
+    const found = candidates.find(dir => fs.existsSync(dir));
+    if (found) return found;
+    return path.join(app.getPath('documents'), 'mmc-screenshots');
+};
 
 
 const logScreenshotResult = (result) => {

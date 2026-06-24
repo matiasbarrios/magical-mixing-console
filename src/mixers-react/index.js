@@ -1,7 +1,7 @@
 // Exported
 export { mixersInitialize } from '@magical-mixing/mixers';
 export { useSearch } from './search';
-export { DeviceContext, useDevice } from './device';
+export { DeviceProvider, useDevice } from './device';
 export * from './device/automix/has';
 export * from './device/automix/options';
 export * from './device/automix/on';

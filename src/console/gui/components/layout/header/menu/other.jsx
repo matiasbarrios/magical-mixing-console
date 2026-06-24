@@ -3,14 +3,12 @@ import { DropdownMenu } from '@radix-ui/themes';
 import { useNavigate } from 'react-router';
 import {
     useDevice,
-    useFxHas, useFxOptions, useInputOptions, useOutputOptions, useSceneHas,
+    useFxHas, useFxOptions, useInputOptions, useOutputOptions,
 } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../language';
 import { useFxNameTranslated } from '../../../../pages/fx/view/name';
 import { useInputNameTranslated } from '../../../../pages/input/view/name';
 import { useOutputNameTranslated } from '../../../../pages/output/view/name';
-import { DropdownMenuSubContent } from './../../../base/dropdownMenuContent';
-
 
 // Internal
 const FxName = ({ fx }) => {
@@ -104,40 +102,11 @@ const Outputs = () => {
 };
 
 
-const Scenes = () => {
-    const { disabled } = useDevice();
-    const navigate = useNavigate();
-    const { t } = useLanguage();
-    const { has } = useSceneHas();
-    if (!has) {
-        return (
-            <DropdownMenu.Item onSelect={() => navigate('/scene/list/app')} disabled={disabled}>
-                { t('Scenes') }
-            </DropdownMenu.Item>
-        );
-    }
-    return (
-        <DropdownMenu.Sub>
-            <DropdownMenu.SubTrigger disabled={disabled}>{ t('Scenes') }</DropdownMenu.SubTrigger>
-            <DropdownMenuSubContent size="2">
-                <DropdownMenu.Item onSelect={() => navigate('/scene/list/device')} disabled={disabled}>
-                    { t('In device') }
-                </DropdownMenu.Item>
-                <DropdownMenu.Item onSelect={() => navigate('/scene/list/app')} disabled={disabled}>
-                    { t('In app') }
-                </DropdownMenu.Item>
-            </DropdownMenuSubContent>
-        </DropdownMenu.Sub>
-    );
-};
-
-
 // Exported
 export default () => (
     <>
-        <Fxs />
         <Inputs />
         <Outputs />
-        <Scenes />
+        <Fxs />
     </>
 );

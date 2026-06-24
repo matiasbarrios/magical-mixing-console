@@ -1,7 +1,7 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
 import { useDcaName, useDcaNameResetAll, useDcaOptions } from '@magical-mixing/mixers-react';
-import { FallbackContextRoot } from '../context';
+import { FallbackContext } from '../context';
 import { useLanguage } from '../../language';
 import { useFallbackName, useFallbackNames } from '../shared/name';
 import { useFallbackDcaOptions } from './options';
@@ -9,7 +9,7 @@ import { useFallbackDcaOptions } from './options';
 
 // Internal
 const FallbackName = ({ dcaId, defaultName, children }) => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
     const { value: nameValue, set: nameSet } = useFallbackName('dca', dcaId);
 
     const { options: deviceOptions } = useDcaOptions();
@@ -59,7 +59,7 @@ const DeviceDcaName = ({ dcaId, defaultName, children }) => {
 
 // Exported
 export const useFallbackDcaNames = () => {
-    const { dcaOptions, setDcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions, setDcaOptions } = useContext(FallbackContext);
     const { namesReset } = useFallbackNames('dca');
     const { resetAll: dcaNameResetAll } = useDcaNameResetAll();
 
@@ -75,7 +75,7 @@ export const useFallbackDcaNames = () => {
 
 
 export const FallbackDcaName = ({ dcaId, children }) => {
-    const { dcaOptions } = useContext(FallbackContextRoot);
+    const { dcaOptions } = useContext(FallbackContext);
 
     const { t } = useLanguage();
     const { get } = useFallbackDcaOptions();

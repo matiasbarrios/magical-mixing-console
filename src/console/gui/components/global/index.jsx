@@ -6,40 +6,47 @@ import {
     Navigate,
     Outlet,
 } from 'react-router';
-import { ChangesContext, DeviceContext } from '@magical-mixing/mixers-react';
+import { DeviceProvider } from '@magical-mixing/mixers-react';
 import routes from '../../routes';
 import { useDevices } from '../devices/context';
 import Layout from '../layout';
-import { FallbackContext } from '../fallback';
-import { VaultContext } from '../vault';
-import GlobalContext from './context';
+import { FallbackProvider } from '../fallback';
+import { VaultProvider } from '../vault';
+import { ActiveDeviceSceneProvider } from '../activeScene';
+import { BootstrapProvider } from '../bootstrap';
+import GlobalProvider from './context';
 import GlobalHooks from './hooks';
 import GlobalInitialization from './initialization';
 import { AppActive } from './appActive';
 import { MobileBack, MobileOfflineHaptics } from './mobile';
-import { ChangesCallout, GlobalErrorCallout } from './callout';
+import { ChangesProgressDialog } from './changesProgress';
 import { StructureErrorBoundary } from './errorBoundary';
 import '../../style/main.css';
 
 
 // Internal
 const Content = ({ noHeader, device, children }) => (
-    <DeviceContext device={device}>
-        <FallbackContext>
-            <VaultContext>
-                <AppActive>
-                    <MobileOfflineHaptics>
-                        {noHeader && children}
-                        {!noHeader && (
-                            <Layout>
-                                {children}
-                            </Layout>
-                        )}
-                    </MobileOfflineHaptics>
-                </AppActive>
-            </VaultContext>
-        </FallbackContext>
-    </DeviceContext>
+    <DeviceProvider device={device}>
+        <ActiveDeviceSceneProvider>
+            <FallbackProvider>
+                <VaultProvider>
+                    <AppActive>
+                        <BootstrapProvider>
+                            <MobileOfflineHaptics>
+                                {noHeader && children}
+                                {!noHeader && (
+                                    <Layout>
+                                        {children}
+                                    </Layout>
+                                )}
+                            </MobileOfflineHaptics>
+                        </BootstrapProvider>
+                    </AppActive>
+                </VaultProvider>
+            </FallbackProvider>
+            <ChangesProgressDialog />
+        </ActiveDeviceSceneProvider>
+    </DeviceProvider>
 );
 
 
@@ -51,7 +58,7 @@ const Structure = ({ children, route }) => {
     }
 
     return (
-        <ChangesContext>
+        <>
             <StructureErrorBoundary>
                 {!focused && children}
                 {focused && (
@@ -60,9 +67,7 @@ const Structure = ({ children, route }) => {
                     </Content>
                 )}
             </StructureErrorBoundary>
-            <GlobalErrorCallout />
-            <ChangesCallout />
-        </ChangesContext>
+        </>
     );
 };
 
@@ -110,9 +115,9 @@ export default () => {
 
     return (
         <GlobalInitialization>
-            <GlobalContext>
+            <GlobalProvider>
                 <RouterProvider router={router} />
-            </GlobalContext>
+            </GlobalProvider>
         </GlobalInitialization>
     );
 };

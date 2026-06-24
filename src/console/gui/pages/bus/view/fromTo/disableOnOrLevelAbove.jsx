@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { IconButton } from '@radix-ui/themes';
 import { MinusIcon } from '@radix-ui/react-icons';
 import { useBusToOnAndLevelAbove, useDevice } from '@magical-mixing/mixers-react';
+import { REMOVE_ROAM_ID, focusRoamAttrs } from '../../../../helpers/hotkeys/focusRoam';
 import { ICON_STYLE } from '../../../../helpers/values';
 import { useUiSize } from '../../../../components/theme';
 
@@ -27,6 +28,7 @@ export default ({ busIdFrom, busIdTo, ariaLabel }) => {
             disabled={disabled}
             aria-label={ariaLabel}
             className="mmc-shrink-0"
+            {...focusRoamAttrs(REMOVE_ROAM_ID)}
         >
             <MinusIcon style={ICON_STYLE} />
         </IconButton>

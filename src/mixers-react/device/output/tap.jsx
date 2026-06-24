@@ -1,13 +1,13 @@
 // Requirements
 import { useCallback, useContext, useMemo } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { useSetMany } from '../../helpers/setMany';
 
 
 // Exported
 export const useOutputTap = (outputId) => {
-    const { features: { output: { tap } } } = useContext(DeviceContextRoot);
+    const { features: { output: { tap } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(tap, outputId);
 
@@ -16,7 +16,7 @@ export const useOutputTap = (outputId) => {
 
 
 export const useOutputTapOptions = () => {
-    const { features: { output: { tap } } } = useContext(DeviceContextRoot);
+    const { features: { output: { tap } } } = useContext(DeviceContext);
 
     const options = useMemo(() => tap.options(), [tap]);
 
@@ -27,7 +27,7 @@ export const useOutputTapOptions = () => {
 
 
 export const useOutputTapSetMany = () => {
-    const { features: { output: { tap } } } = useContext(DeviceContextRoot);
+    const { features: { output: { tap } } } = useContext(DeviceContext);
 
     const setMany = useSetMany(tap);
 

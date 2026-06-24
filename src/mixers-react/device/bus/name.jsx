@@ -1,6 +1,6 @@
 // Requirements
 import { useCallback, useContext } from 'react';
-import { DeviceContextRoot } from '..';
+import { DeviceContext } from '..';
 import { useHasGetSet } from '../../helpers/hasGetSet';
 import { hasCall } from '../../helpers/feature';
 import { useChanges } from '../../helpers/changes';
@@ -8,7 +8,7 @@ import { useChanges } from '../../helpers/changes';
 
 // Exported
 export const useBusName = (busId) => {
-    const { features: { bus: { name } } } = useContext(DeviceContextRoot);
+    const { features: { bus: { name } } } = useContext(DeviceContext);
 
     const [has, value, set] = useHasGetSet(name, busId);
 
@@ -17,7 +17,7 @@ export const useBusName = (busId) => {
 
 
 export const useBusNameResetAll = () => {
-    const { features: { bus } } = useContext(DeviceContextRoot);
+    const { features: { bus } } = useContext(DeviceContext);
     const { runScheduled } = useChanges();
 
     const resetAll = useCallback(async () => {

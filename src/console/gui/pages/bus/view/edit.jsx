@@ -5,7 +5,6 @@ import {
     useBusName, useBusOptions, useBusReset, useDevice,
 } from '@magical-mixing/mixers-react';
 import { useLanguage } from '../../../components/language';
-import { ucFirst } from '../../../helpers/format';
 import { Alert } from '../../../components/base/alert';
 import DialogHeader from '../../../components/base/dialogHeader';
 import {
@@ -13,7 +12,7 @@ import {
 } from '../../../components/base/labelControlTable';
 import { useFallbackBusIcon, useFallbackBusColor } from '../../../components/fallback';
 import { useUiSize } from '../../../components/theme';
-import { NameEdit } from './name';
+import { formatBusIdentifierShort, NameEdit } from './name';
 import { ColorSelect } from './color';
 import { IconSelect } from './icon';
 
@@ -65,6 +64,9 @@ export default ({ busId, open, onOpenChange }) => {
     const { has, value, set } = useBusName(busId);
     const { get } = useBusOptions();
     const bus = useMemo(() => get(busId), [busId, get]);
+    const title = useMemo(() => (
+        bus ? formatBusIdentifierShort(bus.type, bus.number) : null
+    ), [bus]);
 
     const onIconSelected = useCallback((newIcon, oldIcon) => {
         if (newIcon?.id === 'none') return;
@@ -79,7 +81,7 @@ export default ({ busId, open, onOpenChange }) => {
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             <Dialog.Content aria-describedby={undefined}>
                 <DialogHeader>
-                    { `${t(ucFirst(bus.type))} ${bus.number}` }
+                    { title }
                 </DialogHeader>
                 <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
                     <IconSelect busId={busId} onSelected={onIconSelected} />
