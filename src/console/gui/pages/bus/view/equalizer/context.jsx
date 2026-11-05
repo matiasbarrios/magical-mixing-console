@@ -15,6 +15,7 @@ export const EqualizerProvider = ({ children }) => {
     const [rtaMin, setRtaMin] = useDeviceSettings('bus-equalizer-rta-min', RTA_DB_MINIMUM);
     const [spectrumActive, setSpectrumActive] = useState(false);
     const [dbRange, setDbRange] = useDeviceSettings('bus-equalizer-db-range', EQ_DB_RANGE);
+    const [editOpen, setEditOpen] = useState(false);
 
     const state = useMemo(() => ({
         rtaOn,
@@ -25,8 +26,10 @@ export const EqualizerProvider = ({ children }) => {
         setDbRange,
         spectrumActive,
         setSpectrumActive,
+        editOpen,
+        setEditOpen,
     }), [rtaOn, setRtaOn, rtaMin, setRtaMin, dbRange, setDbRange,
-        spectrumActive, setSpectrumActive]);
+        spectrumActive, setSpectrumActive, editOpen, setEditOpen]);
 
     return (
         <Context.Provider value={state}>
@@ -40,6 +43,7 @@ export const useEqualizer = () => {
     const {
         rtaOn, setRtaOn, rtaMin, setRtaMin, dbRange,
         setDbRange, spectrumActive, setSpectrumActive,
+        editOpen, setEditOpen,
     } = useContext(Context);
 
     const spectrumActiveToggle = useCallback(() => {
@@ -56,6 +60,8 @@ export const useEqualizer = () => {
         spectrumActive,
         setSpectrumActive,
         spectrumActiveToggle,
+        editOpen,
+        setEditOpen,
     };
 };
 

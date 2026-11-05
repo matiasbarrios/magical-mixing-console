@@ -1,5 +1,5 @@
 // Requirements
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button, Dialog, Flex, Separator } from '@radix-ui/themes';
 import {
     useBusName, useBusOptions, useBusReset, useDevice,
@@ -15,10 +15,11 @@ import { useUiSize } from '../../../components/theme';
 import { formatBusIdentifierShort, NameEdit } from './name';
 import { ColorSelect } from './color';
 import { IconSelect } from './icon';
+import MoveTo from './moveTo';
 
 
 // Internal
-const ClearBusFooter = ({ busId, onClear }) => {
+const ClearBusFooter = ({ busId, onClear, busy }) => {
     const { t } = useLanguage();
     const { textSize } = useUiSize();
     const { disabled } = useDevice();
@@ -47,7 +48,7 @@ const ClearBusFooter = ({ busId, onClear }) => {
                         variant="ghost"
                         color="red"
                         onClick={doOpen}
-                        disabled={disabled}
+                        disabled={disabled || busy}
                     >
                         { t('Restore this bus') }
                     </Button>
@@ -61,6 +62,7 @@ const ClearBusFooter = ({ busId, onClear }) => {
 // Exported
 export default ({ busId, open, onOpenChange }) => {
     const { t } = useLanguage();
+    const [moveBusy, setMoveBusy] = useState(false);
     const { has, value, set } = useBusName(busId);
     const { get } = useBusOptions();
     const bus = useMemo(() => get(busId), [busId, get]);
@@ -87,9 +89,10 @@ export default ({ busId, open, onOpenChange }) => {
                     <IconSelect busId={busId} onSelected={onIconSelected} />
                     <ColorSelect busId={busId} />
                     <NameEdit busId={busId} onEnter={dialogClose} />
+                    <MoveTo busId={busId} onMoved={dialogClose} onBusy={setMoveBusy} />
                 </LabelControlTable.List>
                 <Separator size="4" my="4" />
-                <ClearBusFooter busId={busId} onClear={dialogClose} />
+                <ClearBusFooter busId={busId} onClear={dialogClose} busy={moveBusy} />
             </Dialog.Content>
         </Dialog.Root>
     );

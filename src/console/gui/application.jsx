@@ -1,4 +1,5 @@
 // Requirements
+import './polyfills';
 import { createRoot } from 'react-dom/client';
 import Global from './components/global';
 

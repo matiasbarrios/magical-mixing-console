@@ -11,7 +11,7 @@ import { useUiSize } from '../../../components/theme';
 
 
 // Exported
-export default ({ busId }) => {
+export default ({ busId, compact = false }) => {
     const { disabled } = useDevice();
     const { t } = useLanguage();
     const { textSize } = useUiSize();
@@ -19,13 +19,13 @@ export default ({ busId }) => {
         has, value, toggle, side,
     } = useBusStereoLink(busId);
 
-    const sideShortLabel = useMemo(() => (side === 'L' ? t('Left') : t('Right')),
+    const sideLabel = useMemo(() => (side === 'L' ? t('Left') : t('Right')),
         [side, t]);
 
-    const sideAriaLabel = useMemo(() => (side === 'L' ? t('Left') : t('Right')),
-        [side, t]);
+    const sideShortLabel = useMemo(() => (compact ? sideLabel.charAt(0) : sideLabel),
+        [compact, sideLabel]);
 
-    const ariaLabel = value ? `${t('Stereo link')}: ${sideAriaLabel}` : t('Stereo link');
+    const ariaLabel = value ? `${t('Stereo link')}: ${sideLabel}` : t('Stereo link');
     const commonProps = {
         size: textSize,
         variant: 'soft',

@@ -39,13 +39,16 @@ const FreshStartEffectsConnected = ({
         iconsReset();
         colorsReset();
         if (mainOne) navigate(buildBusPath(mainOne.id, 'from'));
-    }, [colorsReset, iconsReset, mainOne, navigate]);
+        setWizardOpen(true);
+    }, [colorsReset, iconsReset, mainOne, navigate, setWizardOpen]);
 
     useEffect(() => {
-        runFreshStartRef.current = ({ closeWizardFirst = false } = {}) => {
-            if (closeWizardFirst) setWizardOpen(false);
+        runFreshStartRef.current = () => {
+            setWizardOpen(false);
             clearLoadedScene();
-            reset({ onComplete: onFreshStartComplete });
+            reset({ onComplete: onFreshStartComplete }).catch(() => {
+                setWizardOpen(true);
+            });
         };
         return () => {
             runFreshStartRef.current = () => {};
@@ -76,8 +79,8 @@ export const SetupWizardProvider = ({ children }) => {
         setWizardOpen(false);
     }, []);
 
-    const runFreshStart = useCallback((options) => {
-        runFreshStartRef.current(options);
+    const runFreshStart = useCallback(() => {
+        runFreshStartRef.current();
     }, []);
 
     const value = useMemo(() => ({

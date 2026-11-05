@@ -11,7 +11,7 @@ import { isValidIP, isValidPort } from '../helpers/values.js';
 import { runManualConnectTest, MANUAL_CONNECT_TEST_TARGET } from './manual-connect-test.js';
 
 
-// Internal — Node dgram platform (same role as Electron main-process helpers, no IPC)
+// Internal — Node dgram platform (same role as the tinyjs backend helpers, no bridge)
 const nodePlatform = {
     getLANBroadcastAddress: getLANInterfaces,
     getLocalAddressForIP,

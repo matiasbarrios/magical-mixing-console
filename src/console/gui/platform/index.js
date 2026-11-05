@@ -1,3 +1,7 @@
+// Requirements
+import { loadPlatform } from './adapter.tinyjs.js';
+
+
 // Variables
 let platform = null;
 
@@ -8,7 +12,7 @@ const userAgent = navigator.userAgent.toLowerCase();
 export const isProduction = process.env.NODE_ENV === 'production';
 
 
-export const isMobile = !window?.electron;
+export const isMobile = !window?.tiny;
 
 
 export const isLinux = userAgent.includes('linux') && !userAgent.includes('android');
@@ -16,11 +20,7 @@ export const isLinux = userAgent.includes('linux') && !userAgent.includes('andro
 
 export const platformLoad = async () => {
     if (platform !== null) return;
-    if (window?.electron) {
-        platform = window?.electron;
-    } else {
-        platform = await import('../../capacitor');
-    }
+    platform = await loadPlatform();
 };
 
 

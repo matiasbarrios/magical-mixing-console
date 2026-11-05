@@ -62,91 +62,112 @@ const scheduleBusMonitorPaths = (enqueuePath, busId) => {
 };
 
 
-const scheduleBusPaths = (ctx, bus) => {
-    const { enqueuePath, discover, discoverOnce } = ctx;
+// Input assignment, its trim, and stereo link stay with the slot on a channel move.
+// Outputs are output.source and are never part of this list.
+const scheduleOneBusPaths = (ctx, bus, id, {
+    includeInput = true,
+    includeStereoLink = true,
+} = {}) => {
+    const { enqueuePath, discover } = ctx;
 
-    bus.options.forEach(({ id }) => {
-        enqueuePath(`bus.automix(${id}).id`);
-        enqueuePath(`bus.automix(${id}).weight`);
+    enqueuePath(`bus.automix(${id}).id`);
+    enqueuePath(`bus.automix(${id}).weight`);
 
-        enqueuePath(`bus.color(${id})`);
+    enqueuePath(`bus.color(${id})`);
 
-        scheduleBusCompressorPaths(enqueuePath, id);
+    scheduleBusCompressorPaths(enqueuePath, id);
 
-        discover(bus.dca, [id], () => {
-            bus.dca.options(id).forEach(({ id: dcaId }) => {
-                enqueuePath(`bus.dca(${id}).on(${dcaId})`);
-            });
+    discover(bus.dca, [id], () => {
+        bus.dca.options(id).forEach(({ id: dcaId }) => {
+            enqueuePath(`bus.dca(${id}).on(${dcaId})`);
         });
+    });
 
-        enqueuePath(`bus.equalizer(${id}).on`);
-        enqueuePath(`bus.equalizer(${id}).mode`);
-        discover(bus.equalizer.parametric, [id], () => {
-            bus.equalizer.parametric.options(id).forEach(({ id: parameterId }) => {
-                enqueuePath(`bus.equalizer(${id}).parametric.on(${parameterId})`);
-                enqueuePath(`bus.equalizer(${id}).parametric.type(${parameterId})`);
-                enqueuePath(`bus.equalizer(${id}).parametric.frequency(${parameterId})`);
-                enqueuePath(`bus.equalizer(${id}).parametric.q(${parameterId})`);
-                enqueuePath(`bus.equalizer(${id}).parametric.gain(${parameterId})`);
-            });
+    enqueuePath(`bus.equalizer(${id}).on`);
+    enqueuePath(`bus.equalizer(${id}).mode`);
+    discover(bus.equalizer.parametric, [id], () => {
+        bus.equalizer.parametric.options(id).forEach(({ id: parameterId }) => {
+            enqueuePath(`bus.equalizer(${id}).parametric.on(${parameterId})`);
+            enqueuePath(`bus.equalizer(${id}).parametric.type(${parameterId})`);
+            enqueuePath(`bus.equalizer(${id}).parametric.frequency(${parameterId})`);
+            enqueuePath(`bus.equalizer(${id}).parametric.q(${parameterId})`);
+            enqueuePath(`bus.equalizer(${id}).parametric.gain(${parameterId})`);
         });
-        discover(bus.equalizer.graphic, [id], () => {
-            bus.equalizer.graphic.options(id).forEach(({ id: graphicId }) => {
-                enqueuePath(`bus.equalizer(${id}).graphic.gain(${graphicId})`);
-            });
+    });
+    discover(bus.equalizer.graphic, [id], () => {
+        bus.equalizer.graphic.options(id).forEach(({ id: graphicId }) => {
+            enqueuePath(`bus.equalizer(${id}).graphic.gain(${graphicId})`);
         });
-        discover(bus.equalizer.true, [id], () => {
-            bus.equalizer.true.options(id).forEach(({ id: trueId }) => {
-                enqueuePath(`bus.equalizer(${id}).true.gain(${trueId})`);
-            });
+    });
+    discover(bus.equalizer.true, [id], () => {
+        bus.equalizer.true.options(id).forEach(({ id: trueId }) => {
+            enqueuePath(`bus.equalizer(${id}).true.gain(${trueId})`);
         });
+    });
 
-        enqueuePath(`bus.fx(${id}).id`);
-        enqueuePath(`bus.fx(${id}).on`);
-        enqueuePath(`bus.fx(${id}).gain`);
+    enqueuePath(`bus.fx(${id}).id`);
+    enqueuePath(`bus.fx(${id}).on`);
+    enqueuePath(`bus.fx(${id}).gain`);
 
-        scheduleBusGatePaths(enqueuePath, id);
+    scheduleBusGatePaths(enqueuePath, id);
 
-        enqueuePath(`bus.icon(${id})`);
+    enqueuePath(`bus.icon(${id})`);
 
+    if (includeInput) {
+        const { discoverOnce } = ctx;
         enqueuePath(`bus.input(${id}).id`);
         discoverOnce(bus.input.id, [id], (inputId) => {
             if (inputId === null) return;
             enqueuePath(`bus.input(${id}).trim(${inputId})`);
         });
+    }
 
-        enqueuePath(`bus.insert(${id}).on`);
-        enqueuePath(`bus.insert(${id}).fx`);
+    enqueuePath(`bus.insert(${id}).on`);
+    enqueuePath(`bus.insert(${id}).fx`);
 
-        enqueuePath(`bus.level(${id})`);
+    enqueuePath(`bus.level(${id})`);
 
-        enqueuePath(`bus.lowCut(${id}).on`);
-        enqueuePath(`bus.lowCut(${id}).frequency`);
+    enqueuePath(`bus.lowCut(${id}).on`);
+    enqueuePath(`bus.lowCut(${id}).frequency`);
 
-        discover(bus.mg, [id], () => {
-            bus.mg.options(id).forEach(({ id: mgId }) => {
-                enqueuePath(`bus.mg(${id}).on(${mgId})`);
-            });
+    discover(bus.mg, [id], () => {
+        bus.mg.options(id).forEach(({ id: mgId }) => {
+            enqueuePath(`bus.mg(${id}).on(${mgId})`);
         });
+    });
 
-        scheduleBusMonitorPaths(enqueuePath, id);
+    scheduleBusMonitorPaths(enqueuePath, id);
 
-        enqueuePath(`bus.mute(${id})`);
+    enqueuePath(`bus.mute(${id})`);
 
-        enqueuePath(`bus.name(${id})`);
+    enqueuePath(`bus.name(${id})`);
 
-        enqueuePath(`bus.pan(${id})`);
+    enqueuePath(`bus.pan(${id})`);
 
-        enqueuePath(`bus.polarity(${id})`);
+    enqueuePath(`bus.polarity(${id})`);
 
-        enqueuePath(`bus.stereoLink(${id})`);
+    if (includeStereoLink) enqueuePath(`bus.stereoLink(${id})`);
 
-        bus.options.forEach(({ id: busToId }) => {
-            enqueuePath(`bus.to(${id}).on(${busToId})`);
-            enqueuePath(`bus.to(${id}).level(${busToId})`);
-            enqueuePath(`bus.to(${id}).pan(${busToId})`);
-            enqueuePath(`bus.to(${id}).tap(${busToId})`);
-        });
+    bus.options.forEach(({ id: busToId }) => {
+        enqueuePath(`bus.to(${id}).on(${busToId})`);
+        enqueuePath(`bus.to(${id}).level(${busToId})`);
+        enqueuePath(`bus.to(${id}).pan(${busToId})`);
+        enqueuePath(`bus.to(${id}).tap(${busToId})`);
+    });
+};
+
+
+const scheduleBusPaths = (ctx, bus) => {
+    bus.options.forEach(({ id }) => {
+        scheduleOneBusPaths(ctx, bus, id);
+    });
+};
+
+
+const scheduleBusChannelMovePaths = (ctx, bus, busId) => {
+    scheduleOneBusPaths(ctx, bus, busId, {
+        includeInput: false,
+        includeStereoLink: false,
     });
 };
 
@@ -255,3 +276,6 @@ export const runAppSceneCaptureDiscovery = (ctx, features) => {
         scheduleOutputPaths(ctx, output);
     });
 };
+
+
+export { scheduleBusChannelMovePaths };

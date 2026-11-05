@@ -1,0 +1,28 @@
+{
+  "name": "magical-mixing-console",
+  "title": "Magical Mixing Console",
+  "size": "1050x680",
+  "id": "com.magicalmixing.console",
+  "version": "2.3.0",
+  "minTinyjsVersion": "0.68.0",
+  "icon": "assets/icon/icon.png",
+  "contextMenu": false,
+  "backend": "out/tinyjs/backend/main.js",
+  "frontend": {
+    "build": "npm run tinyjs-frontend-build",
+    "dist": "out/tinyjs/www",
+    "dev": "npm run tinyjs-frontend-dev",
+    "devUrl": "http://127.0.0.1:3002"
+  },
+  "macos": {
+    "icon": "out/tinyjs/icon.iconset/icon_512x512@2x.png",
+    "signIdentity": "5B61825FAFB485522858BD2F5CA22CFC8AA907AE",
+    "notarize": { "profile": "mmc-notary" }
+  },
+  "windows": {
+    "chrome": { "menu": false }
+  },
+  "linux": {
+    "chrome": { "menu": false }
+  }
+}

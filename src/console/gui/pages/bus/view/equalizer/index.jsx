@@ -6,6 +6,7 @@ import Parametric from './parametric';
 import Graphic from './graphic';
 import True from './true';
 import Options from './options';
+import EditPanel from './edit';
 import { EqualizerProvider } from './context';
 
 
@@ -28,7 +29,7 @@ const Equalizer = ({ busId }) => {
             <Flex
                 direction="column"
                 flexGrow="1"
-                minHeight="0"
+                minHeight="10rem"
                 minWidth="0"
                 width="100%"
                 overflow="hidden"
@@ -44,6 +45,7 @@ const Equalizer = ({ busId }) => {
             <Flex align="start" flexShrink="0" py="1" width="100%" overflow="visible">
                 <Options busId={busId} />
             </Flex>
+            <EditPanel busId={busId} />
         </Flex>
     );
 };

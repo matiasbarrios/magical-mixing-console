@@ -1,4 +1,4 @@
-/* Native scrollbars styled like Radix Themes ScrollArea (Chrome / Electron). */
+/* Native scrollbars styled like Radix Themes ScrollArea (Chrome). */
 
 /* No rubber-band / pull-to-refresh chaining on mobile WebViews when at scroll edges. */
 .mmc-conditional-scroll-y,
@@ -91,4 +91,22 @@
 
 .mmc-conditional-scroll-x.mmc-conditional-scroll-x-always {
     overflow-x: scroll;
+}
+
+/* The dialog overlay scroller covers the whole window. A preview dialog that
+   fits still trips it by about a pixel, so keep that scroller off and let the
+   dialog body handle overflow. */
+.rt-DialogScroll:has(.mmc-preview-dialog) {
+    overflow: hidden;
+}
+
+.mmc-preview-dialog {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: calc(100dvh - var(--space-6) - max(var(--space-6), 6vh) - 1px);
+}
+
+.mmc-preview-dialog-fill {
+    height: calc(100dvh - var(--space-6) - max(var(--space-6), 6vh) - 1px);
 }

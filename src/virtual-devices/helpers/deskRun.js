@@ -305,7 +305,7 @@ export const createVirtualDesk = ({
             return;
         }
 
-        addressesValues['/xinfo'] = [listeningIp, deviceName, deviceModel, deviceFirmware];
+        addressesValues['/info'] = [listeningIp, deviceName, deviceModel, deviceFirmware];
 
         socketId = await provider.udpSocketOpen(listeningIp, listeningPort);
         console.log(`Virtual ${deviceModel} listening on`, listeningIp, listeningPort);

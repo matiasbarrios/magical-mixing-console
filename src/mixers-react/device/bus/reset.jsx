@@ -13,8 +13,8 @@ import { busMgUnassignAll } from './mg';
 import { busDcaUnassignAll } from './dca';
 
 
-// Internal
-const busReset = (
+// Exported
+export const busReset = (
     changeSchedule, bus, input, dca, mg, busId
 ) => {
     hasCall(bus, [], () => {

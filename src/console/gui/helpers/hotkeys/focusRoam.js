@@ -38,6 +38,12 @@ const FOCUS_ROAM_SPECS = [
         labelPrev: 'Focus previous gate preview',
     },
     {
+        roamId: 'previewSends',
+        key: 'KeyX',
+        labelNext: 'Focus next sends preview',
+        labelPrev: 'Focus previous sends preview',
+    },
+    {
         roamId: 'inputPreview',
         key: 'KeyI',
         labelNext: 'Focus next input button',
@@ -139,6 +145,7 @@ export const SLIDER_ROAM_ID = 'slider';
 export const PREVIEW_EQ_ROAM_ID = 'previewEq';
 export const PREVIEW_COMPRESSOR_ROAM_ID = 'previewCompressor';
 export const PREVIEW_GATE_ROAM_ID = 'previewGate';
+export const PREVIEW_SENDS_ROAM_ID = 'previewSends';
 export const INPUT_PREVIEW_ROAM_ID = 'inputPreview';
 export const SOLO_ROAM_ID = 'solo';
 export const MUTE_ROAM_ID = 'mute';
@@ -160,6 +167,8 @@ export const focusNextPreviewCompressorActionId = focusActionId('next', PREVIEW_
 export const focusPrevPreviewCompressorActionId = focusActionId('prev', PREVIEW_COMPRESSOR_ROAM_ID);
 export const focusNextPreviewGateActionId = focusActionId('next', PREVIEW_GATE_ROAM_ID);
 export const focusPrevPreviewGateActionId = focusActionId('prev', PREVIEW_GATE_ROAM_ID);
+export const focusNextPreviewSendsActionId = focusActionId('next', PREVIEW_SENDS_ROAM_ID);
+export const focusPrevPreviewSendsActionId = focusActionId('prev', PREVIEW_SENDS_ROAM_ID);
 export const focusNextInputPreviewActionId = focusActionId('next', INPUT_PREVIEW_ROAM_ID);
 export const focusPrevInputPreviewActionId = focusActionId('prev', INPUT_PREVIEW_ROAM_ID);
 export const focusNextSoloActionId = focusActionId('next', SOLO_ROAM_ID);

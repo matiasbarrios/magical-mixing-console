@@ -46,6 +46,7 @@ const VARIANT_CONFIG = {
         rowPb: undefined,
         rowJustify: 'center',
         scaleInactive: true,
+        collapseSingle: true,
         containerStyle: containerStyleBase,
     },
 };
@@ -80,6 +81,24 @@ const measureStyle = {
 
 
 const tabColor = isActive => (isActive ? 'blue' : 'gray');
+
+
+const collapsedTriggerStyle = {
+    width: 'max-content',
+    maxWidth: '100%',
+    minWidth: 0,
+    flexShrink: 1,
+    overflow: 'hidden',
+};
+
+
+const collapsedLabelStyle = {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    minWidth: 0,
+    flex: '1 1 auto',
+};
 
 
 // Internal
@@ -201,6 +220,20 @@ const TabButton = ({
 };
 
 
+const TabMenuItems = ({
+    tabs, active, onSelect, textSize,
+}) => tabs.map(tab => (
+    <DropdownMenu.Item key={tab.id} onSelect={() => onSelect(tab.id)}>
+        <Flex align="center" gapX="1">
+            {active === tab.id
+                ? <CheckIcon style={ICON_STYLE} />
+                : <Box {...ICON_SPACER} />}
+            <Text size={textSize}>{ tab.label }</Text>
+        </Flex>
+    </DropdownMenu.Item>
+));
+
+
 const OverflowMenu = ({
     tabs, active, onSelect, textSize,
 }) => {
@@ -221,16 +254,37 @@ const OverflowMenu = ({
                 <ChevronDownIcon style={ICON_STYLE} />
             </DropdownMenuTrigger>
             <DropdownMenuContent size={DROPDOWN_MENU_CONTENT_SIZE} align="end">
-                {tabs.map(tab => (
-                    <DropdownMenu.Item key={tab.id} onSelect={() => onSelect(tab.id)}>
-                        <Flex align="center" gapX="1">
-                            {active === tab.id
-                                ? <CheckIcon style={ICON_STYLE} />
-                                : <Box {...ICON_SPACER} />}
-                            <Text size={textSize}>{ tab.label }</Text>
-                        </Flex>
-                    </DropdownMenu.Item>
-                ))}
+                <TabMenuItems tabs={tabs} active={active} onSelect={onSelect} textSize={textSize} />
+            </DropdownMenuContent>
+        </DropdownMenu.Root>
+    );
+};
+
+
+// One visible section in the header: the soft button is the menu, chevron included.
+const CollapsedHeaderTabs = ({
+    tabs, active, onSelect, textSize,
+}) => {
+    const [opened, setOpened] = useState(false);
+    const toggleOpened = useCallback(() => setOpened(o => !o), []);
+    const activeLabel = useMemo(() => tabs.find(tab => tab.id === active)?.label ?? '', [tabs, active]);
+
+    return (
+        <DropdownMenu.Root open={opened} onOpenChange={setOpened}>
+            <DropdownMenuTrigger
+                square
+                variant="soft"
+                color="blue"
+                onClick={toggleOpened}
+                style={collapsedTriggerStyle}
+            >
+                <Flex as="span" align="center" gap="1" minWidth="0" maxWidth="100%" overflow="hidden">
+                    <Text size={textSize} truncate style={collapsedLabelStyle}>{ activeLabel }</Text>
+                    <ChevronDownIcon style={ICON_STYLE} />
+                </Flex>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent size={DROPDOWN_MENU_CONTENT_SIZE} align="center">
+                <TabMenuItems tabs={tabs} active={active} onSelect={onSelect} textSize={textSize} />
             </DropdownMenuContent>
         </DropdownMenu.Root>
     );
@@ -242,7 +296,8 @@ export default ({ tabs, active, onChange, variant = 'default' }) => {
     const { disabled } = useDevice();
     const { textSize } = useUiSize();
     const {
-        rowPt, rowPb, rowJustify, scaleInactive, containerStyle: variantContainerStyle,
+        rowPt, rowPb, rowJustify, scaleInactive, collapseSingle = false,
+        containerStyle: variantContainerStyle,
     } = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.default;
     const containerRef = useRef(null);
     const tabRefs = useRef({});
@@ -306,6 +361,7 @@ export default ({ tabs, active, onChange, variant = 'default' }) => {
 
     const tabSplit = useMemo(() => splitTabs(tabs, active, visibleCount), [tabs, active, visibleCount]);
     const { visibleTabs, hiddenTabs } = tabSplit;
+    const collapseToMenu = collapseSingle && visibleTabs.length === 1 && hiddenTabs.length > 0;
 
     const onSelect = useCallback((tabId) => {
         if (disabled) return;
@@ -348,25 +404,36 @@ export default ({ tabs, active, onChange, variant = 'default' }) => {
                 flexShrink="0"
                 minWidth="0"
                 width="100%"
-                role="tablist"
+                role={collapseToMenu ? undefined : 'tablist'}
             >
-                {visibleTabs.map(tab => (
-                    <TabButton
-                        key={tab.id}
-                        tab={tab}
-                        isActive={active === tab.id}
-                        onSelect={onSelect}
-                        textSize={textSize}
-                        scaleInactive={scaleInactive}
-                    />
-                ))}
-                {hiddenTabs.length > 0 && (
-                    <OverflowMenu
-                        tabs={hiddenTabs}
+                {collapseToMenu ? (
+                    <CollapsedHeaderTabs
+                        tabs={tabs}
                         active={active}
                         onSelect={onSelect}
                         textSize={textSize}
                     />
+                ) : (
+                    <>
+                        {visibleTabs.map(tab => (
+                            <TabButton
+                                key={tab.id}
+                                tab={tab}
+                                isActive={active === tab.id}
+                                onSelect={onSelect}
+                                textSize={textSize}
+                                scaleInactive={scaleInactive}
+                            />
+                        ))}
+                        {hiddenTabs.length > 0 && (
+                            <OverflowMenu
+                                tabs={hiddenTabs}
+                                active={active}
+                                onSelect={onSelect}
+                                textSize={textSize}
+                            />
+                        )}
+                    </>
                 )}
             </Flex>
         </div>

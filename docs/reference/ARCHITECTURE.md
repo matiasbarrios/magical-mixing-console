@@ -8,12 +8,12 @@ For mixer **domain vocabulary** (bus, input, output, etc.), see [CONCEPTS.md](./
 
 ## Stack at a glance
 
-MMC is a monorepo. The app ships on **Electron** (desktop) and **Capacitor** (iOS/Android). Both run the same React UI and talk to mixers over **OSC/UDP**.
+MMC is a monorepo. The app ships on **tinyjs** (desktop) and **Capacitor** (iOS/Android). Both run the same React UI and talk to mixers over **OSC/UDP**.
 
 ```mermaid
 flowchart TB
     subgraph apps["Ship targets"]
-        ELECTRON["Electron main\n(console/electron)"]
+        TINY["tinyjs backend\n(console/tinyjs)"]
         CAP["Capacitor shell\n(console/capacitor + native)"]
     end
 
@@ -33,13 +33,13 @@ flowchart TB
         VD["virtual-devices\nsimulated X18"]
     end
 
-    ELECTRON --> GUI
+    TINY --> GUI
     CAP --> GUI
     GUI --> MR
     MR --> MIX
-    ELECTRON -.-> VD
+    TINY -.-> VD
     CAP -.-> VD
-    MIX -->|"platform injection"| ELECTRON
+    MIX -->|"platform injection"| TINY
     MIX -->|"platform injection"| CAP
 ```
 
@@ -56,8 +56,8 @@ flowchart TB
 | `src/console/` | `@magical-mixing/console` — app (gui + platform adapters) |
 | `src/virtual-devices/` | `@magical-mixing/virtual-devices` — simulated mixer for dev |
 | `plugins/` | Custom Capacitor plugins (UDP socket, navigation bar) |
-| `webpack/` | Build configs (Electron Forge, Capacitor bundle) |
-| Root `package.json` | Workspace root, Electron/Capacitor scripts, shared deps |
+| `vite/` | Frontend build (tinyjs dev server on port 3002, Capacitor bundle) |
+| Root `package.json` | Workspace root, tinyjs/Capacitor scripts, shared deps |
 
 ---
 
@@ -147,16 +147,16 @@ See also: `.cursor/rules/console-gui.mdc`.
 
 ---
 
-### `@magical-mixing/console` → `electron/` and `capacitor/`
+### `@magical-mixing/console` → `tinyjs/` and `capacitor/`
 
 **What they are:** **Platform adapters** — the same GUI runs everywhere; these modules implement the `platform` contract.
 
 **Owns:**
-- UDP socket open/send/receive (Electron main process or Capacitor plugin)
+- UDP socket open/send/receive (tinyjs backend or Capacitor plugin)
 - LAN broadcast address discovery
 - Persistent settings load/save
 - Vault file storage
-- OS integration: updates, language, haptics, status bar, navigation bar
+- OS integration: language, haptics, status bar, navigation bar
 - Virtual device run/stop (delegates to `virtual-devices`)
 
 **Does not own:**
@@ -165,10 +165,9 @@ See also: `.cursor/rules/console-gui.mdc`.
 
 **Typical changes:**
 - Desktop vs mobile behavioral difference for I/O or storage
-- Capacitor/Electron permission or lifecycle issue
-- Auto-update, notarization-related **wiring** ([RELEASE.md](../release/RELEASE.md), [MACOS_SIGNING.md](../release/MACOS_SIGNING.md))
+- Capacitor or tinyjs permission or lifecycle issue
 
-**Selection:** `gui/platform/index.js` loads `window.electron` or dynamically imports `capacitor/`.
+**Selection:** each frontend build loads one adapter. `gui/platform/adapter.tinyjs.js` loads tinyjs. The Capacitor Vite config redirects that import to `gui/platform/adapter.capacitor.js`. `isMobile` still follows `window.tiny` at runtime.
 
 ---
 
@@ -192,11 +191,11 @@ See also: `.cursor/rules/console-gui.mdc`.
 
 ---
 
-### Root repo, `webpack/`, `plugins/`
+### Root repo and `plugins/`
 
-**Root + webpack:** build pipeline — Electron Forge, Capacitor sync, bundling. Touch when adding deps, changing build targets, or fixing pack/release issues.
+**Root:** build pipeline — Vite for the tinyjs and Capacitor frontends, Capacitor sync, bundling. Touch when adding deps, changing build targets, or fixing pack/release issues.
 
-**`plugins/`:** native Capacitor plugins vendored in-repo (`capacitor-udp-socket`, `capacitor-navigation-bar`). Touch for mobile UDP or Android navigation bar behavior.
+**`plugins/`:** native Capacitor plugins cloned for iOS and Android (`capacitor-udp-socket`, `capacitor-navigation-bar`). They stay in root `dependencies` so `cap sync` copies them into the native projects. Desktop builds do not import them. Touch for mobile UDP or Android navigation bar behavior.
 
 ---
 
@@ -204,7 +203,7 @@ See also: `.cursor/rules/console-gui.mdc`.
 
 At startup (`gui/components/global/initialization.jsx`):
 
-1. Load platform (`electron` or `capacitor`)
+1. Load platform (`tinyjs` or `capacitor`)
 2. Wire settings and vault providers from platform
 3. Call `mixersInitialize({ getLANBroadcastAddress, udpSocketOpen, … })`
 
@@ -242,11 +241,11 @@ Bus **send matrix** drivers live under `bus/to/` (`on.js`, `level.js`, `tap.js`,
 | Layout, navigation, styling, copy | `console/gui` |
 | New screen for existing parameter | `console/gui` only |
 | UDP not working on iOS/Android | `console/capacitor`, `plugins/capacitor-udp-socket` |
-| UDP not working on desktop | `console/electron/helpers/udp.js` |
-| Settings or vault not persisting | `console/electron` or `console/capacitor` helpers |
+| UDP not working on desktop | `console/tinyjs/backend/helpers/udp.js` |
+| Settings or vault not persisting | `console/tinyjs` or `console/capacitor` helpers |
 | Dev without hardware | `virtual-devices` |
 | Device not found on network | `mixers/devices/search.js`, driver search |
-| Build / release / store packaging | root `package.json`, `webpack/`, [RELEASE.md](../release/RELEASE.md) |
+| Build / release / store packaging | root `package.json`, `vite/`, `installer/` |
 
 ---
 
@@ -266,7 +265,7 @@ Skip layers that don't apply (e.g. no GUI yet for a headless experiment).
 
 ## Publishing
 
-`@magical-mixing/mixers` lives in `src/mixers/` and is linked via npm workspaces (see [DEVELOPMENT.md](../development/DEVELOPMENT.md#paquetes-npm-workspaces)). It can be published to npm independently ([RELEASE.md](../release/RELEASE.md) §7). Keep its public API stable; app-specific behavior belongs in `console`.
+`@magical-mixing/mixers` lives in `src/mixers/` and is linked via npm workspaces (see [DEVELOPMENT.md](../development/DEVELOPMENT.md#paquetes-npm-workspaces)). It can be published to npm independently from the `magical-mixers` repository. Keep its public API stable; app-specific behavior belongs in `console`.
 
 ---
 
@@ -278,9 +277,6 @@ Skip layers that don't apply (e.g. no GUI yet for a headless experiment).
 | [CONNECTIVITY.md](./CONNECTIVITY.md) | Device search/connect actors, socket ownership, flows |
 | [README.md](../README.md) | Doc index |
 | [DEVELOPMENT.md](../development/DEVELOPMENT.md) | Dev setup, plugins, npm scripts |
-| [RELEASE.md](../release/RELEASE.md) | Release manual (todas las plataformas) |
-| [MACOS_SIGNING.md](../release/MACOS_SIGNING.md) | macOS Electron signing & notarization |
-| [ASSETS.md](../release/ASSETS.md) | Icons & splash assets |
 | [DEBUGGING_NETWORK.md](../development/DEBUGGING_NETWORK.md) | Wireshark / UDP debugging |
 | [GUI.md](../gui/GUI.md) | GUI conventions |
 | `.cursor/rules/console-gui.mdc` | Scoped rules for GUI-only work |

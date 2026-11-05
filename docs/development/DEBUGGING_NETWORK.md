@@ -18,7 +18,7 @@ Variables to adapt for each capture:
 Common noise to exclude (heartbeat, meters, status):
 
 ```
-!frame contains "/xinfo" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
+!frame contains "/info" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
 ```
 
 Base filter (UDP between two hosts only):
@@ -36,7 +36,7 @@ udp && ip.src==SRC && ip.dst==DST
 `SRC=192.168.1.11`, `DST=192.168.1.21`:
 
 ```
-udp && ip.src==192.168.1.11 && ip.dst==192.168.1.21 && !frame contains "/xinfo" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
+udp && ip.src==192.168.1.11 && ip.dst==192.168.1.21 && !frame contains "/info" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
 ```
 
 ### Same Mac → another IP, meters packets only `/meters/0`
@@ -44,19 +44,19 @@ udp && ip.src==192.168.1.11 && ip.dst==192.168.1.21 && !frame contains "/xinfo" 
 `DST=192.168.1.19`:
 
 ```
-udp && ip.src==192.168.1.11 && ip.dst==192.168.1.19 && !frame contains "/xinfo" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "status" && frame contains "/meters/0"
+udp && ip.src==192.168.1.11 && ip.dst==192.168.1.19 && !frame contains "/info" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "status" && frame contains "/meters/0"
 ```
 
 ### Geekom (`192.168.1.22`) → `192.168.1.21`
 
 ```
-udp && ip.src==192.168.1.22 && ip.dst==192.168.1.21 && !frame contains "/xinfo" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
+udp && ip.src==192.168.1.22 && ip.dst==192.168.1.21 && !frame contains "/info" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
 ```
 
 ### M4 (`192.168.1.10`) → `192.168.1.21`
 
 ```
-udp && ip.src==192.168.1.10 && ip.dst==192.168.1.21 && !frame contains "/xinfo" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
+udp && ip.src==192.168.1.10 && ip.dst==192.168.1.21 && !frame contains "/info" && !frame contains "/xremotenfb" && !frame contains "renew" && !frame contains "meters" && !frame contains "status"
 ```
 
 ---

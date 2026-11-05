@@ -3,6 +3,8 @@ out
 settings.json
 vaults
 .webpack
+.build
+dist
 plugins
 .DS_Store
 test-results/

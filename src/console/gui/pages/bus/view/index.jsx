@@ -162,6 +162,7 @@ const BusTabs = ({ bus }) => {
 
     const { tabActive, onTabChange } = useBusViewTab({
         busId: bus.id,
+        busType: bus.type,
         tabs,
         defaultTab,
     });
@@ -311,10 +312,16 @@ const Bus = ({ bus }) => {
     const previous = useMemo(() => previousBusGet(bus.id), [previousBusGet, bus.id]);
     const next = useMemo(() => nextBusGet(bus.id), [nextBusGet, bus.id]);
 
-    const previousPath = useMemo(() => (previous ? buildBusPath(previous.id, tab) : undefined),
-        [previous, tab]);
-    const nextPath = useMemo(() => (next ? buildBusPath(next.id, tab) : undefined),
-        [next, tab]);
+    const previousPath = useMemo(() => {
+        if (!previous) return undefined;
+        const neighborTab = previous.type === bus.type ? tab : undefined;
+        return buildBusPath(previous.id, neighborTab);
+    }, [previous, bus.type, tab]);
+    const nextPath = useMemo(() => {
+        if (!next) return undefined;
+        const neighborTab = next.type === bus.type ? tab : undefined;
+        return buildBusPath(next.id, neighborTab);
+    }, [next, bus.type, tab]);
 
     const instance = useMemo(() => ({
         busId: bus.id,

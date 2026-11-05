@@ -228,6 +228,7 @@ Only mark the control type that should participate (not every knob). References:
 | `⌘E` / `⇧⌘E` | `previewEq` | EQ mini preview |
 | `⌘C` / `⇧⌘C` | `previewCompressor` | Compressor mini preview |
 | `⌘G` / `⇧⌘G` | `previewGate` | Gate mini preview |
+| `⌘X` / `⇧⌘X` | `previewSends` | Sends mini preview |
 | `⌘I` / `⇧⌘I` | `inputPreview` | Input button (reception) |
 | `⌘S` / `⇧⌘S` | `solo` | Solo button |
 | `⌘M` / `⇧⌘M` | `mute` | Mute button |
@@ -275,7 +276,7 @@ The global listener must **exclude** those ids if they must not run outside the 
 | Text inputs | Guards skip shortcuts when focus is in `INPUT` / `TEXTAREA` / `contentEditable` |
 | Record shortcut | `data-hotkey-recording` in `hotkeyInput.jsx`; the guard respects it |
 | Handler return | `false` → no `preventDefault` (e.g. no focus roam targets) |
-| macOS / Electron | Reset/add/edit use `primaryAltModifier()` (`⌥⌘` / `Ctrl+Alt`). EQ preview stays on `primaryModifier()+E` |
+| macOS | Reset/add/edit use `primaryAltModifier()` (`⌥⌘` / `Ctrl+Alt`). EQ preview stays on `primaryModifier()+E` |
 | Windows | Focus roam uses **Ctrl**, not the Windows key (`metaKey`). See `platformModifier.js` |
 | GUI scope | Only `src/console/gui/**` |
 

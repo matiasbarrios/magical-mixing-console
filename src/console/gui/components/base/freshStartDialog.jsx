@@ -117,7 +117,7 @@ export const FreshStartDialog = ({ onAccept, children }) => {
                             color="gray"
                         />
                         <Text size="1" color="gray">
-                            { t('You can then use the setup wizard (green wand) to configure channels quickly.') }
+                            { t('The setup wizard opens next so you can configure channels.') }
                         </Text>
                     </Flex>
                     <Flex justify="end" gapX="3" mt="4">

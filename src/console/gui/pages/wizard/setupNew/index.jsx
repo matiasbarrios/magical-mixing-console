@@ -1,6 +1,6 @@
 // Requirements
 import {
-    useCallback, useEffect, useMemo, useState,
+    useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { useNavigate } from 'react-router';
 import { Button, Dialog, Flex } from '@radix-ui/themes';
@@ -14,9 +14,10 @@ import { isKickSidechainSourceValid, kickSidechainFromSetupType } from './kickBa
 import { isVocalDuckingConfigured, vocalDuckingFromSetupType } from './vocalDucking';
 import { configureFromSetupType } from './templates';
 import {
-    createInitialState, getStepsForFlow,
+    createInitialState, formatSetupBusName, getStepsForFlow,
 } from './state';
 import PickType from './steps/pickType';
+import Continue from './steps/continue';
 import PickTarget from './steps/pickTarget';
 import Identity from './steps/identity';
 import ConfigureOptions from './steps/configureOptions';
@@ -71,6 +72,9 @@ export default ({ open, onOpenChange }) => {
     const [state, setState] = useState(createInitialState);
     const [stepIndex, setStepIndex] = useState(0);
     const [applying, setApplying] = useState(false);
+    const [followUp, setFollowUp] = useState(null);
+    const lastAppliedBusIdRef = useRef(null);
+    const sessionAppliedRef = useRef(false);
 
     const steps = useMemo(() => getStepsForFlow(state.flow),
         [state.flow]);
@@ -81,12 +85,22 @@ export default ({ open, onOpenChange }) => {
         setState(createInitialState());
         setStepIndex(0);
         setApplying(false);
+        setFollowUp(null);
+        lastAppliedBusIdRef.current = null;
+        sessionAppliedRef.current = false;
     }, []);
 
     const handleOpenChange = useCallback((nextOpen) => {
-        if (!nextOpen) reset();
+        if (!nextOpen) {
+            const applied = sessionAppliedRef.current;
+            const busId = applied ? lastAppliedBusIdRef.current : null;
+            reset();
+            onOpenChange(false);
+            if (busId !== null) navigate(`/bus/${busId}`);
+            return;
+        }
         onOpenChange(nextOpen);
-    }, [onOpenChange, reset]);
+    }, [navigate, onOpenChange, reset]);
 
     useEffect(() => {
         if (!open && !applying) reset();
@@ -143,10 +157,29 @@ export default ({ open, onOpenChange }) => {
     }, []);
 
     const onApplyComplete = useCallback(() => {
-        const { busId } = state;
-        handleOpenChange(false);
-        if (busId !== null) navigate(`/bus/${busId}`);
-    }, [handleOpenChange, navigate, state]);
+        lastAppliedBusIdRef.current = state.busId;
+        sessionAppliedRef.current = true;
+        setFollowUp({
+            name: formatSetupBusName({
+                flow: state.flow,
+                setupType,
+                who: state.who,
+                t,
+            }),
+        });
+        setApplying(false);
+    }, [setupType, state, t]);
+
+    const onFollowUpChannel = useCallback(() => {
+        setFollowUp(null);
+        setState(createInitialState());
+        setStepIndex(0);
+    }, []);
+
+    const onFollowUpMonitor = useCallback(() => {
+        setFollowUp(null);
+        onSetupTypeSelect('stage-monitor');
+    }, [onSetupTypeSelect]);
 
     const onApplyError = useCallback((error) => {
         console.error('Setup wizard apply failed', error);
@@ -161,6 +194,16 @@ export default ({ open, onOpenChange }) => {
     const stepTotal = steps.length;
 
     const stepContent = useMemo(() => {
+        if (followUp) {
+            return (
+                <Continue
+                    name={followUp.name}
+                    disabled={disabled}
+                    onChannel={onFollowUpChannel}
+                    onMonitor={onFollowUpMonitor}
+                />
+            );
+        }
         if (step === 'type') {
             return (
                 <PickType
@@ -230,7 +273,8 @@ export default ({ open, onOpenChange }) => {
         }
         return null;
     }, [
-        onBusSelect, onInputChange, onOutputChange, onSetupTypeSelect,
+        disabled, followUp, onBusSelect, onFollowUpChannel, onFollowUpMonitor,
+        onInputChange, onOutputChange, onSetupTypeSelect,
         onStereoLinkChange, onWhoChange, setupType, state, step,
     ]);
 
@@ -259,7 +303,7 @@ export default ({ open, onOpenChange }) => {
                 <ConditionalScrollY width="100%">
                     { stepContent }
                 </ConditionalScrollY>
-                {!applying && (stepIndex > 0 || !autoAdvanceStep) && (
+                {!applying && (followUp || stepIndex > 0 || !autoAdvanceStep) && (
                     <Flex
                         align="center"
                         justify="end"
@@ -269,37 +313,50 @@ export default ({ open, onOpenChange }) => {
                         flexShrink="0"
                         width="100%"
                     >
-                        {stepIndex > 0 && (
-                            <Button
-                                size={textSize}
-                                variant="soft"
-                                color="gray"
-                                onClick={goBack}
-                                disabled={disabled}
-                            >
-                                { t('Back') }
-                            </Button>
-                        )}
-                        {isLastStep ? (
+                        {followUp ? (
                             <Button
                                 size={textSize}
                                 variant="soft"
                                 color="blue"
-                                onClick={startApply}
-                                disabled={disabled || !advanceEnabled}
+                                onClick={() => handleOpenChange(false)}
                             >
-                                { stepButtonLabel(t('Apply'), stepNumber, stepTotal, showStepProgress) }
+                                { t('Done') }
                             </Button>
-                        ) : !autoAdvanceStep && (
-                            <Button
-                                size={textSize}
-                                variant="soft"
-                                color="blue"
-                                onClick={goNext}
-                                disabled={disabled || !advanceEnabled}
-                            >
-                                { stepButtonLabel(t('Next'), stepNumber, stepTotal, showStepProgress) }
-                            </Button>
+                        ) : (
+                            <>
+                                {stepIndex > 0 && (
+                                    <Button
+                                        size={textSize}
+                                        variant="soft"
+                                        color="gray"
+                                        onClick={goBack}
+                                        disabled={disabled}
+                                    >
+                                        { t('Back') }
+                                    </Button>
+                                )}
+                                {isLastStep ? (
+                                    <Button
+                                        size={textSize}
+                                        variant="soft"
+                                        color="blue"
+                                        onClick={startApply}
+                                        disabled={disabled || !advanceEnabled}
+                                    >
+                                        { stepButtonLabel(t('Apply'), stepNumber, stepTotal, showStepProgress) }
+                                    </Button>
+                                ) : !autoAdvanceStep && (
+                                    <Button
+                                        size={textSize}
+                                        variant="soft"
+                                        color="blue"
+                                        onClick={goNext}
+                                        disabled={disabled || !advanceEnabled}
+                                    >
+                                        { stepButtonLabel(t('Next'), stepNumber, stepTotal, showStepProgress) }
+                                    </Button>
+                                )}
+                            </>
                         )}
                     </Flex>
                 )}

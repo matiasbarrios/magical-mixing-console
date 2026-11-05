@@ -156,14 +156,14 @@ Shared inset for scrollable main content:
 
 ### `header/`
 
-Sticky 48px bar (`headerHeight`). Left: logo + header trail. Center: device status (paused / reconnecting). Right: wizard trigger, trail actions, prev/next navigation, app menu.
+Sticky 48px bar (`headerHeight`). Left: logo + header trail. Center: device status (paused / reconnecting). Right: trail actions, prev/next navigation, app menu. The setup wizard is the first item in that menu.
 
 `Header` accepts `fixed` for full-screen flows outside `Layout` (e.g. `pages/device/connect.jsx`).
 
 | File | Role |
 |------|------|
 | `header/index.jsx` | Sticky bar composition |
-| `header/actions.jsx` | `HeaderActions` — wizard, trail actions, prev/next, menu (`actionGroup.jsx`) |
+| `header/actions.jsx` | `HeaderActions` — trail actions, prev/next, menu (`actionGroup.jsx`) |
 | `header/iconButton.jsx` | `HeaderIconButton` |
 | `header/logo.jsx` | Logo |
 | `header/menu/` | App menu |
@@ -276,7 +276,7 @@ useHeaderTrailCenter(headerTabPicker);
 
 **Tabs in the sticky header:** Entity views do **not** render an inline tab bar. They pass `hideTabBar` to `EntityTabsShell` and register `HeaderTabBar` via `useHeaderTrailCenter`. Hotkey tab cycle and bus-view shortcuts still work — `EntityTabsShell` registers the tab bar with `registerTabBar` even when hidden.
 
-**Tab persistence:** `useEntityTabs({ tabs, settingsKey, defaultTab })` for most entities. Bus uses URL-synced tabs via `useBusViewTab` / `buildBusPath` (preserves `?tab=` on prev/next).
+**Tab persistence:** `useEntityTabs({ tabs, settingsKey, defaultTab })` for most entities. Bus uses URL-synced tabs via `useBusViewTab` / `buildBusPath`. Each bus type remembers its own tab. Prev/next keeps `?tab=` within the same type; crossing types opens the destination type's remembered tab.
 
 **Reference:** `pages/input/view/index.jsx` + `pages/input/view/tabs.jsx`.
 

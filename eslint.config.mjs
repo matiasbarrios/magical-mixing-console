@@ -27,8 +27,6 @@ export default defineConfig([
                 ...globals.node,
                 $: 'readonly',
                 alert: 'readonly',
-                MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: 'readonly',
-                MAIN_WINDOW_WEBPACK_ENTRY: 'readonly',
                 process: 'readonly',
                 __dirname: 'readonly',
             },
@@ -151,6 +149,20 @@ export default defineConfig([
                 },
             },
             react: { version: '19' },
+        },
+    },
+    {
+        files: ['src/console/tinyjs/backend/**/*.js'],
+        languageOptions: {
+            globals: {
+                tjs: 'readonly',
+                UDPSocket: 'readonly',
+            },
+        },
+        rules: {
+            'import-x/no-unresolved': ['error', {
+                ignore: ['^@magical-mixing/', '^tjs:'],
+            }],
         },
     },
 ]);

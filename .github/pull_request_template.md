@@ -26,7 +26,7 @@
 - [ ] `npm run lint`
 - [ ] `npm test`
 - [ ] `npm run test:integration`
-- [ ] Electron (`npm run electron-dev`)
+- [ ] Desktop (`npm run tinyjs-dev`)
 - [ ] Capacitor
 - [ ] Virtual X18 only
 - [ ] Real desk (model: ___)

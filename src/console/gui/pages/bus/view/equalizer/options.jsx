@@ -16,7 +16,7 @@ import { useUiSize } from '../../../../components/theme';
 import { ActiveToggleButton } from '../../../../components/base/activeToggleButton';
 import { DropdownSelect } from '../../../../components/base/dropdownSelect';
 import { useEqualizer } from './context';
-import Edit, { HasEditableFilters, ResetWhich } from './edit';
+import { HasEditableFilters, ResetWhich } from './edit';
 import { PresetProvider, PresetSave, PresetsMenu } from './presets';
 
 
@@ -163,41 +163,42 @@ const EditButton = ({ busId }) => {
     const { t } = useLanguage();
     const { disabled } = useDevice();
     const { textSize } = useUiSize();
-    const [open, setOpen] = useState(false);
+    const { editOpen, setEditOpen } = useEqualizer();
+
+    const toggleEdit = useCallback(() => {
+        setEditOpen(!editOpen);
+    }, [editOpen, setEditOpen]);
 
     return (
         <HasEditableFilters busId={busId}>
-            <>
-                <Flex align="center" gap="2">
-                    <IconButton
-                        size={textSize}
-                        variant="soft"
-                        color="gray"
-                        onClick={() => setOpen(true)}
-                        disabled={disabled}
-                    >
-                        <Pencil1Icon style={ICON_STYLE} />
-                    </IconButton>
-                    <ResetWhich busId={busId}>
-                        {({ reset }) => (
-                            <IconButton
-                                size={textSize}
-                                variant="soft"
-                                color="gray"
-                                onClick={reset}
-                                disabled={disabled}
-                                aria-label={t('Reset')}
-                                {...focusRoamAttrs(RESET_ROAM_ID)}
-                            >
-                                <ResetIcon />
-                            </IconButton>
-                        )}
-                    </ResetWhich>
-                </Flex>
-                {!!open && (
-                    <Edit busId={busId} open={open} onOpenChange={setOpen} />
-                )}
-            </>
+            <Flex align="center" gap="2">
+                <IconButton
+                    size={textSize}
+                    variant="soft"
+                    color={editOpen ? 'blue' : 'gray'}
+                    onClick={toggleEdit}
+                    disabled={disabled}
+                    aria-pressed={editOpen}
+                    aria-label={t('Edit equalizer')}
+                >
+                    <Pencil1Icon style={ICON_STYLE} />
+                </IconButton>
+                <ResetWhich busId={busId}>
+                    {({ reset }) => (
+                        <IconButton
+                            size={textSize}
+                            variant="soft"
+                            color="gray"
+                            onClick={reset}
+                            disabled={disabled}
+                            aria-label={t('Reset')}
+                            {...focusRoamAttrs(RESET_ROAM_ID)}
+                        >
+                            <ResetIcon />
+                        </IconButton>
+                    )}
+                </ResetWhich>
+            </Flex>
         </HasEditableFilters>
     );
 };

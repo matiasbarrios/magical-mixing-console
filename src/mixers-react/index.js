@@ -40,6 +40,7 @@ export * from './device/bus/options';
 export * from './device/bus/pan';
 export * from './device/bus/polarity';
 export * from './device/bus/reset';
+export * from './device/bus/move';
 export * from './device/bus/rta';
 export * from './device/bus/stereoLink';
 export * from './device/scene/app';

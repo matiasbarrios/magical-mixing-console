@@ -1,5 +1,5 @@
 // Requirements
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Power, PowerOff } from 'lucide-react';
 import {
     Box, Dialog, Flex, IconButton, Text,
@@ -7,29 +7,35 @@ import {
 import {
     useBusEqualizerGraphic, useBusEqualizerGraphicReset,
     useBusEqualizerMode, useBusEqualizerParametric,
-    useBusEqualizerParametricFrequency, useBusEqualizerParametricOn,
+    useBusEqualizerParametricFrequency, useBusEqualizerParametricGain,
+    useBusEqualizerParametricOn, useBusEqualizerParametricQ,
     useBusEqualizerParametricOptions, useBusEqualizerParametricReset,
     useBusEqualizerParametricType,
     useBusEqualizerTrue, useBusEqualizerTrueReset,
     useDevice,
 } from '@magical-mixing/mixers-react';
-import { RESET_ROAM_ID, focusRoamAttrs } from '../../../../helpers/hotkeys/focusRoam';
-import ResetIcon from '../../../../components/base/resetIcon';
-import { ICON_STYLE } from '../../../../helpers/values';
+import { scaleLinear } from 'd3';
+import { ICON_STYLE, ONE } from '../../../../helpers/values';
 import FrequencyInput from '../../../../components/base/frequencyInput';
 import { DropdownSelect } from '../../../../components/base/dropdownSelect';
 import DialogHeader from '../../../../components/base/dialogHeader';
+import DecimalInput from '../../../../components/base/decimalInput';
+import { Knob } from '../../../../components/base/knob';
 import { useLanguage } from '../../../../components/language';
 import { useUiSize } from '../../../../components/theme';
 import { COLORS } from './parametric/constants';
+import { gainAlwaysZero } from './parametric/biquad';
+import { useEqualizer } from './context';
 
 
 // Internal
+const GAIN_RESET = 0;
+
 const filtersGridStyle = {
     display: 'grid',
-    gridTemplateColumns: 'auto minmax(0, 1fr) auto',
+    gridTemplateColumns: 'auto minmax(0, 1fr) auto auto',
     columnGap: 'var(--space-2)',
-    rowGap: 'var(--space-3)',
+    rowGap: 'var(--space-2)',
     alignItems: 'center',
     width: '100%',
 };
@@ -47,6 +53,14 @@ const filterFrequencyCellStyle = {
     minWidth: 0,
 };
 
+const filterKnobsCellStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 'var(--space-1)',
+    minWidth: 'var(--mmc-knob-size)',
+};
+
 const filterControlsCellStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -61,9 +75,131 @@ const filterOnSlotStyle = {
 
 const filterInactiveOpacity = 0.5;
 
+const editPanelStyle = {
+    overflowX: 'hidden',
+    overflowY: 'auto',
+};
+
+
+const FilterGain = ({ busId, parameterId, name }) => {
+    const { t } = useLanguage();
+    const { disabled } = useDevice();
+    const { dbRange } = useEqualizer();
+    const {
+        has, value, set,
+    } = useBusEqualizerParametricGain(busId, parameterId);
+
+    const minimum = -dbRange;
+    const maximum = dbRange;
+
+    const gainScale = useMemo(() => scaleLinear()
+        .domain([minimum, maximum]).range([0, ONE]), [minimum, maximum]);
+    const decimalToValue = useMemo(() => gainScale.invert, [gainScale]);
+    const valueToDecimal = useCallback((v) => {
+        const clamped = Math.max(minimum, Math.min(maximum, v));
+        return gainScale(clamped);
+    }, [gainScale, minimum, maximum]);
+
+    const [opened, setOpened] = useState(false);
+    const open = useCallback(() => setOpened(true), []);
+    const close = useCallback(() => setOpened(false), []);
+
+    if (!has || value === undefined || value === null || Number.isNaN(value)) return null;
+
+    return (
+        <>
+            <Knob
+                value={value}
+                set={set}
+                valueToDecimal={valueToDecimal}
+                decimalToValue={decimalToValue}
+                minimum={minimum}
+                maximum={maximum}
+                onRightClick={open}
+                ariaLabel={`${t('Gain')}, ${t(name)}`}
+                disabled={disabled}
+                decimalsToShow={1}
+                asButton
+                resetValue={GAIN_RESET}
+                onFocusScale={1.5}
+            />
+            <Dialog.Root open={opened} onOpenChange={setOpened}>
+                <Dialog.Content aria-describedby={undefined}>
+                    <DialogHeader>
+                        { `${t(name)} · ${t('Gain')}` }
+                    </DialogHeader>
+                    <DecimalInput
+                        value={value}
+                        decimalsLimit={1}
+                        set={set}
+                        onEnter={close}
+                        allowNegativeValue
+                        minimum={minimum}
+                        maximum={maximum}
+                    />
+                </Dialog.Content>
+            </Dialog.Root>
+        </>
+    );
+};
+
+
+const FilterQ = ({ busId, parameterId, name }) => {
+    const { t } = useLanguage();
+    const { disabled } = useDevice();
+    const {
+        has, value, set, minimum, maximum,
+    } = useBusEqualizerParametricQ(busId, parameterId);
+
+    const valueToDecimal = useMemo(() => scaleLinear()
+        .domain([minimum, maximum]).range([0, ONE]), [minimum, maximum]);
+    const decimalToValue = useMemo(() => valueToDecimal.invert, [valueToDecimal]);
+
+    const [opened, setOpened] = useState(false);
+    const open = useCallback(() => setOpened(true), []);
+    const close = useCallback(() => setOpened(false), []);
+
+    if (!has || value === undefined || value === null || Number.isNaN(value)) return null;
+
+    return (
+        <>
+            <Knob
+                value={value}
+                set={set}
+                valueToDecimal={valueToDecimal}
+                decimalToValue={decimalToValue}
+                minimum={minimum}
+                maximum={maximum}
+                onRightClick={open}
+                ariaLabel={`Q, ${t(name)}`}
+                disabled={disabled}
+                decimalsToShow={2}
+                asButton
+                resetValue={minimum}
+                onFocusScale={1.5}
+            />
+            <Dialog.Root open={opened} onOpenChange={setOpened}>
+                <Dialog.Content aria-describedby={undefined}>
+                    <DialogHeader>
+                        { `${t(name)} · Q` }
+                    </DialogHeader>
+                    <DecimalInput
+                        value={value}
+                        decimalsLimit={2}
+                        set={set}
+                        onEnter={close}
+                        minimum={minimum}
+                        maximum={maximum}
+                    />
+                </Dialog.Content>
+            </Dialog.Root>
+        </>
+    );
+};
+
 
 const ParametricFilterRow = ({
-    busId, parameterId, name, autoFocus, onFrequencyEnter, frequencyInputRef,
+    busId, parameterId, name, onFrequencyEnter, frequencyInputRef,
 }) => {
     const { t } = useLanguage();
     const { disabled } = useDevice();
@@ -83,6 +219,9 @@ const ParametricFilterRow = ({
 
     const typeOption = useMemo(() => typeOptions.find(o => o.id === type),
         [type, typeOptions]);
+
+    const showGain = !!typeOption?.preset && !gainAlwaysZero(typeOption.preset);
+    const showQ = ['Parametric', 'Vintage'].includes(typeOption?.name);
 
     const handleFrequencyEnter = useCallback(() => {
         if (typeOptions.length > 1) {
@@ -123,7 +262,6 @@ const ParametricFilterRow = ({
                         set={frequencySet}
                         minimum={minimum}
                         maximum={maximum}
-                        autoFocus={autoFocus}
                         onEnter={handleFrequencyEnter}
                         size={textSize}
                         width="100%"
@@ -133,6 +271,14 @@ const ParametricFilterRow = ({
                     <Box flexGrow="1" />
                 )}
                 <Text size={textSize} color="gray" wrap="nowrap">Hz</Text>
+            </Flex>
+            <Flex style={{ ...filterKnobsCellStyle, ...inactiveStyle }}>
+                {showGain && (
+                    <FilterGain busId={busId} parameterId={parameterId} name={name} />
+                )}
+                {showQ && (
+                    <FilterQ busId={busId} parameterId={parameterId} name={name} />
+                )}
             </Flex>
             <Flex style={filterControlsCellStyle}>
                 {type !== undefined && typeOptions.length > 1 ? (
@@ -199,7 +345,6 @@ const ParametricFilters = ({ busId }) => {
                     busId={busId}
                     parameterId={o.id}
                     name={o.name}
-                    autoFocus={index === 0}
                     onFrequencyEnter={() => focusNextRow(index)}
                     frequencyInputRef={(el) => { focusRefs.current[index] = el; }}
                 />
@@ -260,46 +405,28 @@ const HasEditableFilters = ({ busId, children }) => {
 };
 
 
-const EditContent = ({ busId }) => (
-    <HasEditableFilters busId={busId}>
-        <ParametricFilters busId={busId} />
-    </HasEditableFilters>
-);
+const EditPanel = ({ busId }) => {
+    const { editOpen } = useEqualizer();
+    if (!editOpen) return null;
+
+    return (
+        <HasEditableFilters busId={busId}>
+            <Flex
+                width="100%"
+                minHeight="0"
+                flexShrink="1"
+                flexGrow="0"
+                pb="1"
+                style={editPanelStyle}
+            >
+                <ParametricFilters busId={busId} />
+            </Flex>
+        </HasEditableFilters>
+    );
+};
 
 
 // Exported
 export { HasEditableFilters, ResetWhich };
 
-export default ({ busId, open, onOpenChange }) => {
-    const { t } = useLanguage();
-    const { disabled } = useDevice();
-    const { textSize } = useUiSize();
-
-    return (
-        <Dialog.Root open={open} onOpenChange={onOpenChange}>
-            <Dialog.Content aria-describedby={undefined}>
-                <DialogHeader>
-                    { t('Edit equalizer') }
-                </DialogHeader>
-                <EditContent busId={busId} />
-                <ResetWhich busId={busId}>
-                    {({ reset }) => (
-                        <Flex gap="3" mt="4" justify="end">
-                            <IconButton
-                                size={textSize}
-                                variant="soft"
-                                color="gray"
-                                onClick={reset}
-                                disabled={disabled}
-                                aria-label={t('Reset')}
-                                {...focusRoamAttrs(RESET_ROAM_ID)}
-                            >
-                                <ResetIcon />
-                            </IconButton>
-                        </Flex>
-                    )}
-                </ResetWhich>
-            </Dialog.Content>
-        </Dialog.Root>
-    );
-};
+export default EditPanel;

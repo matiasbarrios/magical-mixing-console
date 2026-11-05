@@ -129,7 +129,8 @@ const ColumnInner = ({ busIdFrom, busIdTo, linkDestination }) => {
                     <DestinationBusNameArea
                         busIdTo={busIdTo}
                         truncate
-                        showIdentifier={!!linkDestination}
+                        showIdentifier
+                        link={!!linkDestination}
                     />
                 </CenteredRow>
             </Flex>

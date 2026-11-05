@@ -508,8 +508,28 @@ const Chart = ({ busId, height }) => {
 
     // On resize
     useEffect(() => {
-        window.addEventListener('resize', createRefs);
-        return () => window.removeEventListener('resize', createRefs);
+        const element = equalizerRef.current;
+        if (!element) return undefined;
+
+        let frameId = 0;
+        const observer = new ResizeObserver(() => {
+            if (frameId) cancelAnimationFrame(frameId);
+            frameId = requestAnimationFrame(() => {
+                frameId = 0;
+                const { clientWidth, clientHeight } = element;
+                if (!clientWidth || !clientHeight) return;
+                const current = chartRef.current;
+                if (current?.width === clientWidth && current?.height === clientHeight) return;
+                createRefs();
+            });
+        });
+
+        observer.observe(element);
+
+        return () => {
+            if (frameId) cancelAnimationFrame(frameId);
+            observer.disconnect();
+        };
     }, [createRefs]);
 
     // On disabled

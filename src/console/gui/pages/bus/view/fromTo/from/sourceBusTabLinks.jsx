@@ -7,10 +7,13 @@ import Equalizer from './equalizer';
 import Compressor from './compressor';
 import Gate from './gate';
 import Input from './input';
+import Sends from './sends';
 
 
 // Internal
-const SourceBusTabLinksInner = ({ busIdFrom }) => {
+const SourceBusTabLinksInner = ({
+    busIdFrom, showInput, showEq, showCompressor, showGate, showSends,
+}) => {
     const { isVertical } = useEntityViewLayout();
     const stopRowOpen = useCallback((e) => {
         e.stopPropagation();
@@ -27,10 +30,11 @@ const SourceBusTabLinksInner = ({ busIdFrom }) => {
             onPointerDown={stopRowOpen}
             onClick={stopRowOpen}
         >
-            <Input busIdFrom={busIdFrom} />
-            <Equalizer busIdFrom={busIdFrom} />
-            <Compressor busIdFrom={busIdFrom} />
-            <Gate busIdFrom={busIdFrom} />
+            {showInput && <Input busIdFrom={busIdFrom} />}
+            {showEq && <Equalizer busIdFrom={busIdFrom} />}
+            {showCompressor && <Compressor busIdFrom={busIdFrom} />}
+            {showGate && <Gate busIdFrom={busIdFrom} />}
+            {showSends && <Sends busIdFrom={busIdFrom} />}
         </Flex>
     );
 };
@@ -53,8 +57,27 @@ const useReceptionShortcutsVisible = () => {
 // Exported
 export const SourceBusTabLinks = ({ busIdFrom }) => {
     const visible = useReceptionShortcutsVisible();
+    const {
+        receptionPreviewInput,
+        receptionPreviewEq,
+        receptionPreviewCompressor,
+        receptionPreviewGate,
+        receptionPreviewSends,
+    } = useTheme();
 
-    if (!visible) return null;
+    const anyPreview = receptionPreviewInput || receptionPreviewEq || receptionPreviewCompressor
+        || receptionPreviewGate || receptionPreviewSends;
 
-    return <SourceBusTabLinksInner busIdFrom={busIdFrom} />;
+    if (!visible || !anyPreview) return null;
+
+    return (
+        <SourceBusTabLinksInner
+            busIdFrom={busIdFrom}
+            showInput={receptionPreviewInput}
+            showEq={receptionPreviewEq}
+            showCompressor={receptionPreviewCompressor}
+            showGate={receptionPreviewGate}
+            showSends={receptionPreviewSends}
+        />
+    );
 };

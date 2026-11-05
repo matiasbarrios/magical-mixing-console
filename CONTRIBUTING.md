@@ -30,7 +30,7 @@ The software is provided **as-is**, without warranty or support. Maintainers may
 | New OSC parameter for a supported desk | `src/mixers/drivers/` |
 | React hook for an existing driver feature | `src/mixers-react/` |
 | UI screen or layout | `src/console/gui/` |
-| Desktop sockets / Electron | `src/console/electron/` |
+| Desktop sockets / tinyjs | `src/console/tinyjs/` |
 | Mobile sockets / Capacitor | `src/console/capacitor/` |
 | New mixer family (large effort) | New driver under `src/mixers/drivers/` |
 
@@ -47,7 +47,7 @@ git clone https://github.com/matiasbarrios/magical-mixing-console.git
 cd magical-mixing-console
 npm install
 # Clone and build Capacitor plugins — see DEVELOPMENT.md
-npm run electron-dev   # desktop
+npm run tinyjs-dev   # desktop
 ```
 
 Virtual mixer (no hardware):
@@ -72,7 +72,7 @@ Details: [docs/TESTING.md](docs/TESTING.md). Tests are manual today (no CI gate)
 
 - Keep PRs focused — one concern per PR when possible.
 - Describe **what** changed and **why**.
-- Note platform tested (Electron, Capacitor, or mixers-only).
+- Note platform tested (tinyjs, Capacitor, or mixers-only).
 - If you change OSC paths or driver behavior, mention desk/model tested (real or virtual X18).
 - Forks that ship their own app builds should use their own name/logo and `appId` in `capacitor.config.json` (see README).
 

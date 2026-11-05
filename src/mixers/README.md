@@ -31,7 +31,7 @@ import { mixersInitialize, searchNew, oscFromBuffer, oscToBuffer } from '@magica
 - `getLANBroadcastAddress`, `getLocalAddressForIP`
 - `udpSocketOpen`, `udpSocketClose`, `udpMessageSend`, `onUDPMessageReceived`
 
-Electron and Capacitor adapters live in `src/console/`; for Node scripts see `examples/manual-connect-test-cli.js`.
+tinyjs and Capacitor adapters live in `src/console/`; for Node scripts see `examples/manual-connect-test-cli.js`.
 
 ## Feature API
 

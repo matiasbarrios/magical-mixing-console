@@ -84,7 +84,9 @@ const useDestinationBusIdentifierLabel = (busIdTo) => {
 };
 
 
-const DestinationBusNameLink = ({ busIdTo, truncate = false, showIdentifier = false }) => {
+const DestinationBusNameLink = ({
+    busIdTo, truncate = false, showIdentifier = false, link = true,
+}) => {
     const { t } = useLanguage();
     const { disabled } = useDevice();
     const { textSize, subTextFontSize } = useUiSize();
@@ -116,7 +118,7 @@ const DestinationBusNameLink = ({ busIdTo, truncate = false, showIdentifier = fa
                     <FallbackBusIcon busId={busIdTo} color={color} />
                 </Flex>
             )}
-            <Text size={textSize} style={truncate ? TRUNCATE_TEXT_STYLE : undefined}>
+            <Text size={textSize} color={color} style={truncate ? TRUNCATE_TEXT_STYLE : undefined}>
                 { displayName }
             </Text>
         </Flex>
@@ -133,16 +135,29 @@ const DestinationBusNameLink = ({ busIdTo, truncate = false, showIdentifier = fa
                     style={truncate ? { maxWidth: '100%' } : undefined}
                 >
                     { nameContent }
-                    <Text size="1" className="mmc-btn-nowrap" style={{ fontSize: subTextFontSize }}>
+                    <Text
+                        size="1"
+                        color={color}
+                        className="mmc-btn-nowrap"
+                        style={{ fontSize: subTextFontSize }}
+                    >
                         { identifierLabel }
                     </Text>
                 </Flex>
             );
         }
         return nameContent;
-    }, [showIdentifier, identifierLabel, nameContent, truncate, subTextFontSize]);
+    }, [showIdentifier, identifierLabel, nameContent, truncate, subTextFontSize, color]);
 
     if (!displayName) return null;
+
+    if (!link) {
+        return wrapIfTruncate((
+            <Flex align="center" justify="center" minWidth="0" maxWidth="100%" width="100%">
+                { buttonContent }
+            </Flex>
+        ));
+    }
 
     const focusRoamProps = showIdentifier ? focusRoamAttrs(BUS_IDENTIFIER_ROAM_ID) : {};
 
@@ -166,14 +181,16 @@ const DestinationBusNameLink = ({ busIdTo, truncate = false, showIdentifier = fa
 
 
 const DestinationBusUnsetNameArea = ({
-    busIdTo, truncate = false, showIdentifier = false,
+    busIdTo, truncate = false, showIdentifier = false, link = true,
 }) => {
     const { t } = useLanguage();
     const { disabled } = useDevice();
     const { textSize, subTextFontSize } = useUiSize();
     const { value: color } = useFallbackBusColor(busIdTo, 'gray');
+    const { has: iconHas, value: iconValue } = useFallbackBusIcon(busIdTo);
     const identifierLabel = useDestinationBusIdentifierLabel(busIdTo);
     const onViewClick = useDestinationBusNavigate(busIdTo);
+    const showIcon = iconHas && iconValue && iconValue !== 'none';
 
     if (!showIdentifier || !identifierLabel) return null;
 
@@ -182,6 +199,32 @@ const DestinationBusUnsetNameArea = ({
             { content }
         </Flex>
     ) : content);
+
+    if (!link) {
+        return wrapIfTruncate((
+            <Flex align="center" justify="center" minWidth="0" maxWidth="100%" width="100%">
+                <Flex
+                    align="center"
+                    gap="1"
+                    minWidth="0"
+                    style={truncate ? { maxWidth: '100%' } : undefined}
+                >
+                    {showIcon && (
+                        <Flex flexShrink="0" style={{ lineHeight: 0 }}>
+                            <FallbackBusIcon busId={busIdTo} color={color} />
+                        </Flex>
+                    )}
+                    <Text
+                        size={textSize}
+                        color={color}
+                        style={truncate ? TRUNCATE_TEXT_STYLE : undefined}
+                    >
+                        { identifierLabel }
+                    </Text>
+                </Flex>
+            </Flex>
+        ));
+    }
 
     return wrapIfTruncate((
         <Button
@@ -231,7 +274,9 @@ const DestinationViewBus = ({ busIdTo, linkDestination }) => {
 };
 
 
-const DestinationBusNameArea = ({ busIdTo, truncate = false, showIdentifier = false }) => {
+const DestinationBusNameArea = ({
+    busIdTo, truncate = false, showIdentifier = false, link = true,
+}) => {
     const {
         has: stereoLinkHas, value: stereoLinkValue, pair: stereoLinkPair,
     } = useBusStereoLink(busIdTo);
@@ -247,6 +292,7 @@ const DestinationBusNameArea = ({ busIdTo, truncate = false, showIdentifier = fa
                 busIdTo={busIdTo}
                 truncate={truncate}
                 showIdentifier={showIdentifier}
+                link={link}
             />
         );
     }
@@ -256,6 +302,7 @@ const DestinationBusNameArea = ({ busIdTo, truncate = false, showIdentifier = fa
             busIdTo={busIdTo}
             truncate={truncate}
             showIdentifier={showIdentifier}
+            link={link}
         />
     );
 };

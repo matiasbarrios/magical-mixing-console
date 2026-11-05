@@ -19,6 +19,7 @@ import Other from './other';
 import Groups from './groups';
 import App from './app';
 import Help from './help';
+import Troubleshooting from './troubleshooting';
 import Reset from './reset';
 import Scenes from './scenes';
 import { DropdownMenuContent, DropdownMenuSubContent } from './../../../base/dropdownMenuContent';
@@ -121,6 +122,7 @@ export default () => {
                 <Scenes />
                 <DropdownMenu.Separator />
                 <App />
+                <Troubleshooting />
                 <Help />
             </DropdownMenuContent>
         </DropdownMenu.Root>

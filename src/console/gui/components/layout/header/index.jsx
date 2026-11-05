@@ -9,6 +9,7 @@ import {
 import WizardTrigger from '../../../pages/wizard/trigger';
 import { SetupWizardProvider } from '../../../pages/wizard/context';
 import { HelpProvider } from '../../help/context';
+import { TroubleshootingProvider } from '../../../pages/troubleshooting/context';
 import { AppearanceProvider } from '../../../pages/settings/appearance';
 import { HotkeysSettingsProvider } from '../../../pages/settings/hotkeys';
 import ActiveScene from './activeScene';
@@ -106,7 +107,9 @@ export default ({ fixed = false }) => (
         <AppearanceProvider>
             <HotkeysSettingsProvider>
                 <HelpProvider>
-                    <HeaderContent fixed={fixed} />
+                    <TroubleshootingProvider>
+                        <HeaderContent fixed={fixed} />
+                    </TroubleshootingProvider>
                 </HelpProvider>
             </HotkeysSettingsProvider>
         </AppearanceProvider>

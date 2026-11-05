@@ -19,7 +19,7 @@ const BusConfigActions = ({ busId }) => {
     return (
         <Flex direction="column" align="center" justify="center" gapY="1" flexShrink="0">
             {polarityHas && <Polarity busId={busId} />}
-            {stereoLinkHas && <StereoLink busId={busId} />}
+            {stereoLinkHas && <StereoLink busId={busId} compact />}
         </Flex>
     );
 };

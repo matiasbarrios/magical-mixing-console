@@ -33,6 +33,11 @@ export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useSettings('theme', 'dark', true);
     const [textSize, setTextSize] = useSettings('text-size', '1');
     const [receptionShortcuts, setReceptionShortcuts] = useSettings('bus-reception-shortcuts', true);
+    const [receptionPreviewInput, setReceptionPreviewInput] = useSettings('bus-reception-preview-input', true);
+    const [receptionPreviewEq, setReceptionPreviewEq] = useSettings('bus-reception-preview-eq', true);
+    const [receptionPreviewCompressor, setReceptionPreviewCompressor] = useSettings('bus-reception-preview-compressor', true);
+    const [receptionPreviewGate, setReceptionPreviewGate] = useSettings('bus-reception-preview-gate', true);
+    const [receptionPreviewSends, setReceptionPreviewSends] = useSettings('bus-reception-preview-sends', true);
     const [entityViewLayout, setEntityViewLayout] = useSettings('entity-view-layout', 'vertical');
     const [headerWizardWandShown, setHeaderWizardWandShown] = useSettings('header-wizard-wand-shown', true);
     const [headerNavigation, setHeaderNavigation] = useSettings('header-navigation', false);
@@ -51,6 +56,16 @@ export const ThemeProvider = ({ children }) => {
         setTextSize,
         receptionShortcuts,
         setReceptionShortcuts,
+        receptionPreviewInput,
+        setReceptionPreviewInput,
+        receptionPreviewEq,
+        setReceptionPreviewEq,
+        receptionPreviewCompressor,
+        setReceptionPreviewCompressor,
+        receptionPreviewGate,
+        setReceptionPreviewGate,
+        receptionPreviewSends,
+        setReceptionPreviewSends,
         entityViewLayout,
         setEntityViewLayout,
         headerWizardWandShown,
@@ -58,8 +73,10 @@ export const ThemeProvider = ({ children }) => {
         headerNavigation,
         setHeaderNavigation,
     }), [theme, themeCurrent, setTheme, textSize, setTextSize, receptionShortcuts, setReceptionShortcuts,
-        entityViewLayout, setEntityViewLayout, headerWizardWandShown, setHeaderWizardWandShown,
-        headerNavigation, setHeaderNavigation]);
+        receptionPreviewInput, setReceptionPreviewInput, receptionPreviewEq, setReceptionPreviewEq,
+        receptionPreviewCompressor, setReceptionPreviewCompressor, receptionPreviewGate, setReceptionPreviewGate,
+        receptionPreviewSends, setReceptionPreviewSends, entityViewLayout, setEntityViewLayout,
+        headerWizardWandShown, setHeaderWizardWandShown, headerNavigation, setHeaderNavigation]);
 
     useEffect(() => {
         document.body.classList.toggle('dark', themeCurrent === 'dark');
@@ -107,6 +124,11 @@ export const useTheme = () => {
     const {
         theme, setTheme, themeCurrent, textSize, setTextSize,
         receptionShortcuts, setReceptionShortcuts,
+        receptionPreviewInput, setReceptionPreviewInput,
+        receptionPreviewEq, setReceptionPreviewEq,
+        receptionPreviewCompressor, setReceptionPreviewCompressor,
+        receptionPreviewGate, setReceptionPreviewGate,
+        receptionPreviewSends, setReceptionPreviewSends,
         entityViewLayout, setEntityViewLayout,
         headerWizardWandShown, setHeaderWizardWandShown,
         headerNavigation, setHeaderNavigation,
@@ -120,6 +142,16 @@ export const useTheme = () => {
         setTextSize,
         receptionShortcuts,
         setReceptionShortcuts,
+        receptionPreviewInput,
+        setReceptionPreviewInput,
+        receptionPreviewEq,
+        setReceptionPreviewEq,
+        receptionPreviewCompressor,
+        setReceptionPreviewCompressor,
+        receptionPreviewGate,
+        setReceptionPreviewGate,
+        receptionPreviewSends,
+        setReceptionPreviewSends,
         entityViewLayout,
         setEntityViewLayout,
         headerWizardWandShown,

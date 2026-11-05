@@ -41,6 +41,8 @@ export default ({ busId, sends, onSendsChange }) => {
 
     const auxBuses = useMemo(() => toOptions.filter(o => o.type === 'secondary'),
         [toOptions]);
+    const showMonitorHint = useMemo(() => auxBuses.length > 0
+        && !auxBuses.some(bus => sends.aux[bus.id]), [auxBuses, sends]);
 
     const setMain = useCallback((main) => {
         onSendsChange({ ...sends, main });
@@ -58,6 +60,11 @@ export default ({ busId, sends, onSendsChange }) => {
             <Text size={textSize} color="gray">
                 { t('Where to send?') }
             </Text>
+            {showMonitorHint && (
+                <Text size={textSize} color="gray">
+                    { t('Aux buses are the monitors. You can set one up next.') }
+                </Text>
+            )}
             <LabelControlTable.List className={LABEL_CONTROL_CLASS}>
                 {mainOne && (
                     <SendRow

@@ -10,7 +10,7 @@ Use this doc when changing search, connect, pause/resume, or any network behavio
 
 | Actor | Location | Knows about UDP/sockets? | Responsibility in connectivity |
 |-------|----------|--------------------------|--------------------------------|
-| **Platform** (Electron / Capacitor) | `console/electron/`, `console/capacitor/` | Yes — OS primitives only | Expose bind/send/receive/close; LAN interface enumeration |
+| **Platform** (tinyjs / Capacitor) | `console/tinyjs/`, `console/capacitor/` | Yes — OS primitives only | Expose bind/send/receive/close; LAN interface enumeration |
 | **mixers** | `src/mixers/` | Yes — full protocol & lifecycle | Search, connect, session, halt/resume; **owns all socket decisions** |
 | **mixers-react** | `src/mixers-react/` | No | React hooks/context over mixers API (`useSearch`, `useDevice`) |
 | **console/gui** | `console/gui/` | No | UX: “search”, “connect to result”, “connect to IP:port”, app device list |
@@ -22,7 +22,7 @@ Use this doc when changing search, connect, pause/resume, or any network behavio
 
 ## Layer responsibilities (connectivity)
 
-### Platform — Electron / Capacitor
+### Platform — tinyjs / Capacitor
 
 **Role:** Passthrough to the operating system. Implements a **transport contract**, not product logic.
 
@@ -40,7 +40,7 @@ Use this doc when changing search, connect, pause/resume, or any network behavio
 
 The platform may keep an internal `socketId → native socket` map. That is an **implementation detail of the primitive API** — opaque integer handles, not semantic roles.
 
-**Typical touch points:** `console/electron/helpers/udp.js`, `console/electron/helpers/lan.js`, `console/capacitor/helpers/udp.js`, `console/capacitor/helpers/lan.js`.
+**Typical touch points:** `console/tinyjs/backend/helpers/udp.js`, `console/tinyjs/helpers/lan.js`, `console/capacitor/helpers/udp.js`, `console/capacitor/helpers/lan.js`.
 
 #### Platform implementations
 
@@ -48,12 +48,12 @@ The **same contract** is implemented twice in-repo (plus native code on mobile):
 
 | Target | Adapter | Native layer |
 |--------|---------|--------------|
-| **Desktop** | `console/electron/helpers/udp.js`, `lan.js` | Node.js `dgram` in Electron main process; IPC to renderer |
+| **Desktop** | `console/tinyjs/backend/helpers/udp.js`, `helpers/lan.js` | txiki.js `UDPSocket` in the tinyjs backend; the page talks to it over the tinyjs bridge |
 | **Mobile** | `console/capacitor/helpers/udp.js`, `lan.js` | [`plugins/capacitor-udp-socket`](../../plugins/capacitor-udp-socket) Capacitor plugin (iOS/Android) |
 
-Capacitor’s `udp.js` wraps `UdpSocket` from the plugin — bind, send, receive, close — and maps to the same method names as Electron. Payloads cross the bridge as raw `bytes` arrays (0–255); no base64 in JS. Sends are not deferred with `setTimeout`. The plugin lives under `plugins/capacitor-udp-socket` (cloned at build time; see [DEVELOPMENT.md](../development/DEVELOPMENT.md)). It must stay as dumb as Electron: opaque socket handles, no search/session awareness.
+Capacitor’s `udp.js` wraps `UdpSocket` from the plugin — bind, send, receive, close — and maps to the same method names as tinyjs. Payloads cross the Capacitor bridge as raw `bytes` arrays (0–255). The desktop bridge carries them as base64. Sends are not deferred with `setTimeout`. The plugin lives under `plugins/capacitor-udp-socket` (cloned for mobile builds; see [DEVELOPMENT.md](../development/DEVELOPMENT.md)). It must stay as dumb as the tinyjs backend: opaque socket handles, no search/session awareness.
 
-GUI picks the adapter via `console/gui/platform/index.js` (`window.electron` → Electron API; otherwise dynamic import of `console/capacitor`).
+GUI picks the adapter at build time. The tinyjs frontend loads `console/gui/platform/adapter.tinyjs.js`. The Capacitor frontend redirects that import to `adapter.capacitor.js`. `isMobile` still follows `window.tiny` at runtime.
 
 ---
 
@@ -86,7 +86,7 @@ mixers/
 │   ├── search.js               # found-device registry, manual connect
 │   └── device.js               # online/halted, initialize → driver
 └── drivers/xair/
-    ├── search.js               # /xinfo broadcast, attach searchSocket to found data
+    ├── search.js               # /info broadcast, attach searchSocket to found data
     └── device/index.js         # adopt search socket → session controller
 ```
 
@@ -137,7 +137,7 @@ These are **two different registries**. Do not conflate them.
 | **Lifetime** | While search runs (and briefly for manual connect) | Whole app session |
 | **Contents** | Desks **seen on the network** (metadata + internal `searchSocket`) | Desks **the user connected to** (live `device` objects from `getFound`) |
 | **Purpose** | Discovery — populate the connect screen list | Product — header switcher, routing, which desk is focused |
-| **Mutations** | Automatic on `/xinfo`; cleared on search stop | `deviceAdd` / `deviceRemove` from UI |
+| **Mutations** | Automatic on `/info`; cleared on search stop | `deviceAdd` / `deviceRemove` from UI |
 
 Flow when the user connects:
 
@@ -152,7 +152,7 @@ Search can list a desk the user never adds. The app list can hold multiple conne
 
 ### virtual-devices (development)
 
-**Role:** Simulated X18 on the network. Uses the **same platform UDP contract** when run from Electron/Capacitor.
+**Role:** Simulated X18 on the network. Uses the **same platform UDP contract** when run from tinyjs or Capacitor.
 
 Not part of production connectivity path, but useful for local testing of search + connect without hardware.
 
@@ -173,9 +173,9 @@ Concretely:
 | Close socket after connect vs keep for session | mixers |
 | Halt app focus: stop processing but keep socket | mixers (`udpOSCController.halt` / `device.halt`) |
 | Close on device dispose | mixers → calls platform `udpSocketClose` |
-| Map `socketId` to native `dgram` socket | platform only |
+| Map `socketId` to the native UDP socket | platform only |
 
-Electron and Capacitor must **not** branch on “search vs connection”. If that distinction appears in platform code, it belongs higher in mixers.
+tinyjs and Capacitor must **not** branch on “search vs connection”. If that distinction appears in platform code, it belongs higher in mixers.
 
 ---
 
@@ -185,11 +185,11 @@ Electron and Capacitor must **not** branch on “search vs connection”. If tha
 
 `console/gui/components/global/initialization.jsx` is **not** a connectivity layer. It runs once at app boot and wires dependencies:
 
-1. `platformLoad()` — Electron preload API or Capacitor module
+1. `platformLoad()` — tinyjs adapter or Capacitor module
 2. Settings and vault providers (unrelated to mixers)
 3. `mixersInitialize({ … })` — passes platform UDP/LAN functions into mixers
 
-It does not decide when to search, connect, or reuse sockets. If mixers needs a new platform capability, add it to **both** Electron and Capacitor adapters, expose it on the platform object, and register it here. Business logic stays in mixers.
+It does not decide when to search, connect, or reuse sockets. If mixers needs a new platform capability, add it to **both** tinyjs and Capacitor adapters, expose it on the platform object, and register it here. Business logic stays in mixers.
 
 | Method | Purpose |
 |--------|---------|
@@ -221,8 +221,8 @@ sequenceDiagram
     M->>M: per LAN interface: udpOSCSearchNew + open
     M->>P: udpSocketOpen(localAddress, _, broadcast=true)
     loop every 2s
-        M->>Desk: OSC /xinfo (broadcast)
-        Desk->>M: OSC /xinfo reply
+        M->>Desk: OSC /info (broadcast)
+        Desk->>M: OSC /info reply
         M->>M: register device + searchSocket ref
     end
     M-->>MR: onUpdate(found[])
@@ -255,7 +255,7 @@ sequenceDiagram
 Same ownership rules. mixers:
 1. Clears stale cache entry for that `ip:port`
 2. Starts targeted search (`searchInIPPortStart`)
-3. Waits for a **live** `searchSocket` (fresh `/xinfo` response), not cached metadata alone
+3. Waits for a **live** `searchSocket` (fresh `/info` response), not cached metadata alone
 4. Then same handoff as connect-from-list
 
 GUI only calls `searchInIPPort(ip, port, onFound, onNotFound)`.
@@ -305,7 +305,7 @@ On resume, mixers re-enables processing and renews subscriptions **on the same s
 
 | State | Layer | Meaning |
 |-------|-------|---------|
-| **Searching** | mixers `search` | Broadcasting / waiting for `/xinfo` |
+| **Searching** | mixers `search` | Broadcasting / waiting for `/info` |
 | **Found (listed)** | mixers `search` | Desk seen; may still be searching |
 | **Connected (session)** | mixers `device` | Socket adopted; OSC subscriptions active |
 | **Halted** | mixers `device` | Paused; socket open, traffic ignored |
@@ -332,12 +332,12 @@ On resume, mixers re-enables processing and renews subscriptions **on the same s
 
 ## Invariants (keep these when extending connectivity)
 
-1. **Platform stays dumb** — no search/session semantics in Electron/Capacitor.
+1. **Platform stays dumb** — no search/session semantics in tinyjs/Capacitor.
 2. **mixers owns socket lifecycle** — including reuse from discovery to session.
 3. **GUI and mixers-react stay transport-agnostic** — no UDP types in UI code.
 4. **Internal fields stay internal** — e.g. `searchSocket` never leaks to `found[]` for React.
-5. **Drivers own protocol** — X Air `/xinfo` discovery lives in `drivers/xair/`; another desk family would add another driver, same mixers device/search shell.
-6. **Provider injection only** — `mixers` runs the same on Electron and Capacitor; swap adapter, not core logic.
+5. **Drivers own protocol** — X Air `/info` discovery lives in `drivers/xair/`; another desk family would add another driver, same mixers device/search shell.
+6. **Provider injection only** — `mixers` runs the same on tinyjs and Capacitor; swap adapter, not core logic.
 
 ---
 

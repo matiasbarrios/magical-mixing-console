@@ -77,7 +77,7 @@ const FreshStartOption = () => {
     const { runFreshStart } = useSetupWizard();
 
     const doFreshStart = useCallback(() => {
-        runFreshStart({ closeWizardFirst: true });
+        runFreshStart();
     }, [runFreshStart]);
 
     return (

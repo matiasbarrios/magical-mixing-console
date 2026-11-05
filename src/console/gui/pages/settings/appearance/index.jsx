@@ -30,7 +30,7 @@ const APPEARANCE_TAB_ROW_COUNTS = {
     global: 4,
     header: 2,
     footer: 2,
-    'bus-reception': 1,
+    'bus-reception': 6,
 };
 
 const dialogStyle = {
@@ -86,7 +86,7 @@ const SelectRow = ({
 
 
 const ToggleRow = ({
-    label, value, onChange,
+    label, value, onChange, disabled,
 }) => {
     const { t } = useLanguage();
 
@@ -99,7 +99,7 @@ const ToggleRow = ({
             </LabelControlTable.Cell>
             <LabelControlTable.Cell>
                 <Flex align="center" justify="end" width="100%" minWidth="0">
-                    <CheckToggleButton active={value} onClick={onChange} />
+                    <CheckToggleButton active={value} onClick={onChange} disabled={disabled} />
                 </Flex>
             </LabelControlTable.Cell>
         </LabelControlTable.Row>
@@ -166,12 +166,47 @@ const GlobalTab = ({
 
 const BusReceptionTab = ({
     receptionShortcuts, receptionShortcutsToggle,
+    receptionPreviewInput, receptionPreviewInputToggle,
+    receptionPreviewEq, receptionPreviewEqToggle,
+    receptionPreviewCompressor, receptionPreviewCompressorToggle,
+    receptionPreviewGate, receptionPreviewGateToggle,
+    receptionPreviewSends, receptionPreviewSendsToggle,
 }) => (
     <FormPanel>
         <ToggleRow
             label="Show input/eq/compressor/gate preview when enough space"
             value={receptionShortcuts}
             onChange={receptionShortcutsToggle}
+        />
+        <ToggleRow
+            label="Input"
+            value={receptionPreviewInput}
+            onChange={receptionPreviewInputToggle}
+            disabled={!receptionShortcuts}
+        />
+        <ToggleRow
+            label="Equalizer"
+            value={receptionPreviewEq}
+            onChange={receptionPreviewEqToggle}
+            disabled={!receptionShortcuts}
+        />
+        <ToggleRow
+            label="Compressor"
+            value={receptionPreviewCompressor}
+            onChange={receptionPreviewCompressorToggle}
+            disabled={!receptionShortcuts}
+        />
+        <ToggleRow
+            label="Gate"
+            value={receptionPreviewGate}
+            onChange={receptionPreviewGateToggle}
+            disabled={!receptionShortcuts}
+        />
+        <ToggleRow
+            label="Sends"
+            value={receptionPreviewSends}
+            onChange={receptionPreviewSendsToggle}
+            disabled={!receptionShortcuts}
         />
     </FormPanel>
 );
@@ -217,6 +252,11 @@ const AppearanceDialog = ({ open, onOpenChange }) => {
     const {
         theme, setTheme, textSize, setTextSize,
         receptionShortcuts, setReceptionShortcuts,
+        receptionPreviewInput, setReceptionPreviewInput,
+        receptionPreviewEq, setReceptionPreviewEq,
+        receptionPreviewCompressor, setReceptionPreviewCompressor,
+        receptionPreviewGate, setReceptionPreviewGate,
+        receptionPreviewSends, setReceptionPreviewSends,
         entityViewLayout, setEntityViewLayout,
         headerWizardWandShown, setHeaderWizardWandShown,
         headerNavigation, setHeaderNavigation,
@@ -235,6 +275,21 @@ const AppearanceDialog = ({ open, onOpenChange }) => {
 
     const receptionShortcutsToggle = useCallback(() => setReceptionShortcuts(!receptionShortcuts),
         [receptionShortcuts, setReceptionShortcuts]);
+
+    const receptionPreviewInputToggle = useCallback(() => setReceptionPreviewInput(!receptionPreviewInput),
+        [receptionPreviewInput, setReceptionPreviewInput]);
+
+    const receptionPreviewEqToggle = useCallback(() => setReceptionPreviewEq(!receptionPreviewEq),
+        [receptionPreviewEq, setReceptionPreviewEq]);
+
+    const receptionPreviewCompressorToggle = useCallback(() => setReceptionPreviewCompressor(!receptionPreviewCompressor),
+        [receptionPreviewCompressor, setReceptionPreviewCompressor]);
+
+    const receptionPreviewGateToggle = useCallback(() => setReceptionPreviewGate(!receptionPreviewGate),
+        [receptionPreviewGate, setReceptionPreviewGate]);
+
+    const receptionPreviewSendsToggle = useCallback(() => setReceptionPreviewSends(!receptionPreviewSends),
+        [receptionPreviewSends, setReceptionPreviewSends]);
 
     const headerWizardWandToggle = useCallback(() => setHeaderWizardWandShown(!headerWizardWandShown),
         [headerWizardWandShown, setHeaderWizardWandShown]);
@@ -309,6 +364,16 @@ const AppearanceDialog = ({ open, onOpenChange }) => {
                         <BusReceptionTab
                             receptionShortcuts={receptionShortcuts}
                             receptionShortcutsToggle={receptionShortcutsToggle}
+                            receptionPreviewInput={receptionPreviewInput}
+                            receptionPreviewInputToggle={receptionPreviewInputToggle}
+                            receptionPreviewEq={receptionPreviewEq}
+                            receptionPreviewEqToggle={receptionPreviewEqToggle}
+                            receptionPreviewCompressor={receptionPreviewCompressor}
+                            receptionPreviewCompressorToggle={receptionPreviewCompressorToggle}
+                            receptionPreviewGate={receptionPreviewGate}
+                            receptionPreviewGateToggle={receptionPreviewGateToggle}
+                            receptionPreviewSends={receptionPreviewSends}
+                            receptionPreviewSendsToggle={receptionPreviewSendsToggle}
                         />
                     )}
                 </ConditionalScrollY>

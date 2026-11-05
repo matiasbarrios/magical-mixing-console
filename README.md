@@ -58,10 +58,10 @@ cd ../..
 
 ### Desktop version
 
-In dev mode:
+In dev mode. This needs the [tinyjs](https://tinyjs.app) CLI 0.68.0 or newer:
 
 ```bash
-npm run electron-dev
+npm run tinyjs-dev
 ```
 
 The app should open showing the following screen:

@@ -27,7 +27,7 @@ const wait = ms => new Promise((resolve) => { setTimeout(resolve, ms); });
 const logNetworkContext = (ip, platformLabel) => {
     log('platform', platformLabel);
     log('target', `${ip}:${MANUAL_CONNECT_TEST_TARGET.port}`);
-    // Reads injected provider (Node dgram, Electron IPC, etc.) — not hardcoded here
+    // Reads injected provider (Node dgram, tinyjs bridge, etc.) — not hardcoded here
     log('getLocalAddressForIP', getLocalAddressForIP(ip));
     log('getLANInterfaces', getLANInterfaces());
 };
